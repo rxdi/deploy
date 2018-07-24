@@ -1,0 +1,32 @@
+{
+  "name": "@rxdi/deploy",
+  "version": "0.0.207",
+  "description": "Package prepared to deploy easy decentralized rxdi package ",
+  "main": "index.js",
+  "scripts": {
+    "postpublish": "git push -f ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git && git push --tags && git push ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git --tags",
+    "test": "jest",
+    "lint": "tslint -c tslint.json 'development/**/*.{ts,tsx}'",
+    "pretest": "npm run lint",
+    "build": "./node_modules/.bin/gapi module build",
+    "deploy": "./node_modules/.bin/gapi module deploy",
+    "deploy-config": "./node_modules/.bin/gapi module deploy-config"
+  },
+  "bin": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxdi/deploy"
+  },
+  "author": "Kristiyan Tachev",
+  "license": "MIT",
+  "dependencies": {
+    "@rxdi/core": "0.0.207",
+    "@gapi/cli": "^1.2.10",
+    "@rxdi/dts-merge": "^0.0.207",
+    "parcel-bundler": "^1.9.7"
+  },
+  "devDependencies": {
+    "@types/node": "^10.3.4",
+    "typescript": "^2.7.1"
+  }
+}
