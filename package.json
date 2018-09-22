@@ -5,6 +5,12 @@
   "main": "index.js",
   "scripts": {
     "postpublish": "git push -f ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git && git push --tags && git push ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git --tags",
+    "start": "node ./index.js",
+    "build:docker":"docker build -t rxdi/deployer .",
+    "start:docker":"docker-compose up -d",
+    "deploy":"docker run -v /proba/:/usr/src/app/proba --name rxdi-deployer rxdi/deployer ./proba/index.ts || true && npm run stop",
+    "stop":"docker rm -f rxdi-deployer",
+    "tsc": "./node_modules/.bin/tsc",
     "test": "jest",
     "lint": "tslint -c tslint.json 'development/**/*.{ts,tsx}'",
     "pretest": "npm run lint"

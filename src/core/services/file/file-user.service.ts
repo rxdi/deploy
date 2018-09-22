@@ -58,6 +58,7 @@ export class FileUserService {
 
     completeBuildAndAddToIpfs(folder: string, file: string, namespace: string) {
         let ipfsFile: IPFSFile[];
+        let ipfsFileMetadata: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
         let ipfsTypings: IPFSFile[];
         let ipfsModule: IPFSFile[];
         let ipfsMessage: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
@@ -98,6 +99,7 @@ export class FileUserService {
                         name: namespace,
                         typings: ipfsTypings[0].hash,
                         module: ipfsFile[0].hash,
+                        metadata: ipfsFileMetadata[0].hash,
                         message: ipfsMessage[0].hash,
                         previews: [...iterable]
                     };

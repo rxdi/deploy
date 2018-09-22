@@ -1,0 +1,12 @@
+version: '2'
+services:
+
+  rxdi-ipfs-deployer:
+    image: rxdi/deployer:latest
+    restart: always
+    mem_limit: 1000000000
+    cpu_shares: 73
+    container_name: rxdi-ipfs-deployer
+    volumes:
+      - ./proba:/usr/src/app/proba
+    command: './proba/index.ts @yournamespace "init(): init commit" -v --tsconfig'
