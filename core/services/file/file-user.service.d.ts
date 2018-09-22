@@ -14,7 +14,7 @@ export declare class FileUserService {
     dag_name: string;
     constructor(fileService: FileService, parcelBundler: ParcelBundlerService, ipfsFile: FileIpfsService, typingsGenerator: TypescriptDefinitionGeneratorService, logger: BootstrapLogger);
     getTsConfig(filename: string): string;
-    completeBuildAndAddToIpfs(folder: string, file: string, namespace: string): import("rxjs/internal/Observable").Observable<{}>;
+    completeBuildAndAddToIpfs(folder: string, file: string, namespace: string, message: any): import("rxjs/internal/Observable").Observable<{}>;
     completeBuildAndAddToIpfs2(namespace?: string): import("rxjs/internal/Observable").Observable<IPFSFile[]>;
     writeFile(file: string, fileName: string, namespace: string): Promise<{}>;
     writeDag(path: string, file: string): Promise<{}>;

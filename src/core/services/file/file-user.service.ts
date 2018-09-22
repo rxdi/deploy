@@ -56,20 +56,19 @@ export class FileUserService {
 }`;
     }
 
-    completeBuildAndAddToIpfs(folder: string, file: string, namespace: string) {
+    completeBuildAndAddToIpfs(folder: string, file: string, namespace: string, message) {
         let ipfsFile: IPFSFile[];
         let ipfsFileMetadata: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
         let ipfsTypings: IPFSFile[];
         let ipfsModule: IPFSFile[];
         let ipfsMessage: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
-
         this.logger.log('Bundling Started!\n');
         let m;
         return from(this.parcelBundler.prepareBundler(folder + '/' + file, { outDir: this.defaultBuildDirecctory }))
             .pipe(
                 tap(() => this.logger.log('Bundling finished!\n')),
-                tap(() => this.logger.log(`Adding commit message ${process.argv[4]}...\n`)),
-                switchMap(() => this.ipfsFile.addFile(process.argv[4])),
+                tap(() => this.logger.log(`Adding commit message ${message}...\n`)),
+                switchMap(() => this.ipfsFile.addFile(message)),
                 tap(res => ipfsMessage = res),
                 tap(() => this.logger.log(`Commit message added...\n`)),
                 switchMap(() => this.fileService.readFile(`./build/${file.replace('.ts', '')}.js`)),

@@ -22,16 +22,18 @@ if (process.argv.toString().includes('-v') || process.argv.toString().includes('
 core_1.Container.set(env_injection_tokens_1.__NODE_MODULES, __dirname + '/node_modules');
 core_1.Bootstrap(index_1.CoreModule)
     .subscribe(() => __awaiter(this, void 0, void 0, function* () {
-    const filePath = process.argv[2];
-    const namespace = process.argv[3];
+    let filePath = process.argv[2];
+    let namespace = process.argv[3];
+    let message = process.argv[4];
     const fileUserService = core_1.Container.get(index_1.FileUserService);
     const fileService = core_1.Container.get(index_1.FileService);
-    const file = filePath.replace(/^.*[\\\/]/, '');
-    const folder = filePath.substring(0, filePath.lastIndexOf("/"));
+    let file = filePath.split('/').pop();
+    // let extension = filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0];
+    let folder = filePath.substring(0, filePath.lastIndexOf("/"));
     if (process.argv.toString().includes('--tsconfig')) {
         yield fileService.writeFile(folder + '/tsconfig.json', fileUserService.getTsConfig(file.replace('.ts', '')));
     }
-    fileUserService.completeBuildAndAddToIpfs(folder, file, namespace)
+    fileUserService.completeBuildAndAddToIpfs(folder, file, namespace, message)
         .subscribe((res) => {
         setTimeout(() => {
             logger.log(`Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
