@@ -20,8 +20,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const fs_1 = require("fs");
 let FileService = class FileService {
-    constructor(fileService) {
+    constructor(fileService, logger) {
         this.fileService = fileService;
+        this.logger = logger;
     }
     ensureDir(dir) {
         return this.fileService.mkdirp(dir);
@@ -58,7 +59,7 @@ let FileService = class FileService {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             fs_1.readFile(file, 'utf8', (err, data) => {
                 if (err) {
-                    console.log(err);
+                    this.logger.error('Fallback missing reactive.json file will create one!');
                     return this.writeFile(file, JSON.stringify({
                         name: '',
                         typings: '',
@@ -66,9 +67,7 @@ let FileService = class FileService {
                         message: '',
                         previews: []
                     }))
-                        .then((data) => {
-                        resolve(data);
-                    })
+                        .then(() => __awaiter(this, void 0, void 0, function* () { return resolve(yield this.readFilePromisify(file)); }))
                         .catch(e => reject(e));
                 }
                 resolve(data);
@@ -88,6 +87,7 @@ let FileService = class FileService {
 };
 FileService = __decorate([
     core_1.Service(),
-    __metadata("design:paramtypes", [core_1.FileService])
+    __metadata("design:paramtypes", [core_1.FileService,
+        core_1.BootstrapLogger])
 ], FileService);
 exports.FileService = FileService;

@@ -1,11 +1,12 @@
-import { Service, FileService as RxdiFileService } from '@rxdi/core';
+import { Service, FileService as RxdiFileService, BootstrapLogger } from '@rxdi/core';
 import { readFile, writeFile } from 'fs';
 
 @Service()
 export class FileService {
 
     constructor(
-        private fileService: RxdiFileService
+        private fileService: RxdiFileService,
+        private logger: BootstrapLogger
     ) { }
 
     ensureDir(dir: string) {
@@ -43,7 +44,7 @@ export class FileService {
         return new Promise(async (resolve, reject) => {
             readFile(file, 'utf8', (err, data) => {
                 if (err) {
-                    console.log(err);
+                    this.logger.error('Fallback missing reactive.json file will create one!');
                     return this.writeFile(file, JSON.stringify({
                         name: '',
                         typings: '',
@@ -51,9 +52,7 @@ export class FileService {
                         message: '',
                         previews: []
                     }))
-                    .then((data) => {
-                        resolve(data)
-                    })
+                    .then(async () => resolve(await this.readFilePromisify(file)))
                     .catch(e => reject(e));
                 }
                 resolve(data);
