@@ -21,8 +21,8 @@
   "dependencies": {
     "@gapi/ipfs": "1.4.19",
     "@gapi/ipfs-daemon": "1.4.19",
-    "@rxdi/core": "^0.0.271",
-    "@rxdi/dts-merge": "^0.0.271",
+    "@rxdi/core": "^0.0.273",
+    "@rxdi/dts-merge": "^0.0.273",
     "parcel-bundler": "1.9.7",
     "typescript": "3.0.3"
   },
