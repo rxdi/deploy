@@ -1,2 +1,2 @@
-export * from './core.module';
+export * from './app.module';
 export * from './services/index';

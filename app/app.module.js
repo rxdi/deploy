@@ -14,28 +14,16 @@ const file_service_1 = require("./services/file/file.service");
 const parcel_bundler_service_1 = require("./services/parcel-bundler/parcel-bundler.service");
 const file_user_service_1 = require("./services/file/file-user.service");
 const dts_generator_service_1 = require("./services/dts-generator/dts-generator.service");
-let CoreModule = class CoreModule {
+let AppModule = class AppModule {
 };
-CoreModule = __decorate([
+AppModule = __decorate([
     core_1.Module({
         imports: [
             ipfs_daemon_1.IpfsDaemonModule.forRoot({ type: 'js' }),
             ipfs_1.IpfsModule.forRoot({
                 init: false,
                 start: true,
-                logging: true,
-                config: {
-                    Addresses: {
-                        API: '/ip4/127.0.0.1/tcp/5002',
-                        Announce: [],
-                        Gateway: '/ip4/127.0.0.1/tcp/8080',
-                        NoAnnounce: [],
-                        Swarm: [
-                            '/ip4/0.0.0.0/tcp/4002',
-                            '/ip6/::/tcp/4002'
-                        ]
-                    },
-                }
+                logging: true
             }),
         ],
         services: [
@@ -46,5 +34,5 @@ CoreModule = __decorate([
             dts_generator_service_1.TypescriptDefinitionGeneratorService
         ]
     })
-], CoreModule);
-exports.CoreModule = CoreModule;
+], AppModule);
+exports.AppModule = AppModule;

@@ -14,19 +14,7 @@ import { TypescriptDefinitionGeneratorService } from './services/dts-generator/d
         IpfsModule.forRoot({
             init: false,
             start: true,
-            logging: true,
-            config: {
-                Addresses: {
-                    API: '/ip4/127.0.0.1/tcp/5002',
-                    Announce: [],
-                    Gateway: '/ip4/127.0.0.1/tcp/8080',
-                    NoAnnounce: [],
-                    Swarm: [
-                        '/ip4/0.0.0.0/tcp/4002',
-                        '/ip6/::/tcp/4002'
-                    ]
-                },
-            }
+            logging: true
         }),
     ],
     services: [
@@ -37,4 +25,4 @@ import { TypescriptDefinitionGeneratorService } from './services/dts-generator/d
         TypescriptDefinitionGeneratorService
     ]
 })
-export class CoreModule { }
+export class AppModule { }

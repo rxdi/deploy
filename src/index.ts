@@ -1,36 +1,48 @@
 #!/usr/bin/env node
 import { Container, ConfigService, Bootstrap, BootstrapLogger } from '@rxdi/core';
-import { CoreModule, FileUserService, FileService } from './core/index';
+import { AppModule, FileUserService, FileService } from './app/index';
 import { __NODE_MODULES } from './env.injection.tokens';
-import { existsSync } from 'fs';
+import { interval } from 'rxjs';
+import { map, take, tap, switchMapTo } from 'rxjs/operators';
 
 const logger = Container.get(BootstrapLogger);
+
 if (process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) {
     Container.get(ConfigService).setConfig({ logger: { logging: true, hashes: true, date: true, exitHandler: true, fileService: true } });
 }
 
 Container.set(__NODE_MODULES, __dirname + '/node_modules');
 
-Bootstrap(CoreModule)
+Bootstrap(AppModule)
     .subscribe(async () => {
-        let filePath = process.argv[2];
-        let namespace = process.argv[3];
-        let message = process.argv[4];
+        const filePath = process.argv[2];
+        const namespace = process.argv[3];
+        const message = process.argv[4];
         const fileUserService = Container.get(FileUserService);
         const fileService = Container.get(FileService);
-        let file = filePath.split('/').pop();
-        // let extension = filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0];
-        let folder = filePath.substring(0, filePath.lastIndexOf("/"));
+        const start = 10;
+        const file = filePath.split('/').pop();
+        const folder = filePath.substring(0, filePath.lastIndexOf("/"));
+        // const extension = filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0];
         if (process.argv.toString().includes('--tsconfig')) {
             await fileService.writeFile(folder + '/tsconfig.json', fileUserService.getTsConfig(file.replace('.ts', '')));
         }
         fileUserService.completeBuildAndAddToIpfs(folder, file, namespace, message)
+            .pipe(
+                tap((res) => {
+                    logger.log(`Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
+                    logger.log(`Module deployed to ipfs node will exit in: ${start} seconds`);
+                }),
+                switchMapTo(interval(1000)),
+                take(start),
+                map(v => (start - 1) - v)
+            )
             .subscribe(
-                (res) => {
-                    setTimeout(() => {
-                        logger.log(`Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
+                (counter) => {
+                    logger.log(`${counter}`);
+                    if (!counter) {
                         process.exit(0);
-                    }, 7000);
+                    }
                 },
                 e => {
                     logger.error(e);
@@ -38,5 +50,5 @@ Bootstrap(CoreModule)
                 });
     });
 
-export * from './core/index';
+export * from './app/index';
 
