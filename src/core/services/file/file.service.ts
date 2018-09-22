@@ -39,6 +39,28 @@ export class FileService {
         });
     }
 
+    readFilePromisifyFallback(file: string) {
+        return new Promise(async (resolve, reject) => {
+            readFile(file, 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return this.writeFile(file, JSON.stringify({
+                        name: '',
+                        typings: '',
+                        module: '',
+                        message: '',
+                        previews: []
+                    }))
+                    .then((data) => {
+                        resolve(data)
+                    })
+                    .catch(e => reject(e));
+                }
+                resolve(data);
+            });
+        });
+    }
+
     private writeFilePromisify(path: string, data: any): Promise<boolean> {
         return new Promise((resolve, reject) => {
             writeFile(path, data, (err) => {

@@ -14,10 +14,12 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const index_1 = require("./core/index");
+const env_injection_tokens_1 = require("./env.injection.tokens");
 const logger = core_1.Container.get(core_1.BootstrapLogger);
 if (process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) {
     core_1.Container.get(core_1.ConfigService).setConfig({ logger: { logging: true, hashes: true, date: true, exitHandler: true, fileService: true } });
 }
+core_1.Container.set(env_injection_tokens_1.__NODE_MODULES, __dirname + '/node_modules');
 core_1.Bootstrap(index_1.CoreModule)
     .subscribe(() => __awaiter(this, void 0, void 0, function* () {
     const filePath = process.argv[2];

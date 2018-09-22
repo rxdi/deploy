@@ -84,7 +84,7 @@ export class FileUserService {
                 switchMap((res: string) => this.ipfsFile.addFile(res)),
                 tap(res => ipfsTypings = res),
                 tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)),
-                switchMap(() => this.fileService.readFile(`${folder}/${this.dag_name}`)),
+                switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${this.dag_name}`)),
                 switchMap((d: string) => {
                     const dag = JSON.parse(d);
                     if (dag.module === ipfsFile[0].hash) {
@@ -93,12 +93,13 @@ export class FileUserService {
                     You need to make change to the module so it will be with different integrity!
                         `);
                     }
+                    let iterable = dag.previews || [];
                     m = {
                         name: namespace,
                         typings: ipfsTypings[0].hash,
                         module: ipfsFile[0].hash,
                         message: ipfsMessage[0].hash,
-                        previews: [...dag.previews]
+                        previews: [...iterable]
                     };
                     return this.ipfsFile.addFile(JSON.stringify(m, null, 4));
                 }),

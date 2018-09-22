@@ -78,7 +78,7 @@ let FileUserService = class FileUserService {
         return rxjs_1.from(this.parcelBundler.prepareBundler(folder + '/' + file, { outDir: this.defaultBuildDirecctory }))
             .pipe(operators_1.tap(() => this.logger.log('Bundling finished!\n')), operators_1.tap(() => this.logger.log(`Adding commit message ${process.argv[4]}...\n`)), operators_1.switchMap(() => this.ipfsFile.addFile(process.argv[4])), operators_1.tap(res => ipfsMessage = res), operators_1.tap(() => this.logger.log(`Commit message added...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/${file.replace('.ts', '')}.js`)), operators_1.tap(() => this.logger.log(`Reading bundle ./build/${file.replace('.ts', '')}.js finished!\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsFile = res), operators_1.tap(() => this.logger.log(`Bundle added to ipfs ./build/${file.replace('.ts', '')}.js\n`)), 
         // tap(() => this.logger.log(`Typescript definitions merge started!\n`)),
-        operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsTypings = res), operators_1.tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)), operators_1.switchMap(() => this.fileService.readFile(`${folder}/${this.dag_name}`)), operators_1.switchMap((d) => {
+        operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsTypings = res), operators_1.tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)), operators_1.switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${this.dag_name}`)), operators_1.switchMap((d) => {
             const dag = JSON.parse(d);
             if (dag.module === ipfsFile[0].hash) {
                 throw new Error(`
@@ -86,12 +86,13 @@ let FileUserService = class FileUserService {
                     You need to make change to the module so it will be with different integrity!
                         `);
             }
+            let iterable = dag.previews || [];
             m = {
                 name: namespace,
                 typings: ipfsTypings[0].hash,
                 module: ipfsFile[0].hash,
                 message: ipfsMessage[0].hash,
-                previews: [...dag.previews]
+                previews: [...iterable]
             };
             return this.ipfsFile.addFile(JSON.stringify(m, null, 4));
         }), operators_1.tap(res => ipfsModule = res), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.tap(() => {

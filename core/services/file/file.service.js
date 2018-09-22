@@ -54,6 +54,27 @@ let FileService = class FileService {
             });
         });
     }
+    readFilePromisifyFallback(file) {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            fs_1.readFile(file, 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return this.writeFile(file, JSON.stringify({
+                        name: '',
+                        typings: '',
+                        module: '',
+                        message: '',
+                        previews: []
+                    }))
+                        .then((data) => {
+                        resolve(data);
+                    })
+                        .catch(e => reject(e));
+                }
+                resolve(data);
+            });
+        }));
+    }
     writeFilePromisify(path, data) {
         return new Promise((resolve, reject) => {
             fs_1.writeFile(path, data, (err) => {

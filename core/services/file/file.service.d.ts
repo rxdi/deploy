@@ -8,5 +8,6 @@ export declare class FileService {
     createFolder(folder: string): Promise<boolean>;
     fileWalker(folder: string): import("rxjs/internal/Observable").Observable<string[]>;
     private readFilePromisify;
+    readFilePromisifyFallback(file: string): Promise<{}>;
     private writeFilePromisify;
 }

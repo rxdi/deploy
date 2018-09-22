@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 import { Container, ConfigService, Bootstrap, BootstrapLogger } from '@rxdi/core';
 import { CoreModule, FileUserService, FileService } from './core/index';
+import { __NODE_MODULES } from './env.injection.tokens';
 
 const logger = Container.get(BootstrapLogger);
 if (process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) {
     Container.get(ConfigService).setConfig({ logger: { logging: true, hashes: true, date: true, exitHandler: true, fileService: true } });
 }
+
+Container.set(__NODE_MODULES, __dirname + '/node_modules');
 
 Bootstrap(CoreModule)
     .subscribe(async () => {

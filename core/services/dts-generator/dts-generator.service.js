@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -19,9 +22,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const childProcess = require("child_process");
+const env_injection_tokens_1 = require("../../../env.injection.tokens");
 let TypescriptDefinitionGeneratorService = class TypescriptDefinitionGeneratorService {
-    constructor(logger) {
+    constructor(logger, node_modules) {
         this.logger = logger;
+        this.node_modules = node_modules;
     }
     validateEntries(namespace, projectPath, outPath) {
         if (!projectPath) {
@@ -46,8 +51,7 @@ let TypescriptDefinitionGeneratorService = class TypescriptDefinitionGeneratorSe
                 }
                 process.env = Object.assign(process.env, {});
                 this.logger.log('Typescript merging definitions started in child process...\n');
-                const node_modules = __dirname.replace('/src/core/services/dts-generator', '') + '/node_modules';
-                this.child = childProcess.spawn(`${node_modules}/.bin/rxdi-merge`, [
+                this.child = childProcess.spawn(`${this.node_modules}/.bin/rxdi-merge`, [
                     '--name',
                     namespace,
                     '--project',
@@ -74,8 +78,7 @@ let TypescriptDefinitionGeneratorService = class TypescriptDefinitionGeneratorSe
 };
 TypescriptDefinitionGeneratorService = __decorate([
     core_1.Service(),
-    __metadata("design:paramtypes", [core_1.BootstrapLogger])
+    __param(1, core_1.Inject(env_injection_tokens_1.__NODE_MODULES)),
+    __metadata("design:paramtypes", [core_1.BootstrapLogger, String])
 ], TypescriptDefinitionGeneratorService);
 exports.TypescriptDefinitionGeneratorService = TypescriptDefinitionGeneratorService;
-const node_modules = __dirname.replace('/src/core/services/dts-generator', '');
-console.log(node_modules);

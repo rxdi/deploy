@@ -1,13 +1,14 @@
-import { Service, Container, BootstrapLogger } from '@rxdi/core';
-import Bundler = require('parcel-bundler');
+import { Service, BootstrapLogger, Inject } from '@rxdi/core';
 import childProcess = require('child_process');
+import { __NODE_MODULES } from '../../../env.injection.tokens';
 
 @Service()
 export class TypescriptDefinitionGeneratorService {
     child: childProcess.ChildProcess;
 
     constructor(
-        private logger: BootstrapLogger
+        private logger: BootstrapLogger,
+        @Inject(__NODE_MODULES) private node_modules: string
     ) { }
 
     private validateEntries(namespace: string, projectPath: string, outPath: string) {
@@ -34,9 +35,8 @@ export class TypescriptDefinitionGeneratorService {
             }
             process.env = Object.assign(process.env, {});
             this.logger.log('Typescript merging definitions started in child process...\n');
-            const node_modules = __dirname.replace('/src/core/services/dts-generator', '') + '/node_modules';
             this.child = childProcess.spawn(
-                `${node_modules}/.bin/rxdi-merge`,
+                `${this.node_modules}/.bin/rxdi-merge`,
                 [
                     '--name',
                     namespace,
@@ -63,6 +63,3 @@ export class TypescriptDefinitionGeneratorService {
     }
 
 }
-
-const node_modules = __dirname.replace('/src/core/services/dts-generator', '');
-console.log(node_modules);
