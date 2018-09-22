@@ -46,7 +46,8 @@ let TypescriptDefinitionGeneratorService = class TypescriptDefinitionGeneratorSe
                 }
                 process.env = Object.assign(process.env, {});
                 this.logger.log('Typescript merging definitions started in child process...\n');
-                this.child = childProcess.spawn('./node_modules/.bin/rxdi-merge', [
+                const node_modules = __dirname.replace('/src/core/services/dts-generator', '') + '/node_modules';
+                this.child = childProcess.spawn(`${node_modules}/.bin/rxdi-merge`, [
                     '--name',
                     namespace,
                     '--project',
@@ -76,3 +77,5 @@ TypescriptDefinitionGeneratorService = __decorate([
     __metadata("design:paramtypes", [core_1.BootstrapLogger])
 ], TypescriptDefinitionGeneratorService);
 exports.TypescriptDefinitionGeneratorService = TypescriptDefinitionGeneratorService;
+const node_modules = __dirname.replace('/src/core/services/dts-generator', '');
+console.log(node_modules);

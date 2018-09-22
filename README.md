@@ -4,7 +4,7 @@
 
 #### Install globally
 ```bash
-npm i @rxdi/deploy -g
+npm i @rxdi/deploy ipfs -g
 ```
 
 #### Bundle and deploy your file!
