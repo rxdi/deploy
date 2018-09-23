@@ -19,6 +19,8 @@ const compile_service_1 = require("./services/compile/compile.service");
 const tsconfig_generator_service_1 = require("./services/tsconfig-generator/tsconfig-generator.service");
 const table_service_1 = require("./services/table-service/table-service");
 const status_module_1 = require("./status/status.module");
+const build_history_service_1 = require("./services/build-history/build-history.service");
+const error_reason_service_1 = require("./services/error-reason/error-reason.service");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -37,9 +39,12 @@ AppModule = __decorate([
             file_user_service_1.FileUserService,
             dts_generator_service_1.TypescriptDefinitionGeneratorService,
             tsconfig_generator_service_1.TsConfigGenratorService,
-            table_service_1.TableService
+            table_service_1.TableService,
+            build_history_service_1.BuildHistoryService,
+            error_reason_service_1.ErrorReasonService
         ],
-        afterPlugins: [compile_service_1.CompileService]
+        afterPlugins: [compile_service_1.CompilePlugin]
     })
 ], AppModule);
 exports.AppModule = AppModule;
+//# sourceMappingURL=app.module.js.map

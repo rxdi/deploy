@@ -22,7 +22,10 @@ core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.
         pluginsAfter: arguments_service_1.nextOrDefault('--node-only', true, Boolean)
     } }));
 core_1.BootstrapFramework(app_module_1.AppModule, [environment_setter_module_1.EnvironemntSetterModule])
-    .subscribe(() => console.log('Bootstrap success!'), (error) => {
+    .subscribe(() => {
+    console.log('Bootstrap success!');
+}, (error) => {
     throw new Error(error);
 });
 __export(require("./app/index"));
+//# sourceMappingURL=index.js.map

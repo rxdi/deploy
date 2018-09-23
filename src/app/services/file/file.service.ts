@@ -55,7 +55,7 @@ export class FileService {
                     .then(async () => resolve(await this.readFilePromisify(file)))
                     .catch(e => reject(e));
                 }
-                resolve(data);
+                return resolve(data);
             });
         });
     }

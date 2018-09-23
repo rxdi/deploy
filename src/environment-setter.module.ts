@@ -1,5 +1,5 @@
 import { Module } from '@rxdi/core';
-import { ArgumentsService } from './app/services/arguments/arguments.service';
+import { ArgumentsService, nextOrDefault } from './app/services/arguments/arguments.service';
 import {
     __NODE_MODULES,
     __DEPLOYER_ARGUMENTS,
@@ -17,10 +17,17 @@ import {
     __PROCESSING_TIME_INIT,
     __PROCESSING_TIME_FINISH,
     __PROCESSING_TIME_END,
-    __FILE_NAME
+    __FILE_NAME,
+    __HOME_DIR,
+    __SETTINGS_DATABASE,
+    __BUILD_HISTORY_DATABASE,
+    __PREVIWS_DATABASE,
+    __COMMIT_MESSAGE
 } from './env.injection.tokens';
 import { TsConfigGenratorService } from './app/services/tsconfig-generator/tsconfig-generator.service';
 import { FileService } from './app/services/file/file.service';
+import { homedir } from 'os';
+import * as Datastore from 'nedb';
 
 @Module({
     services: [
@@ -29,9 +36,21 @@ import { FileService } from './app/services/file/file.service';
             useValue: __dirname + '/node_modules'
         },
         {
+            provide: __HOME_DIR,
+            useValue: homedir()
+        },
+        {
             provide: __DEPLOYER_ARGUMENTS,
-            useFactory: () => {
-                return process.argv.slice(2);
+            useValue: process.argv.slice(2)
+        },
+        {
+            provide: __COMMIT_MESSAGE,
+            deps: [__DEPLOYER_ARGUMENTS],
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => {
+                if (args[2] && args[2].includes('--') || args[2] && args[2].includes('-')) {
+                    return '';
+                }
+                return args[2] || '';
             }
         },
         {
@@ -46,8 +65,7 @@ import { FileService } from './app/services/file/file.service';
         },
         {
             provide: __PARCEL_BUILD_OUT_DIR,
-            deps: [ArgumentsService],
-            useFactory: (as: ArgumentsService) => as.nextOrDefault('--out-dir', 'build')
+            useValue: nextOrDefault('--out-dir', 'build')
         },
         {
             provide: __PARCEL_SETTINGS,
@@ -65,7 +83,7 @@ import { FileService } from './app/services/file/file.service';
         {
             provide: __FILE_PATH,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => args[0]
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => args[0] || 'index.ts'
         },
         {
             provide: __FILE_NAME,
@@ -75,7 +93,7 @@ import { FileService } from './app/services/file/file.service';
         {
             provide: __NAMESPACE,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => args[1]
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => args[1] || '@default'
         },
         {
             provide: __FOLDER,
@@ -85,17 +103,15 @@ import { FileService } from './app/services/file/file.service';
         {
             provide: __FILE_EXTENSION,
             deps: [__FILE_PATH],
-            useFactory: (filePath: __FILE_PATH) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0]
+            useFactory: (filePath) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i) ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'index.ts'
         },
         {
             provide: __IPFS_NODE_RESOLUTION_TIME,
-            deps: [ArgumentsService],
-            useFactory: (as: ArgumentsService) => as.nextOrDefault('--beat', 10, Number)
+            useValue: nextOrDefault('--beat', 10, Number)
         },
         {
             provide: __DEPLOYER_OUTPUT_CONFIG_NAME,
-            deps: [ArgumentsService],
-            useFactory: (as: ArgumentsService) => as.nextOrDefault('--deployer-config-name', 'reactive.json')
+            useValue: nextOrDefault('--deployer-config-name', 'reactive.json')
         },
         {
             provide: __PROCESSING_TIME_INIT,
@@ -103,13 +119,12 @@ import { FileService } from './app/services/file/file.service';
         },
         {
             provide: __PROCESSING_TIME_FINISH,
-            deps: [ArgumentsService],
-            useFactory: (as: ArgumentsService) => as.nextOrDefault('--deployer-config-name', 'reactive.json')
+            useValue: nextOrDefault('--deployer-config-name', 'reactive.json')
         },
         {
             provide: __PROCESSING_TIME_END,
             deps: [ArgumentsService],
-            useFactory: (as: ArgumentsService) => as.nextOrDefault('--deployer-config-name', 'reactive.json')
+            useValue: nextOrDefault('--deployer-config-name', 'reactive.json')
         },
         {
             provide: 'init-ts-config-file',
@@ -133,6 +148,48 @@ import { FileService } from './app/services/file/file.service';
                 }
                 return tsConfig;
             }
+        },
+        {
+            provide: __SETTINGS_DATABASE,
+            deps: [__HOME_DIR],
+            lazy: true,
+            useFactory: (homeDir) => new Promise((resolve) => {
+                const database = new Datastore({ filename: `${homeDir}/.rxdi/settings`, autoload: true });
+                database.loadDatabase((e) => {
+                    if (e) {
+                        throw new Error('Error loading database!');
+                    }
+                    resolve(database);
+                });
+            })
+        },
+        {
+            provide: __BUILD_HISTORY_DATABASE,
+            deps: [__HOME_DIR],
+            lazy: true,
+            useFactory: (homeDir) => new Promise((resolve) => {
+                const database = new Datastore({ filename: `${homeDir}/.rxdi/history`, autoload: true });
+                database.loadDatabase((e) => {
+                    if (e) {
+                        throw new Error('Error loading database!');
+                    }
+                    resolve(database);
+                });
+            })
+        },
+        {
+            provide: __PREVIWS_DATABASE,
+            deps: [__HOME_DIR],
+            lazy: true,
+            useFactory: (homeDir) => new Promise((resolve) => {
+                const database = new Datastore({ filename: `${homeDir}/.rxdi/previews`, autoload: true });
+                database.loadDatabase((e) => {
+                    if (e) {
+                        throw new Error('Error loading database!');
+                    }
+                    resolve(database);
+                });
+            })
         }
     ]
 })

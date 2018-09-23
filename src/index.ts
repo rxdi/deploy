@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 process.argv.toString().includes('--silent') ? console.log = () => null : null;
 
-import { __NODE_MODULES, __DEPLOYER_ARGUMENTS } from './env.injection.tokens';
 import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { EnvironemntSetterModule } from './environment-setter.module';
 import { AppModule } from './app/app.module';
 import { nextOrDefault } from './app/services/arguments/arguments.service';
-
 
 Container.get(ConfigService).setConfig({
     ...(process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) ? ({
@@ -27,7 +25,9 @@ Container.get(ConfigService).setConfig({
 
 BootstrapFramework(AppModule, [EnvironemntSetterModule])
     .subscribe(
-        () => console.log('Bootstrap success!'),
+        () => {
+            console.log('Bootstrap success!');
+        },
         (error) => {
             throw new Error(error);
         },

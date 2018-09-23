@@ -1,9 +1,7 @@
 import { Service, Inject } from '@rxdi/core';
 import { FileService } from './file.service';
 import {
-    __PARCEL_BUILD_OUT_DIR,
-    __NAMESPACE,
-    __DEPLOYER_OUTPUT_CONFIG_NAME
+    __PARCEL_BUILD_OUT_DIR
 } from '../../../env.injection.tokens';
 
 @Service()

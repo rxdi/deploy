@@ -70,7 +70,7 @@ let FileService = class FileService {
                         .then(() => __awaiter(this, void 0, void 0, function* () { return resolve(yield this.readFilePromisify(file)); }))
                         .catch(e => reject(e));
                 }
-                resolve(data);
+                return resolve(data);
             });
         }));
     }
@@ -91,3 +91,4 @@ FileService = __decorate([
         core_1.BootstrapLogger])
 ], FileService);
 exports.FileService = FileService;
+//# sourceMappingURL=file.service.js.map

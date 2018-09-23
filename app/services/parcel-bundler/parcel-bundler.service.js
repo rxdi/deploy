@@ -24,12 +24,10 @@ const core_1 = require("@rxdi/core");
 const Bundler = require("parcel-bundler");
 const env_injection_tokens_1 = require("../../../env.injection.tokens");
 let ParcelBundlerService = class ParcelBundlerService {
-    constructor(isBrowserBuild, isBuildMinfied, buildOutDir, parcelSettings, args) {
+    constructor(isBrowserBuild, isBuildMinfied, buildOutDir) {
         this.isBrowserBuild = isBrowserBuild;
         this.isBuildMinfied = isBuildMinfied;
         this.buildOutDir = buildOutDir;
-        this.parcelSettings = parcelSettings;
-        this.args = args;
     }
     prepareBundler(file) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -43,11 +41,6 @@ let ParcelBundlerService = class ParcelBundlerService {
                 const bundler = new Bundler(file, options);
                 let bundle = null;
                 bundler.on('bundled', (compiledBundle) => {
-                    // const inter: {
-                    //     id; name; basename; relativeName; options; encoding; type; processed; contents; ast; generated; hash; parentDeps; dependencies
-                    //     depAssets; parentBundle; bundles; cacheData; startTime; endTime; buildTime; bundledSize; resolver;
-                    // } = compiledBundle.entryAsset;
-                    // console.log(inter.buildTime, inter.startTime, inter.endTime, inter.bundledSize);
                     bundle = compiledBundle;
                 });
                 bundler.on('buildEnd', () => {
@@ -65,8 +58,7 @@ ParcelBundlerService = __decorate([
     __param(0, core_1.Inject(env_injection_tokens_1.__PARCEL_BROWSER_BUILD)),
     __param(1, core_1.Inject(env_injection_tokens_1.__PARCEL_MINIFY)),
     __param(2, core_1.Inject(env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR)),
-    __param(3, core_1.Inject(env_injection_tokens_1.__PARCEL_SETTINGS)),
-    __param(4, core_1.Inject(env_injection_tokens_1.__DEPLOYER_ARGUMENTS)),
-    __metadata("design:paramtypes", [Boolean, Boolean, String, Object, Array])
+    __metadata("design:paramtypes", [Boolean, Boolean, String])
 ], ParcelBundlerService);
 exports.ParcelBundlerService = ParcelBundlerService;
+//# sourceMappingURL=parcel-bundler.service.js.map

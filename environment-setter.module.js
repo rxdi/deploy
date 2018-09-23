@@ -19,6 +19,8 @@ const arguments_service_1 = require("./app/services/arguments/arguments.service"
 const env_injection_tokens_1 = require("./env.injection.tokens");
 const tsconfig_generator_service_1 = require("./app/services/tsconfig-generator/tsconfig-generator.service");
 const file_service_1 = require("./app/services/file/file.service");
+const os_1 = require("os");
+const Datastore = require("nedb");
 let EnvironemntSetterModule = class EnvironemntSetterModule {
 };
 EnvironemntSetterModule = __decorate([
@@ -29,9 +31,21 @@ EnvironemntSetterModule = __decorate([
                 useValue: __dirname + '/node_modules'
             },
             {
+                provide: env_injection_tokens_1.__HOME_DIR,
+                useValue: os_1.homedir()
+            },
+            {
                 provide: env_injection_tokens_1.__DEPLOYER_ARGUMENTS,
-                useFactory: () => {
-                    return process.argv.slice(2);
+                useValue: process.argv.slice(2)
+            },
+            {
+                provide: env_injection_tokens_1.__COMMIT_MESSAGE,
+                deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
+                useFactory: (args) => {
+                    if (args[2] && args[2].includes('--') || args[2] && args[2].includes('-')) {
+                        return '';
+                    }
+                    return args[2] || '';
                 }
             },
             {
@@ -46,8 +60,7 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR,
-                deps: [arguments_service_1.ArgumentsService],
-                useFactory: (as) => as.nextOrDefault('--out-dir', 'build')
+                useValue: arguments_service_1.nextOrDefault('--out-dir', 'build')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_SETTINGS,
@@ -65,7 +78,7 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__FILE_PATH,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => args[0]
+                useFactory: (args) => args[0] || 'index.ts'
             },
             {
                 provide: env_injection_tokens_1.__FILE_NAME,
@@ -75,7 +88,7 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__NAMESPACE,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => args[1]
+                useFactory: (args) => args[1] || '@default'
             },
             {
                 provide: env_injection_tokens_1.__FOLDER,
@@ -85,17 +98,15 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__FILE_EXTENSION,
                 deps: [env_injection_tokens_1.__FILE_PATH],
-                useFactory: (filePath) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0]
+                useFactory: (filePath) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i) ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'index.ts'
             },
             {
                 provide: env_injection_tokens_1.__IPFS_NODE_RESOLUTION_TIME,
-                deps: [arguments_service_1.ArgumentsService],
-                useFactory: (as) => as.nextOrDefault('--beat', 10, Number)
+                useValue: arguments_service_1.nextOrDefault('--beat', 10, Number)
             },
             {
                 provide: env_injection_tokens_1.__DEPLOYER_OUTPUT_CONFIG_NAME,
-                deps: [arguments_service_1.ArgumentsService],
-                useFactory: (as) => as.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useValue: arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_INIT,
@@ -103,13 +114,12 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_FINISH,
-                deps: [arguments_service_1.ArgumentsService],
-                useFactory: (as) => as.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useValue: arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_END,
                 deps: [arguments_service_1.ArgumentsService],
-                useFactory: (as) => as.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useValue: arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: 'init-ts-config-file',
@@ -127,8 +137,51 @@ EnvironemntSetterModule = __decorate([
                     }
                     return tsConfig;
                 })
+            },
+            {
+                provide: env_injection_tokens_1.__SETTINGS_DATABASE,
+                deps: [env_injection_tokens_1.__HOME_DIR],
+                lazy: true,
+                useFactory: (homeDir) => new Promise((resolve) => {
+                    const database = new Datastore({ filename: `${homeDir}/.rxdi/settings`, autoload: true });
+                    database.loadDatabase((e) => {
+                        if (e) {
+                            throw new Error('Error loading database!');
+                        }
+                        resolve(database);
+                    });
+                })
+            },
+            {
+                provide: env_injection_tokens_1.__BUILD_HISTORY_DATABASE,
+                deps: [env_injection_tokens_1.__HOME_DIR],
+                lazy: true,
+                useFactory: (homeDir) => new Promise((resolve) => {
+                    const database = new Datastore({ filename: `${homeDir}/.rxdi/history`, autoload: true });
+                    database.loadDatabase((e) => {
+                        if (e) {
+                            throw new Error('Error loading database!');
+                        }
+                        resolve(database);
+                    });
+                })
+            },
+            {
+                provide: env_injection_tokens_1.__PREVIWS_DATABASE,
+                deps: [env_injection_tokens_1.__HOME_DIR],
+                lazy: true,
+                useFactory: (homeDir) => new Promise((resolve) => {
+                    const database = new Datastore({ filename: `${homeDir}/.rxdi/previews`, autoload: true });
+                    database.loadDatabase((e) => {
+                        if (e) {
+                            throw new Error('Error loading database!');
+                        }
+                        resolve(database);
+                    });
+                })
             }
         ]
     })
 ], EnvironemntSetterModule);
 exports.EnvironemntSetterModule = EnvironemntSetterModule;
+//# sourceMappingURL=environment-setter.module.js.map

@@ -1,12 +1,11 @@
 import {
-    __DEPLOYER_ARGUMENTS,
-    __GENERATE_TS_CONFIG,
-    __FILE_PATH,
     __FOLDER,
     __IPFS_NODE_RESOLUTION_TIME,
     __FILE_NAME,
     __DEPLOYER_OUTPUT_CONFIG_NAME,
-    __NAMESPACE
+    __NAMESPACE,
+    HistoryModel,
+    __COMMIT_MESSAGE
 } from '../../../env.injection.tokens';
 import { Plugin, Inject, BootstrapLogger } from '@rxdi/core';
 import { tap, switchMapTo, take, map, switchMap } from 'rxjs/operators';
@@ -20,19 +19,19 @@ import { TypescriptDefinitionGeneratorService } from '../dts-generator/dts-gener
 import { TsConfigGenratorService } from '../tsconfig-generator/tsconfig-generator.service';
 import { FILE_DEPLOYMENT_STATUS } from '../../status/status-injection.tokens';
 import { TableService } from '../table-service/table-service';
-
-var Table = require("terminal-table");
+import { BuildHistoryService } from '../build-history/build-history.service';
+import { PreviwsService } from '../previews/previews.service';
 
 @Plugin()
-export class CompileService {
+export class CompilePlugin {
 
-    @Inject(__DEPLOYER_ARGUMENTS) private args: __DEPLOYER_ARGUMENTS;
     @Inject(__FILE_NAME) private fileName: __FILE_NAME;
     @Inject(__FOLDER) private folder: __FOLDER;
     @Inject(__IPFS_NODE_RESOLUTION_TIME) private resolutionTime: __IPFS_NODE_RESOLUTION_TIME;
     @Inject(__DEPLOYER_OUTPUT_CONFIG_NAME) private outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME;
     @Inject(__NAMESPACE) private namespace: __NAMESPACE;
-    @Inject(FILE_DEPLOYMENT_STATUS) private $file_deployment_status: FILE_DEPLOYMENT_STATUS;
+    @Inject(FILE_DEPLOYMENT_STATUS) private $deploymentStatus: FILE_DEPLOYMENT_STATUS;
+    @Inject(__COMMIT_MESSAGE) private commitMessage: __COMMIT_MESSAGE;
 
     constructor(
         private parcelBundler: ParcelBundlerService,
@@ -42,15 +41,19 @@ export class CompileService {
         private fileUserService: FileUserService,
         private typingsGenerator: TypescriptDefinitionGeneratorService,
         private tsConfigGenerator: TsConfigGenratorService,
-        private tableService: TableService
-    ) { }
+        private tableService: TableService,
+        private buildHistoryService: BuildHistoryService,
+        private previwsService: PreviwsService,
+    ) {
+        console.log('INIT');
+    }
 
     async register() {
         this.compile();
     }
 
     async compile() {
-        return this.completeBuildAndAddToIpfs(this.folder, this.fileName, this.args[2])
+        return this.completeBuildAndAddToIpfs(this.folder, this.fileName, this.commitMessage, this.namespace, this.outputConfigName)
             .pipe(
                 tap((r) => this.logSuccess(r)),
                 switchMapTo(interval(1000)),
@@ -70,7 +73,7 @@ export class CompileService {
             );
     }
 
-    completeBuildAndAddToIpfs(folder: string, file: string, message) {
+    completeBuildAndAddToIpfs(folder: string, file: string, message, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME) {
         let ipfsFile: IPFSFile[];
         let ipfsFileMetadata: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
         let ipfsTypings: IPFSFile[];
@@ -78,6 +81,7 @@ export class CompileService {
         let ipfsMessage: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
         this.logger.log('Bundling Started!\n');
         let m;
+        let dag: HistoryModel;
         return from(this.parcelBundler.prepareBundler(folder + '/' + file))
             .pipe(
                 tap(() => this.logger.log('Bundling finished!\n')),
@@ -91,36 +95,37 @@ export class CompileService {
                 tap(res => ipfsFile = res),
                 tap(() => this.logger.log(`Bundle added to ipfs ./build/${file.split('.')[0]}.js\n`)),
                 // tap(() => this.logger.log(`Typescript definitions merge started!\n`)),
-                switchMap(() => from(this.typingsGenerator.mergeTypings(this.namespace, folder, './build/index.d.ts'))),
+                switchMap(() => from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))),
                 tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)),
                 switchMap(() => this.fileService.readFile(`./build/index.d.ts`)),
                 tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
                 switchMap((res: string) => this.ipfsFile.addFile(res)),
                 tap(res => ipfsTypings = res),
                 tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)),
-                switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${this.outputConfigName}`)),
+                switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${outputConfigName}`)),
                 switchMap(async (d: string) => {
-                    const dag = JSON.parse(d);
+                    dag = JSON.parse(d);
                     m = dag;
                     if (dag.module === ipfsFile[0].hash) {
                         ipfsModule = await this.ipfsFile.addFile(JSON.stringify(dag, null, 4));
-        
+
                         this.logger.log(`
                     !! Warning !!
                     Module is with the same integrity and will not be uploaded again!
                     You need to make change to the module so it will be with different integrity!
                         `);
-                        this.$file_deployment_status.next({
-                            ...this.$file_deployment_status.getValue(),
+                        this.$deploymentStatus.next({
+                            ...this.$deploymentStatus.getValue(),
                             file: false,
                             module: false
                         })
                     } else {
                         let iterable = dag.previews || [];
-                        m = {
-                            name: this.namespace,
+                        m = <HistoryModel>{
+                            name: namespace,
                             typings: ipfsTypings[0].hash,
                             module: ipfsFile[0].hash,
+                            date: new Date(),
                             metadata: ipfsFileMetadata[0].hash,
                             message: ipfsMessage[0].hash,
                             previews: [...iterable]
@@ -130,7 +135,7 @@ export class CompileService {
                             m.previews.shift();
                         }
                         m.previews = [...m.previews, ipfsModule[0].hash];
-                        this.fileUserService.writeDag(`${folder}/${this.outputConfigName}`, JSON.stringify(m, null, 4));
+                        this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(m, null, 4));
                         return ipfsModule;
                     }
 
@@ -140,8 +145,8 @@ export class CompileService {
                     Typings are with the same integrity and will not be uploaded again!
                     You need to make change to the module so it will be with different integrity!
                         `);
-                        this.$file_deployment_status.next({
-                            ...this.$file_deployment_status.getValue(),
+                        this.$deploymentStatus.next({
+                            ...this.$deploymentStatus.getValue(),
                             typings: false
                         })
                     }
@@ -155,15 +160,36 @@ export class CompileService {
                     module: ipfsModule
                 })),
                 tap(() => {
-                    console.log("" + this.tableService.previewsVersions(m.previews));
-                    console.log("" + this.tableService.previewsNext(m.previews));
-                    console.log("" + this.tableService.endInstallCommand(ipfsModule[0].hash));
-                    console.log("" + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
+                    console.log('' + this.tableService.previewsVersions(m.previews));
+                    console.log('' + this.tableService.previewsNext(m.previews));
+                    console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
+                    console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
+                    this.buildHistoryService.insert(<HistoryModel>{
+                        status: {
+                            file: this.$deploymentStatus.getValue().file,
+                            typings: this.$deploymentStatus.getValue().typings,
+                            module: this.$deploymentStatus.getValue().module
+                        },
+                        hash: ipfsModule[0].hash,
+                        name: namespace,
+                        date: new Date(),
+                        typings: ipfsTypings[0].hash,
+                        module: ipfsFile[0].hash,
+                        metadata: ipfsFileMetadata[0].hash,
+                        message: ipfsMessage[0].hash
+                    })
+                    .pipe(
+                        switchMapTo(this.previwsService.insert({
+                            name: namespace,
+                            hash: ipfsModule[0].hash,
+                            date: new Date()
+                        }))
+                    )
+                    .subscribe(() => this.logger.log('Module saved to persistant history!'));
 
                 })
             );
     }
-
 
     logSuccess(res) {
         // this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);

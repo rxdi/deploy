@@ -30,11 +30,13 @@
     "@rxdi/core": "^0.0.286",
     "@rxdi/dts-merge": "^0.0.286",
     "graphql-request": "^1.8.2",
+    "nedb": "^1.8.0",
     "parcel-bundler": "1.9.7",
     "terminal-table": "0.0.12",
     "typescript": "3.0.3"
   },
   "devDependencies": {
+    "@types/nedb": "^1.8.6",
     "@types/node": "10.10.2"
   }
 }

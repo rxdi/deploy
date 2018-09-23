@@ -47,3 +47,4 @@ TsConfigGenratorService = __decorate([
     core_1.Service()
 ], TsConfigGenratorService);
 exports.TsConfigGenratorService = TsConfigGenratorService;
+//# sourceMappingURL=tsconfig-generator.service.js.map

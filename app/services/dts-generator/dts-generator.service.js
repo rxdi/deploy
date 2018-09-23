@@ -84,3 +84,4 @@ TypescriptDefinitionGeneratorService = __decorate([
     __metadata("design:paramtypes", [core_1.BootstrapLogger, String])
 ], TypescriptDefinitionGeneratorService);
 exports.TypescriptDefinitionGeneratorService = TypescriptDefinitionGeneratorService;
+//# sourceMappingURL=dts-generator.service.js.map

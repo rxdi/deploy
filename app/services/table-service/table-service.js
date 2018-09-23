@@ -153,6 +153,32 @@ let TableService = class TableService {
         });
         return t;
     }
+    getHistoryTable(history) {
+        var t = new Table({
+            borderStyle: 3,
+            horizontalLine: true,
+            width: [3, '50%', '50%'],
+            rightPadding: 0,
+            leftPadding: 1
+        });
+        t.push(['', 'Date', 'Hash']);
+        console.log(history);
+        history.forEach((v) => {
+            t.push(['', `${v.date}`, `rxdi-deploy --find ${v.hash}`]);
+        });
+        t.attrRange({ row: [0, 1] }, {
+            align: "center",
+            color: "green",
+            bg: "black"
+        });
+        t.attrRange({
+            row: [1],
+            column: [1]
+        }, {
+            leftPadding: 5
+        });
+        return t;
+    }
 };
 __decorate([
     core_1.Inject(status_injection_tokens_1.FILE_DEPLOYMENT_STATUS),
@@ -162,3 +188,4 @@ TableService = __decorate([
     core_1.Service()
 ], TableService);
 exports.TableService = TableService;
+//# sourceMappingURL=table-service.js.map

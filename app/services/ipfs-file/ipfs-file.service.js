@@ -46,10 +46,7 @@ let FileIpfsService = class FileIpfsService {
                 ipfsOriginal: 'https://ipfs.io/ipfs/',
                 thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`
             };
-            // this.logger.log(`\nLocal: http://${this.nodeInfo.gatewayHost}:${this.nodeInfo.gatewayPort}/ipfs/${ipfsFile[0].hash}`);
-            // this.logger.log(`\nInfura: ${providers.infura}${ipfsFile[0].hash}`);
             this.logger.log(`\Cloudflare: ${providers.cloudflare}${ipfsFile[0].hash}`);
-            // this.logger.log(`\nIpfs: ${providers.ipfsOriginal}${ipfsFile[0].hash}`);
             return ipfsFile;
         });
     }
@@ -77,3 +74,4 @@ FileIpfsService = __decorate([
         core_1.BootstrapLogger])
 ], FileIpfsService);
 exports.FileIpfsService = FileIpfsService;
+//# sourceMappingURL=ipfs-file.service.js.map
