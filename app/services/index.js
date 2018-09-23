@@ -9,3 +9,5 @@ __export(require("./ipfs-file/ipfs-file.service"));
 __export(require("./parcel-bundler/parcel-bundler.service"));
 __export(require("./arguments/arguments.service"));
 __export(require("./dts-generator/dts-generator.service"));
+__export(require("./compile/compile.service"));
+__export(require("./tsconfig-generator/tsconfig-generator.service"));

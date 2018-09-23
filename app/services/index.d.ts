@@ -4,3 +4,5 @@ export * from './ipfs-file/ipfs-file.service';
 export * from './parcel-bundler/parcel-bundler.service';
 export * from './arguments/arguments.service';
 export * from './dts-generator/dts-generator.service';
+export * from './compile/compile.service';
+export * from './tsconfig-generator/tsconfig-generator.service';

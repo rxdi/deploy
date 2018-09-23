@@ -14,25 +14,28 @@ const file_service_1 = require("./services/file/file.service");
 const parcel_bundler_service_1 = require("./services/parcel-bundler/parcel-bundler.service");
 const file_user_service_1 = require("./services/file/file-user.service");
 const dts_generator_service_1 = require("./services/dts-generator/dts-generator.service");
+const arguments_service_1 = require("./services/arguments/arguments.service");
+const compile_service_1 = require("./services/compile/compile.service");
+const tsconfig_generator_service_1 = require("./services/tsconfig-generator/tsconfig-generator.service");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     core_1.Module({
         imports: [
-            ipfs_daemon_1.IpfsDaemonModule.forRoot({ type: 'js' }),
-            ipfs_1.IpfsModule.forRoot({
-                init: false,
-                start: true,
-                logging: true
+            ipfs_daemon_1.IpfsDaemonModule.forRoot({
+                type: arguments_service_1.nextOrDefault('--default-ipfs-node', 'js')
             }),
+            ipfs_1.IpfsModule.forRoot()
         ],
         services: [
             ipfs_file_service_1.FileIpfsService,
             file_service_1.FileService,
             parcel_bundler_service_1.ParcelBundlerService,
             file_user_service_1.FileUserService,
-            dts_generator_service_1.TypescriptDefinitionGeneratorService
-        ]
+            dts_generator_service_1.TypescriptDefinitionGeneratorService,
+            tsconfig_generator_service_1.TsConfigGenratorService
+        ],
+        afterPlugins: [compile_service_1.CompileService]
     })
 ], AppModule);
 exports.AppModule = AppModule;

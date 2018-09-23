@@ -19,119 +19,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const file_service_1 = require("./file.service");
-const parcel_bundler_service_1 = require("../parcel-bundler/parcel-bundler.service");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
-const ipfs_file_service_1 = require("../ipfs-file/ipfs-file.service");
-const dts_generator_service_1 = require("../dts-generator/dts-generator.service");
+const env_injection_tokens_1 = require("../../../env.injection.tokens");
 let FileUserService = class FileUserService {
-    constructor(fileService, parcelBundler, ipfsFile, typingsGenerator, logger) {
+    constructor(fileService) {
         this.fileService = fileService;
-        this.parcelBundler = parcelBundler;
-        this.ipfsFile = ipfsFile;
-        this.typingsGenerator = typingsGenerator;
-        this.logger = logger;
-        this.defaultBuildDirecctory = 'build';
-        this.dag_name = 'reactive.json';
-    }
-    getTsConfig(filename) {
-        return `
-{
-    "compilerOptions": {
-        "declaration": true,
-        "module": "commonjs",
-        "target": "es6",
-        "baseUrl": "src",
-        "stripInternal": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "moduleResolution": "node",
-        "outDir": ".",
-        "lib": [
-            "es2017",
-            "es2016",
-            "es2015",
-            "es6",
-            "dom",
-            "esnext.asynciterable"
-        ],
-        "skipLibCheck": true,
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-    },
-    "include": [
-        "."
-    ],
-    "files": [
-        "${filename}.ts"
-    ]
-}`;
-    }
-    completeBuildAndAddToIpfs(folder, file, namespace, message) {
-        let ipfsFile;
-        let ipfsFileMetadata = [{ hash: '', path: '', size: 0, content: '' }];
-        let ipfsTypings;
-        let ipfsModule;
-        let ipfsMessage = [{ hash: '', path: '', size: 0, content: '' }];
-        this.logger.log('Bundling Started!\n');
-        let m;
-        return rxjs_1.from(this.parcelBundler.prepareBundler(folder + '/' + file, { outDir: this.defaultBuildDirecctory }))
-            .pipe(operators_1.tap(() => this.logger.log('Bundling finished!\n')), operators_1.tap(() => this.logger.log(`Adding commit message ${message}...\n`)), operators_1.switchMap(() => this.ipfsFile.addFile(message)), operators_1.tap(res => ipfsMessage = res), operators_1.tap(() => this.logger.log(`Commit message added...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/${file.split('.')[0]}.js`)), operators_1.tap(() => this.logger.log(`Reading bundle ./build/${file.split('.')[0]}.js finished!\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsFile = res), operators_1.tap(() => this.logger.log(`Bundle added to ipfs ./build/${file.split('.')[0]}.js\n`)), 
-        // tap(() => this.logger.log(`Typescript definitions merge started!\n`)),
-        operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsTypings = res), operators_1.tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)), operators_1.switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${this.dag_name}`)), operators_1.switchMap((d) => {
-            const dag = JSON.parse(d);
-            if (dag.module === ipfsFile[0].hash) {
-                throw new Error(`
-                    Module is with the same integrity and will not be uploaded again!
-                    You need to make change to the module so it will be with different integrity!
-                        `);
-            }
-            let iterable = dag.previews || [];
-            m = {
-                name: namespace,
-                typings: ipfsTypings[0].hash,
-                module: ipfsFile[0].hash,
-                metadata: ipfsFileMetadata[0].hash,
-                message: ipfsMessage[0].hash,
-                previews: [...iterable]
-            };
-            return this.ipfsFile.addFile(JSON.stringify(m, null, 4));
-        }), operators_1.tap(res => ipfsModule = res), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.tap(() => {
-            if (m.previews.length >= 20) {
-                m.previews.shift();
-            }
-            m.previews = [...m.previews, ipfsModule[0].hash];
-            this.writeDag(`${folder}/${this.dag_name}`, JSON.stringify(m, null, 4));
-        }), operators_1.switchMap(() => rxjs_1.of({
-            file: ipfsFile,
-            typings: ipfsTypings,
-            module: ipfsModule
-        })));
-    }
-    completeBuildAndAddToIpfs2(namespace = '@gapi/core') {
-        const fileName = 'index';
-        const parcelOptions = { outDir: this.defaultBuildDirecctory };
-        let ipfsFile;
-        return rxjs_1.from(this.writeFile(`
-import { Service } from '@rxdi/core';
-
-@Service()
-export class Pesho {
-    constructor() {
-        console.log('THIS IS PESHO SERVICE');
-    }
-}
-        
-        `, fileName + '.ts', namespace))
-            .pipe(operators_1.switchMap(() => rxjs_1.from(this.writeFile(this.getTsConfig(fileName), 'tsconfig.json', namespace))), operators_1.switchMap(() => rxjs_1.from(this.parcelBundler.prepareBundler(`./build/${namespace}/${fileName}.ts`, parcelOptions))), operators_1.switchMap(() => this.fileService.readFile(`./build/${fileName}.js`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsFile = res), operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, `./build/${namespace}`, './build/index.d.ts'))), operators_1.switchMap(() => rxjs_1.of(ipfsFile)));
     }
     writeFile(file, fileName, namespace) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                this.fileService.ensureDir(`${this.defaultBuildDirecctory}/${namespace}`)
+                this.fileService.ensureDir(`${this.parcelBuildDir}/${namespace}`)
                     .subscribe(() => __awaiter(this, void 0, void 0, function* () {
-                    yield this.fileService.writeFile(`${this.defaultBuildDirecctory}/${namespace}/${fileName}`, file);
+                    yield this.fileService.writeFile(`${this.parcelBuildDir}/${namespace}/${fileName}`, file);
                     resolve(true);
                 }), e => reject(e));
             }));
@@ -146,12 +44,12 @@ export class Pesho {
         });
     }
 };
+__decorate([
+    core_1.Inject(env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR),
+    __metadata("design:type", String)
+], FileUserService.prototype, "parcelBuildDir", void 0);
 FileUserService = __decorate([
     core_1.Service(),
-    __metadata("design:paramtypes", [file_service_1.FileService,
-        parcel_bundler_service_1.ParcelBundlerService,
-        ipfs_file_service_1.FileIpfsService,
-        dts_generator_service_1.TypescriptDefinitionGeneratorService,
-        core_1.BootstrapLogger])
+    __metadata("design:paramtypes", [file_service_1.FileService])
 ], FileUserService);
 exports.FileUserService = FileUserService;
