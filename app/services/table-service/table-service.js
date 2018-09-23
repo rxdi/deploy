@@ -124,15 +124,21 @@ let TableService = class TableService {
             leftPadding: 1
         });
         t.push(["Previews version", "Next version"]);
-        let count = 0;
+        let isNext = false;
+        let previews = [];
+        let next = [];
         previewsVersions.forEach(v => {
-            if (count = 1) {
-                count = 0;
+            if (isNext) {
+                isNext = false;
+                next.push(v);
             }
             else {
-                t.push([previewsVersions[previewsVersions.indexOf(v) - 1], v]);
+                previews.push(v);
+                isNext = true;
             }
-            count++;
+        });
+        previews.forEach((v, index) => {
+            t.push([v, next[index]]);
         });
         t.attrRange({ row: [0, 1] }, {
             align: "center",

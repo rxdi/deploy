@@ -155,9 +155,11 @@ export class CompileService {
                     module: ipfsModule
                 })),
                 tap(() => {
-                    console.log("" + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
                     console.log("" + this.tableService.previewsVersions(m.previews));
+                    console.log("" + this.tableService.previewsNext(m.previews));
                     console.log("" + this.tableService.endInstallCommand(ipfsModule[0].hash));
+                    console.log("" + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
+
                 })
             );
     }
