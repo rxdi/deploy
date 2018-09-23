@@ -59,7 +59,9 @@ let TypescriptDefinitionGeneratorService = class TypescriptDefinitionGeneratorSe
                     '--out',
                     outPath
                 ]);
-                this.child.stdout.on('data', (data) => process.stdout.write(data));
+                this.child.stdout.on('data', (data) => {
+                    process.argv.toString().includes('--silent') ? console.log = () => null : process.stdout.write(data);
+                });
                 this.child.stderr.on('data', (data) => {
                     if (data.toString().includes('Unable to resolve configuration')) {
                         this.logger.log('If you want rxdi-deploy to create tsconfig.json for you pass parameter --tsconfig');

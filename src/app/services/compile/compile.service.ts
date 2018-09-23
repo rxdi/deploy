@@ -157,6 +157,7 @@ export class CompileService {
                 tap(() => {
                     console.log("" + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
                     console.log("" + this.tableService.previewsVersions(m.previews));
+                    console.log("" + this.tableService.endInstallCommand(ipfsModule[0].hash));
                 })
             );
     }
@@ -164,7 +165,7 @@ export class CompileService {
 
     logSuccess(res) {
         // this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
-        this.logger.log(`Module deploy finish ipfs node will shitdown in: ${this.resolutionTime} seconds`);
+        console.log(`Module deploy finish ipfs node will shitdown in: ${this.resolutionTime} seconds`);
     }
 
     completeBuildAndAddToIpfs2(namespace: string = '@gapi/core') {

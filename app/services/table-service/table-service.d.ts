@@ -4,5 +4,6 @@ export declare class TableService {
     private $deploymentStatus;
     createTable(file: IPFSFile[], typings: IPFSFile[], m: IPFSFile[]): any;
     previewsVersions(previewsVersions: string[]): any;
+    endInstallCommand(hash: any): any;
     previewsNext(previewsVersions: string[]): any;
 }

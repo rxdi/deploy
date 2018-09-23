@@ -41,9 +41,18 @@ Where:
   - (-v)- Verbose logging,
   - (--browser)- Build only for `browser` if none defaults to `node`
   - (--tsconfig)- If there is no tsconfig create it
+  - (--minify)- Will tell ParcelJS to minify bundle
+  - (--beat)- Heart beat how many seconds will IPFS Daemon run after success finish build job
+  - (--node-only)- Will start the builder as a IPFS node and will not build file
 
 
-After uploading module to IPFS we need to install it:
+Beat argument is created for better control over process termination.
+Reason this exist is internal mechanism since we ADD file to IPFS and then stop the Daemon no one can serve the file for us.
+So to fix this we need to PING biggest IPFS nodes available at the moment with our new generated HASH.
+Since some of them may be down or the connection may be slow the flow of Pinging content onto IPFS is separated from the main Deploy chain.
+This solution will provide us with stable independent build with correct end result.
+
+After uploading module to IPFS we sure want to install it:
 
 Install global `@rxdi/core` this is our connection with the uploaded package
 
@@ -62,5 +71,5 @@ rxdi i QmWxi1tiVRJfVCTkFD9upaeQoPgG4NzbagxyA1RQCt3X3P
 
 One liner test
 ```bash
-echo "export const rxdi_deploy = 'hello_world_ipfs';" > index.ts && rxdi-deploy ./index.ts @yournamespace "init(): init commit" -v --tsconfig
+echo "export const rxdi_deploy = 'final_test53454';" > index.ts && rxdi-deploy ./index.ts @nonamespace "init(): init commit" -v --tsconfig --minify --beat 6
 ```

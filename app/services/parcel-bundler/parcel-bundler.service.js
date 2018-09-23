@@ -51,7 +51,7 @@ let ParcelBundlerService = class ParcelBundlerService {
                     bundle = compiledBundle;
                 });
                 bundler.on('buildEnd', () => {
-                    process.stdout.write(`Parcel Build finished! Bundle source: ${bundle.name}\n`);
+                    process.argv.toString().includes('--silent') ? console.log = () => null : process.stdout.write(`Parcel Build finished! Bundle source: ${bundle.name}\n`);
                     bundle = null;
                     setTimeout(() => resolve(), 1000);
                 });

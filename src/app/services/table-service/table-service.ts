@@ -13,7 +13,7 @@ export class TableService {
         var t = new Table({
             borderStyle: 3,
             horizontalLine: true,
-            width: [3, "10%", "23%", "5%", "60%"],
+            width: [3, "10%", "10%", "8%", "70%"],
             rightPadding: 0,
             leftPadding: 1
         });
@@ -87,6 +87,35 @@ export class TableService {
         previewsVersions.forEach(v => {
             t.push([v, `https://cloudflare-ipfs.com/ipfs/${v}`]);
         });
+
+        t.attrRange({ row: [0, 1] }, {
+            align: "center",
+            color: "green",
+            bg: "black"
+        });
+
+        t.attrRange({
+            row: [1],
+            column: [1]
+        }, {
+                leftPadding: 5
+            });
+
+        return t;
+    }
+
+    endInstallCommand(hash) {
+        const t = new Table({
+            borderStyle: 3,
+            horizontalLine: true,
+            width: ['50%'],
+            rightPadding: 0,
+            leftPadding: 1
+        });
+
+        t.push(["Install command"]);
+        t.push([`rxdi i ${hash}`]);
+
 
         t.attrRange({ row: [0, 1] }, {
             align: "center",

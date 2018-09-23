@@ -4,6 +4,7 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
+process.argv.toString().includes('--silent') ? console.log = () => null : null;
 const core_1 = require("@rxdi/core");
 const environment_setter_module_1 = require("./environment-setter.module");
 const app_module_1 = require("./app/app.module");
