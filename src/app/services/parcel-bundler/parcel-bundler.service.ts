@@ -35,8 +35,7 @@ export class ParcelBundlerService {
                 bundle = compiledBundle;
             });
             bundler.on('buildEnd', () => {
-                process.stdout.write(`Gapi Application build finished! ${file}\n`);
-                process.stdout.write(`Bundle source: ${bundle.name}`);
+                process.stdout.write(`Parcel Build finished! Bundle source: ${bundle.name}\n`);
                 bundle = null;
                 setTimeout(() => resolve(), 1000);
             });

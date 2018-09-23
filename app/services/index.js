@@ -11,3 +11,4 @@ __export(require("./arguments/arguments.service"));
 __export(require("./dts-generator/dts-generator.service"));
 __export(require("./compile/compile.service"));
 __export(require("./tsconfig-generator/tsconfig-generator.service"));
+__export(require("./table-service/table-service"));

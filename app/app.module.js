@@ -17,6 +17,8 @@ const dts_generator_service_1 = require("./services/dts-generator/dts-generator.
 const arguments_service_1 = require("./services/arguments/arguments.service");
 const compile_service_1 = require("./services/compile/compile.service");
 const tsconfig_generator_service_1 = require("./services/tsconfig-generator/tsconfig-generator.service");
+const table_service_1 = require("./services/table-service/table-service");
+const status_module_1 = require("./status/status.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -25,7 +27,8 @@ AppModule = __decorate([
             ipfs_daemon_1.IpfsDaemonModule.forRoot({
                 type: arguments_service_1.nextOrDefault('--default-ipfs-node', 'js')
             }),
-            ipfs_1.IpfsModule.forRoot()
+            ipfs_1.IpfsModule.forRoot(),
+            status_module_1.StatusModule
         ],
         services: [
             ipfs_file_service_1.FileIpfsService,
@@ -33,7 +36,8 @@ AppModule = __decorate([
             parcel_bundler_service_1.ParcelBundlerService,
             file_user_service_1.FileUserService,
             dts_generator_service_1.TypescriptDefinitionGeneratorService,
-            tsconfig_generator_service_1.TsConfigGenratorService
+            tsconfig_generator_service_1.TsConfigGenratorService,
+            table_service_1.TableService
         ],
         afterPlugins: [compile_service_1.CompileService]
     })

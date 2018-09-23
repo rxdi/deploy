@@ -18,6 +18,10 @@ import { FileIpfsService } from '../ipfs-file/ipfs-file.service';
 import { FileService } from '../file/file.service';
 import { TypescriptDefinitionGeneratorService } from '../dts-generator/dts-generator.service';
 import { TsConfigGenratorService } from '../tsconfig-generator/tsconfig-generator.service';
+import { FILE_DEPLOYMENT_STATUS } from '../../status/status-injection.tokens';
+import { TableService } from '../table-service/table-service';
+
+var Table = require("terminal-table");
 
 @Plugin()
 export class CompileService {
@@ -28,6 +32,7 @@ export class CompileService {
     @Inject(__IPFS_NODE_RESOLUTION_TIME) private resolutionTime: __IPFS_NODE_RESOLUTION_TIME;
     @Inject(__DEPLOYER_OUTPUT_CONFIG_NAME) private outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME;
     @Inject(__NAMESPACE) private namespace: __NAMESPACE;
+    @Inject(FILE_DEPLOYMENT_STATUS) private $file_deployment_status: FILE_DEPLOYMENT_STATUS;
 
     constructor(
         private parcelBundler: ParcelBundlerService,
@@ -36,7 +41,8 @@ export class CompileService {
         private fileService: FileService,
         private fileUserService: FileUserService,
         private typingsGenerator: TypescriptDefinitionGeneratorService,
-        private tsConfigGenerator: TsConfigGenratorService
+        private tsConfigGenerator: TsConfigGenratorService,
+        private tableService: TableService
     ) { }
 
     async register() {
@@ -53,7 +59,6 @@ export class CompileService {
             )
             .subscribe(
                 (counter) => {
-                    this.logger.log(`${counter}`);
                     if (!counter) {
                         process.exit(0);
                     }
@@ -61,7 +66,8 @@ export class CompileService {
                 e => {
                     this.logger.error(e);
                     process.exit(1);
-                });
+                }
+            );
     }
 
     completeBuildAndAddToIpfs(folder: string, file: string, message) {
@@ -72,7 +78,6 @@ export class CompileService {
         let ipfsMessage: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
         this.logger.log('Bundling Started!\n');
         let m;
-        console.log(folder + '/' + file);
         return from(this.parcelBundler.prepareBundler(folder + '/' + file))
             .pipe(
                 tap(() => this.logger.log('Bundling finished!\n')),
@@ -94,46 +99,72 @@ export class CompileService {
                 tap(res => ipfsTypings = res),
                 tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)),
                 switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${this.outputConfigName}`)),
-                switchMap((d: string) => {
+                switchMap(async (d: string) => {
                     const dag = JSON.parse(d);
+                    m = dag;
                     if (dag.module === ipfsFile[0].hash) {
+                        ipfsModule = await this.ipfsFile.addFile(JSON.stringify(dag, null, 4));
+        
                         this.logger.log(`
                     !! Warning !!
                     Module is with the same integrity and will not be uploaded again!
                     You need to make change to the module so it will be with different integrity!
                         `);
+                        this.$file_deployment_status.next({
+                            ...this.$file_deployment_status.getValue(),
+                            file: false,
+                            module: false
+                        })
+                    } else {
+                        let iterable = dag.previews || [];
+                        m = {
+                            name: this.namespace,
+                            typings: ipfsTypings[0].hash,
+                            module: ipfsFile[0].hash,
+                            metadata: ipfsFileMetadata[0].hash,
+                            message: ipfsMessage[0].hash,
+                            previews: [...iterable]
+                        };
+                        ipfsModule = await this.ipfsFile.addFile(JSON.stringify(m, null, 4));
+                        if (m.previews.length >= 20) {
+                            m.previews.shift();
+                        }
+                        m.previews = [...m.previews, ipfsModule[0].hash];
+                        this.fileUserService.writeDag(`${folder}/${this.outputConfigName}`, JSON.stringify(m, null, 4));
+                        return ipfsModule;
                     }
-                    let iterable = dag.previews || [];
-                    m = {
-                        name: this.namespace,
-                        typings: ipfsTypings[0].hash,
-                        module: ipfsFile[0].hash,
-                        metadata: ipfsFileMetadata[0].hash,
-                        message: ipfsMessage[0].hash,
-                        previews: [...iterable]
-                    };
-                    return this.ipfsFile.addFile(JSON.stringify(m, null, 4));
+
+                    if (dag.typings === ipfsTypings[0].hash) {
+                        this.logger.log(`
+                    !! Warning !!
+                    Typings are with the same integrity and will not be uploaded again!
+                    You need to make change to the module so it will be with different integrity!
+                        `);
+                        this.$file_deployment_status.next({
+                            ...this.$file_deployment_status.getValue(),
+                            typings: false
+                        })
+                    }
+                    return of(dag);
+
                 }),
-                tap(res => ipfsModule = res),
                 tap(() => this.logger.log(`Module configuration added to ipfs!\n`)),
-                tap(() => {
-                    if (m.previews.length >= 20) {
-                        m.previews.shift();
-                    }
-                    m.previews = [...m.previews, ipfsModule[0].hash];
-                    this.fileUserService.writeDag(`${folder}/${this.outputConfigName}`, JSON.stringify(m, null, 4));
-                }),
                 switchMap(() => of({
                     file: ipfsFile,
                     typings: ipfsTypings,
                     module: ipfsModule
-                }))
+                })),
+                tap(() => {
+                    console.log("" + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
+                    console.log("" + this.tableService.previewsVersions(m.previews));
+                })
             );
     }
 
+
     logSuccess(res) {
-        this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
-        this.logger.log(`Module deployed to ipfs node will exit in: ${this.resolutionTime} seconds`);
+        // this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
+        this.logger.log(`Module deploy finish ipfs node will shitdown in: ${this.resolutionTime} seconds`);
     }
 
     completeBuildAndAddToIpfs2(namespace: string = '@gapi/core') {

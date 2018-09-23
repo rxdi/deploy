@@ -27,8 +27,11 @@ const ipfs_file_service_1 = require("../ipfs-file/ipfs-file.service");
 const file_service_1 = require("../file/file.service");
 const dts_generator_service_1 = require("../dts-generator/dts-generator.service");
 const tsconfig_generator_service_1 = require("../tsconfig-generator/tsconfig-generator.service");
+const status_injection_tokens_1 = require("../../status/status-injection.tokens");
+const table_service_1 = require("../table-service/table-service");
+var Table = require("terminal-table");
 let CompileService = class CompileService {
-    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator) {
+    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService) {
         this.parcelBundler = parcelBundler;
         this.logger = logger;
         this.ipfsFile = ipfsFile;
@@ -36,10 +39,25 @@ let CompileService = class CompileService {
         this.fileUserService = fileUserService;
         this.typingsGenerator = typingsGenerator;
         this.tsConfigGenerator = tsConfigGenerator;
+        this.tableService = tableService;
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
             this.compile();
+        });
+    }
+    compile() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.completeBuildAndAddToIpfs(this.folder, this.fileName, this.args[2])
+                .pipe(operators_1.tap((r) => this.logSuccess(r)), operators_1.switchMapTo(rxjs_1.interval(1000)), operators_1.take(this.resolutionTime), operators_1.map(v => (this.resolutionTime - 1) - v))
+                .subscribe((counter) => {
+                if (!counter) {
+                    process.exit(0);
+                }
+            }, e => {
+                this.logger.error(e);
+                process.exit(1);
+            });
         });
     }
     completeBuildAndAddToIpfs(folder, file, message) {
@@ -50,59 +68,60 @@ let CompileService = class CompileService {
         let ipfsMessage = [{ hash: '', path: '', size: 0, content: '' }];
         this.logger.log('Bundling Started!\n');
         let m;
-        console.log(folder + '/' + file);
         return rxjs_1.from(this.parcelBundler.prepareBundler(folder + '/' + file))
             .pipe(operators_1.tap(() => this.logger.log('Bundling finished!\n')), operators_1.tap(() => this.logger.log(`Adding commit message ${message}...\n`)), operators_1.switchMap(() => this.ipfsFile.addFile(message)), operators_1.tap(res => ipfsMessage = res), operators_1.tap(() => this.logger.log(`Commit message added...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/${file.split('.')[0]}.js`)), operators_1.tap(() => this.logger.log(`Reading bundle ./build/${file.split('.')[0]}.js finished!\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsFile = res), operators_1.tap(() => this.logger.log(`Bundle added to ipfs ./build/${file.split('.')[0]}.js\n`)), 
         // tap(() => this.logger.log(`Typescript definitions merge started!\n`)),
-        operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(this.namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsTypings = res), operators_1.tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)), operators_1.switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${this.outputConfigName}`)), operators_1.switchMap((d) => {
+        operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(this.namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => ipfsTypings = res), operators_1.tap(() => this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`)), operators_1.switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${this.outputConfigName}`)), operators_1.switchMap((d) => __awaiter(this, void 0, void 0, function* () {
             const dag = JSON.parse(d);
+            m = dag;
             if (dag.module === ipfsFile[0].hash) {
+                ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(dag, null, 4));
                 this.logger.log(`
                     !! Warning !!
                     Module is with the same integrity and will not be uploaded again!
                     You need to make change to the module so it will be with different integrity!
                         `);
+                this.$file_deployment_status.next(Object.assign({}, this.$file_deployment_status.getValue(), { file: false, module: false }));
             }
-            let iterable = dag.previews || [];
-            m = {
-                name: this.namespace,
-                typings: ipfsTypings[0].hash,
-                module: ipfsFile[0].hash,
-                metadata: ipfsFileMetadata[0].hash,
-                message: ipfsMessage[0].hash,
-                previews: [...iterable]
-            };
-            return this.ipfsFile.addFile(JSON.stringify(m, null, 4));
-        }), operators_1.tap(res => ipfsModule = res), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.tap(() => {
-            if (m.previews.length >= 20) {
-                m.previews.shift();
+            else {
+                let iterable = dag.previews || [];
+                m = {
+                    name: this.namespace,
+                    typings: ipfsTypings[0].hash,
+                    module: ipfsFile[0].hash,
+                    metadata: ipfsFileMetadata[0].hash,
+                    message: ipfsMessage[0].hash,
+                    previews: [...iterable]
+                };
+                ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(m, null, 4));
+                if (m.previews.length >= 20) {
+                    m.previews.shift();
+                }
+                m.previews = [...m.previews, ipfsModule[0].hash];
+                this.fileUserService.writeDag(`${folder}/${this.outputConfigName}`, JSON.stringify(m, null, 4));
+                return ipfsModule;
             }
-            m.previews = [...m.previews, ipfsModule[0].hash];
-            this.fileUserService.writeDag(`${folder}/${this.outputConfigName}`, JSON.stringify(m, null, 4));
-        }), operators_1.switchMap(() => rxjs_1.of({
+            if (dag.typings === ipfsTypings[0].hash) {
+                this.logger.log(`
+                    !! Warning !!
+                    Typings are with the same integrity and will not be uploaded again!
+                    You need to make change to the module so it will be with different integrity!
+                        `);
+                this.$file_deployment_status.next(Object.assign({}, this.$file_deployment_status.getValue(), { typings: false }));
+            }
+            return rxjs_1.of(dag);
+        })), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.switchMap(() => rxjs_1.of({
             file: ipfsFile,
             typings: ipfsTypings,
             module: ipfsModule
-        })));
-    }
-    compile() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.completeBuildAndAddToIpfs(this.folder, this.fileName, this.args[2])
-                .pipe(operators_1.tap((r) => this.logSuccess(r)), operators_1.switchMapTo(rxjs_1.interval(1000)), operators_1.take(this.resolutionTime), operators_1.map(v => (this.resolutionTime - 1) - v))
-                .subscribe((counter) => {
-                this.logger.log(`${counter}`);
-                if (!counter) {
-                    process.exit(0);
-                }
-            }, e => {
-                this.logger.error(e);
-                process.exit(1);
-            });
-        });
+        })), operators_1.tap(() => {
+            console.log("" + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
+            console.log("" + this.tableService.previewsVersions(m.previews));
+        }));
     }
     logSuccess(res) {
-        this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
-        this.logger.log(`Module deployed to ipfs node will exit in: ${this.resolutionTime} seconds`);
+        // this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
+        this.logger.log(`Module deploy finish ipfs node will shitdown in: ${this.resolutionTime} seconds`);
     }
     completeBuildAndAddToIpfs2(namespace = '@gapi/core') {
         const fileName = 'index';
@@ -145,6 +164,10 @@ __decorate([
     core_1.Inject(env_injection_tokens_1.__NAMESPACE),
     __metadata("design:type", String)
 ], CompileService.prototype, "namespace", void 0);
+__decorate([
+    core_1.Inject(status_injection_tokens_1.FILE_DEPLOYMENT_STATUS),
+    __metadata("design:type", Object)
+], CompileService.prototype, "$file_deployment_status", void 0);
 CompileService = __decorate([
     core_1.Plugin(),
     __metadata("design:paramtypes", [parcel_bundler_service_1.ParcelBundlerService,
@@ -153,6 +176,7 @@ CompileService = __decorate([
         file_service_1.FileService,
         file_user_service_1.FileUserService,
         dts_generator_service_1.TypescriptDefinitionGeneratorService,
-        tsconfig_generator_service_1.TsConfigGenratorService])
+        tsconfig_generator_service_1.TsConfigGenratorService,
+        table_service_1.TableService])
 ], CompileService);
 exports.CompileService = CompileService;

@@ -49,7 +49,7 @@ export class TypescriptDefinitionGeneratorService {
             this.child.stdout.on('data', (data) => process.stdout.write(data));
             this.child.stderr.on('data', (data) => {
                 if (data.toString().includes('Unable to resolve configuration')) {
-                    console.log('If you want rxdi-deploy to create tsconfig.json for you pass parameter --tsconfig');
+                    this.logger.log('If you want rxdi-deploy to create tsconfig.json for you pass parameter --tsconfig');
                 }
                 reject(process.stdout.write(data));
             });

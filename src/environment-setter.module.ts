@@ -31,7 +31,6 @@ import { FileService } from './app/services/file/file.service';
         {
             provide: __DEPLOYER_ARGUMENTS,
             useFactory: () => {
-                console.log('SEGA', process.argv.slice(2));
                 return process.argv.slice(2);
             }
         },

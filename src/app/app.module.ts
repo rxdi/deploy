@@ -10,13 +10,16 @@ import { TypescriptDefinitionGeneratorService } from './services/dts-generator/d
 import { nextOrDefault } from './services/arguments/arguments.service';
 import { CompileService } from './services/compile/compile.service';
 import { TsConfigGenratorService } from './services/tsconfig-generator/tsconfig-generator.service';
+import { TableService } from './services/table-service/table-service';
+import { StatusModule } from './status/status.module';
 
 @Module({
     imports: [
         IpfsDaemonModule.forRoot({
             type: nextOrDefault('--default-ipfs-node', 'js')
         }),
-        IpfsModule.forRoot()
+        IpfsModule.forRoot(),
+        StatusModule
     ],
     services: [
         FileIpfsService,
@@ -24,7 +27,8 @@ import { TsConfigGenratorService } from './services/tsconfig-generator/tsconfig-
         ParcelBundlerService,
         FileUserService,
         TypescriptDefinitionGeneratorService,
-        TsConfigGenratorService
+        TsConfigGenratorService,
+        TableService
     ],
     afterPlugins: [CompileService]
 })

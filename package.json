@@ -31,6 +31,7 @@
     "@rxdi/dts-merge": "^0.0.280",
     "graphql-request": "^1.8.2",
     "parcel-bundler": "1.9.7",
+    "terminal-table": "0.0.12",
     "typescript": "3.0.3"
   },
   "devDependencies": {

@@ -6,6 +6,7 @@ import { FileIpfsService } from '../ipfs-file/ipfs-file.service';
 import { FileService } from '../file/file.service';
 import { TypescriptDefinitionGeneratorService } from '../dts-generator/dts-generator.service';
 import { TsConfigGenratorService } from '../tsconfig-generator/tsconfig-generator.service';
+import { TableService } from '../table-service/table-service';
 export declare class CompileService {
     private parcelBundler;
     private logger;
@@ -14,16 +15,18 @@ export declare class CompileService {
     private fileUserService;
     private typingsGenerator;
     private tsConfigGenerator;
+    private tableService;
     private args;
     private fileName;
     private folder;
     private resolutionTime;
     private outputConfigName;
     private namespace;
-    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService);
+    private $file_deployment_status;
+    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService);
     register(): Promise<void>;
-    completeBuildAndAddToIpfs(folder: string, file: string, message: any): import("rxjs/internal/Observable").Observable<{}>;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;
+    completeBuildAndAddToIpfs(folder: string, file: string, message: any): import("rxjs/internal/Observable").Observable<{}>;
     logSuccess(res: any): void;
     completeBuildAndAddToIpfs2(namespace?: string): import("rxjs/internal/Observable").Observable<IPFSFile[]>;
 }

@@ -31,7 +31,6 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__DEPLOYER_ARGUMENTS,
                 useFactory: () => {
-                    console.log('SEGA', process.argv.slice(2));
                     return process.argv.slice(2);
                 }
             },
@@ -63,11 +62,6 @@ EnvironemntSetterModule = __decorate([
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
                 useFactory: (args) => args.toString().includes('--tsconfig')
             },
-            // {
-            //     provide: __GENERATE_TS_CONFIG,
-            //     deps: [__DEPLOYER_ARGUMENTS],
-            //     useFactory: (args: __DEPLOYER_ARGUMENTS): __GENERATE_TS_CONFIG => args.toString().includes('--node-only')
-            // },
             {
                 provide: env_injection_tokens_1.__FILE_PATH,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
@@ -131,7 +125,7 @@ EnvironemntSetterModule = __decorate([
                     if (tsConfig) {
                         yield fileService.writeFile(folder + '/tsconfig.json', generator.getTsConfig(fileName.replace('.ts', '')));
                     }
-                    return true;
+                    return tsConfig;
                 })
             }
         ]

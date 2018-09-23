@@ -43,13 +43,15 @@ let ParcelBundlerService = class ParcelBundlerService {
                 const bundler = new Bundler(file, options);
                 let bundle = null;
                 bundler.on('bundled', (compiledBundle) => {
-                    const inter = compiledBundle.entryAsset;
-                    console.log(inter.buildTime, inter.startTime, inter.endTime, inter.bundledSize);
+                    // const inter: {
+                    //     id; name; basename; relativeName; options; encoding; type; processed; contents; ast; generated; hash; parentDeps; dependencies
+                    //     depAssets; parentBundle; bundles; cacheData; startTime; endTime; buildTime; bundledSize; resolver;
+                    // } = compiledBundle.entryAsset;
+                    // console.log(inter.buildTime, inter.startTime, inter.endTime, inter.bundledSize);
                     bundle = compiledBundle;
                 });
                 bundler.on('buildEnd', () => {
-                    process.stdout.write(`Gapi Application build finished! ${file}\n`);
-                    process.stdout.write(`Bundle source: ${bundle.name}`);
+                    process.stdout.write(`Parcel Build finished! Bundle source: ${bundle.name}\n`);
                     bundle = null;
                     setTimeout(() => resolve(), 1000);
                 });
