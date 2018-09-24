@@ -92,7 +92,7 @@ import * as Datastore from 'nedb';
                 if (args[0] && args[0].includes('--file')) {
                     return nextOrDefault('--file', '');
                 }
-                if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/).length) {
+                if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/)) {
                     return './index.ts';
                 }
                 return args[0] || './index.ts';
@@ -124,7 +124,9 @@ import * as Datastore from 'nedb';
         {
             provide: __FILE_EXTENSION,
             deps: [__FILE_PATH],
-            useFactory: (filePath: __FILE_PATH) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i).length ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'ts'
+            useFactory: (filePath: __FILE_PATH) => {
+                return filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i) ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'ts';
+            }
         },
         {
             provide: __IPFS_NODE_RESOLUTION_TIME,

@@ -86,7 +86,7 @@ EnvironemntSetterModule = __decorate([
                     if (args[0] && args[0].includes('--file')) {
                         return arguments_service_1.nextOrDefault('--file', '');
                     }
-                    if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/).length) {
+                    if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/)) {
                         return './index.ts';
                     }
                     return args[0] || './index.ts';
@@ -118,7 +118,9 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__FILE_EXTENSION,
                 deps: [env_injection_tokens_1.__FILE_PATH],
-                useFactory: (filePath) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i).length ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'ts'
+                useFactory: (filePath) => {
+                    return filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i) ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'ts';
+                }
             },
             {
                 provide: env_injection_tokens_1.__IPFS_NODE_RESOLUTION_TIME,
