@@ -24,20 +24,16 @@ const core_1 = require("@rxdi/core");
 const Bundler = require("parcel-bundler");
 const env_injection_tokens_1 = require("../../../env.injection.tokens");
 let ParcelBundlerService = class ParcelBundlerService {
-    constructor(isBrowserBuild, isBuildMinfied, buildOutDir) {
+    constructor(isBrowserBuild, isBuildMinfied, buildOutDir, settings) {
         this.isBrowserBuild = isBrowserBuild;
         this.isBuildMinfied = isBuildMinfied;
         this.buildOutDir = buildOutDir;
+        this.settings = settings;
     }
     prepareBundler(file) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                const options = {
-                    target: this.isBrowserBuild ? 'browser' : 'node',
-                    minify: this.isBuildMinfied,
-                    outDir: this.buildOutDir
-                };
-                console.log(this.buildOutDir);
+                const options = Object.assign({ target: this.isBrowserBuild ? 'browser' : 'node', minify: this.isBuildMinfied, outDir: this.buildOutDir }, this.settings);
                 const bundler = new Bundler(file, options);
                 let bundle = null;
                 bundler.on('bundled', (compiledBundle) => {
@@ -58,7 +54,8 @@ ParcelBundlerService = __decorate([
     __param(0, core_1.Inject(env_injection_tokens_1.__PARCEL_BROWSER_BUILD)),
     __param(1, core_1.Inject(env_injection_tokens_1.__PARCEL_MINIFY)),
     __param(2, core_1.Inject(env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR)),
-    __metadata("design:paramtypes", [Boolean, Boolean, String])
+    __param(3, core_1.Inject(env_injection_tokens_1.__PARCEL_SETTINGS)),
+    __metadata("design:paramtypes", [Boolean, Boolean, String, Object])
 ], ParcelBundlerService);
 exports.ParcelBundlerService = ParcelBundlerService;
 //# sourceMappingURL=parcel-bundler.service.js.map

@@ -8,12 +8,14 @@ import { ParcelBundlerService } from './services/parcel-bundler/parcel-bundler.s
 import { FileUserService } from './services/file/file-user.service';
 import { TypescriptDefinitionGeneratorService } from './services/dts-generator/dts-generator.service';
 import { nextOrDefault } from './services/arguments/arguments.service';
-import { CompilePlugin } from './services/compile/compile.service';
 import { TsConfigGenratorService } from './services/tsconfig-generator/tsconfig-generator.service';
 import { TableService } from './services/table-service/table-service';
 import { StatusModule } from './status/status.module';
 import { BuildHistoryService } from './services/build-history/build-history.service';
 import { ErrorReasonService } from './services/error-reason/error-reason.service';
+import { CompilePlugin } from './plugins/compile/compile.plugin';
+import { TimeService } from './services/time/time.service';
+import { HtmlTemplateBuilder } from './services';
 
 @Module({
     imports: [
@@ -32,7 +34,9 @@ import { ErrorReasonService } from './services/error-reason/error-reason.service
         TsConfigGenratorService,
         TableService,
         BuildHistoryService,
-        ErrorReasonService
+        ErrorReasonService,
+        TimeService,
+        HtmlTemplateBuilder
     ],
     afterPlugins: [CompilePlugin]
 })

@@ -15,12 +15,14 @@ const parcel_bundler_service_1 = require("./services/parcel-bundler/parcel-bundl
 const file_user_service_1 = require("./services/file/file-user.service");
 const dts_generator_service_1 = require("./services/dts-generator/dts-generator.service");
 const arguments_service_1 = require("./services/arguments/arguments.service");
-const compile_service_1 = require("./services/compile/compile.service");
 const tsconfig_generator_service_1 = require("./services/tsconfig-generator/tsconfig-generator.service");
 const table_service_1 = require("./services/table-service/table-service");
 const status_module_1 = require("./status/status.module");
 const build_history_service_1 = require("./services/build-history/build-history.service");
 const error_reason_service_1 = require("./services/error-reason/error-reason.service");
+const compile_plugin_1 = require("./plugins/compile/compile.plugin");
+const time_service_1 = require("./services/time/time.service");
+const services_1 = require("./services");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -41,9 +43,11 @@ AppModule = __decorate([
             tsconfig_generator_service_1.TsConfigGenratorService,
             table_service_1.TableService,
             build_history_service_1.BuildHistoryService,
-            error_reason_service_1.ErrorReasonService
+            error_reason_service_1.ErrorReasonService,
+            time_service_1.TimeService,
+            services_1.HtmlTemplateBuilder
         ],
-        afterPlugins: [compile_service_1.CompilePlugin]
+        afterPlugins: [compile_plugin_1.CompilePlugin]
     })
 ], AppModule);
 exports.AppModule = AppModule;

@@ -7,14 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
-let ErrorReasonService = class ErrorReasonService {
-    moduleIntegrityError(hash) {
-        console.log(`Module is with the same integrity like in the previws version ${hash}`);
-        console.log(`To check this version write down following command rxdi-deploy --find ${hash}`);
-    }
+let HtmlTemplateBuilder = class HtmlTemplateBuilder {
 };
-ErrorReasonService = __decorate([
+HtmlTemplateBuilder = __decorate([
     core_1.Service()
-], ErrorReasonService);
-exports.ErrorReasonService = ErrorReasonService;
-//# sourceMappingURL=error-reason.service.js.map
+], HtmlTemplateBuilder);
+exports.HtmlTemplateBuilder = HtmlTemplateBuilder;
+//# sourceMappingURL=html-template-builder.service.js.map

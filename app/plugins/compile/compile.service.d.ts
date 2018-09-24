@@ -1,16 +1,16 @@
 import { __DEPLOYER_OUTPUT_CONFIG_NAME } from '../../../env.injection.tokens';
 import { BootstrapLogger, PluginInterface } from '@rxdi/core';
-import { FileUserService } from '../file/file-user.service';
+import { FileUserService } from '../../services/file/file-user.service';
 import { IPFSFile } from '@gapi/ipfs';
-import { ParcelBundlerService } from '../parcel-bundler/parcel-bundler.service';
-import { FileIpfsService } from '../ipfs-file/ipfs-file.service';
-import { FileService } from '../file/file.service';
-import { TypescriptDefinitionGeneratorService } from '../dts-generator/dts-generator.service';
-import { TsConfigGenratorService } from '../tsconfig-generator/tsconfig-generator.service';
-import { TableService } from '../table-service/table-service';
-import { BuildHistoryService } from '../build-history/build-history.service';
-import { PreviwsService } from '../previews/previews.service';
-import { ErrorReasonService } from '../error-reason/error-reason.service';
+import { ParcelBundlerService } from '../../services/parcel-bundler/parcel-bundler.service';
+import { FileIpfsService } from '../../services/ipfs-file/ipfs-file.service';
+import { FileService } from '../../services/file/file.service';
+import { TypescriptDefinitionGeneratorService } from '../../services/dts-generator/dts-generator.service';
+import { TsConfigGenratorService } from '../../services/tsconfig-generator/tsconfig-generator.service';
+import { TableService } from '../../services/table-service/table-service';
+import { BuildHistoryService } from '../../services/build-history/build-history.service';
+import { PreviwsService } from '../../services/previews/previews.service';
+import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
 export declare class CompilePlugin implements PluginInterface {
     private parcelBundler;

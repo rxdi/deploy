@@ -8,7 +8,6 @@ process.argv.toString().includes('--silent') ? console.log = () => null : null;
 const core_1 = require("@rxdi/core");
 const environment_setter_module_1 = require("./environment-setter.module");
 const app_module_1 = require("./app/app.module");
-const arguments_service_1 = require("./app/services/arguments/arguments.service");
 core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) ? ({
     logger: {
         logging: true,
@@ -19,7 +18,7 @@ core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.
     }
 }) : ({}), { init: false, initOptions: {
         services: true,
-        pluginsAfter: arguments_service_1.nextOrDefault('--node-only', true, Boolean)
+        pluginsAfter: false
     } }));
 core_1.BootstrapFramework(app_module_1.AppModule, [environment_setter_module_1.EnvironemntSetterModule])
     .subscribe(() => {

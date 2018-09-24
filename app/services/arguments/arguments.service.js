@@ -7,7 +7,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
-exports.nextOrDefault = (i, fb = null, type = (p) => (p)) => process.argv.toString().includes(i) ? type(process.argv[process.argv.indexOf(i) + 1]) : fb;
+exports.nextOrDefault = (i, fb = true, type = (p) => (p)) => {
+    if (process.argv.toString().includes(i)) {
+        const isNextArgumentPresent = process.argv[process.argv.indexOf(i) + 1];
+        if (!isNextArgumentPresent) {
+            return fb;
+        }
+        return type(isNextArgumentPresent);
+    }
+    return fb;
+};
 let ArgumentsService = class ArgumentsService {
     nextOrDefault(i, fallback = null, type = (p) => (p)) {
         return exports.nextOrDefault(i, fallback, type);

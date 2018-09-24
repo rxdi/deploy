@@ -1,7 +1,16 @@
 
 import { Service } from '@rxdi/core';
 
-export const nextOrDefault = (i: string, fb: any = null, type = (p) => (p)) => process.argv.toString().includes(i) ? type(process.argv[process.argv.indexOf(i) + 1]) : fb
+export const nextOrDefault = (i: string, fb: any = true, type = (p) => (p)) => {
+    if (process.argv.toString().includes(i)) {
+        const isNextArgumentPresent = process.argv[process.argv.indexOf(i) + 1];
+        if (!isNextArgumentPresent) {
+            return fb;
+        }
+         return type(isNextArgumentPresent);
+    }
+    return fb;
+}
 
 @Service()
 export class ArgumentsService {

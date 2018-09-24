@@ -4,7 +4,6 @@ process.argv.toString().includes('--silent') ? console.log = () => null : null;
 import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { EnvironemntSetterModule } from './environment-setter.module';
 import { AppModule } from './app/app.module';
-import { nextOrDefault } from './app/services/arguments/arguments.service';
 
 Container.get(ConfigService).setConfig({
     ...(process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) ? ({
@@ -19,7 +18,7 @@ Container.get(ConfigService).setConfig({
     init: false,
     initOptions: {
         services: true,
-        pluginsAfter: nextOrDefault('--node-only', true, Boolean)
+        pluginsAfter: false
     }
 });
 

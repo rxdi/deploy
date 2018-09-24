@@ -1,6 +1,6 @@
 import { Service, Inject } from '@rxdi/core';
 import Bundler = require('parcel-bundler');
-import { __PARCEL_BROWSER_BUILD, __PARCEL_MINIFY, __PARCEL_BUILD_OUT_DIR } from '../../../env.injection.tokens';
+import { __PARCEL_BROWSER_BUILD, __PARCEL_MINIFY, __PARCEL_BUILD_OUT_DIR, __PARCEL_SETTINGS } from '../../../env.injection.tokens';
 
 @Service()
 export class ParcelBundlerService {
@@ -8,7 +8,8 @@ export class ParcelBundlerService {
     constructor(
         @Inject(__PARCEL_BROWSER_BUILD) private isBrowserBuild: __PARCEL_BROWSER_BUILD,
         @Inject(__PARCEL_MINIFY) private isBuildMinfied: __PARCEL_BROWSER_BUILD,
-        @Inject(__PARCEL_BUILD_OUT_DIR) private buildOutDir: __PARCEL_BUILD_OUT_DIR
+        @Inject(__PARCEL_BUILD_OUT_DIR) private buildOutDir: __PARCEL_BUILD_OUT_DIR,
+        @Inject(__PARCEL_SETTINGS) private settings: __PARCEL_SETTINGS
     ) {}
 
     async prepareBundler(file) {
@@ -16,14 +17,11 @@ export class ParcelBundlerService {
             const options = {
                 target: this.isBrowserBuild ? 'browser' : 'node',
                 minify: this.isBuildMinfied,
-                outDir: this.buildOutDir
+                outDir: this.buildOutDir,
+                ...this.settings
             };
-            console.log(this.buildOutDir);
-
             const bundler = new Bundler(file, options);
-
             let bundle = null;
-
             bundler.on('bundled', (compiledBundle) => {
                 // const inter: {
                 //     id; name; basename; relativeName; options; encoding; type; processed; contents; ast; generated; hash; parentDeps; dependencies

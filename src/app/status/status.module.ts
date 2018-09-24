@@ -13,9 +13,18 @@ import { StatusService } from './status.service';
         {
             provide: FILE_DEPLOYMENT_STATUS,
             useValue: new BehaviorSubject(<FILE_DEPLOYMENT_STATUS_INTERFACE>{
-                file: 'SUCCESS',
-                typings: 'SUCCESS',
-                module: 'SUCCESS'
+                file: {
+                    status: 'SUCCESS',
+                    message: 'success'
+                },
+                typings: {
+                    status: 'SUCCESS',
+                    message: 'success'
+                },
+                module: {
+                    status: 'SUCCESS',
+                    message: 'success'
+                }
             })
         }
     ]

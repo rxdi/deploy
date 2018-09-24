@@ -21,18 +21,18 @@ const env_injection_tokens_1 = require("../../../env.injection.tokens");
 const core_1 = require("@rxdi/core");
 const operators_1 = require("rxjs/operators");
 const rxjs_1 = require("rxjs");
-const file_user_service_1 = require("../file/file-user.service");
-const parcel_bundler_service_1 = require("../parcel-bundler/parcel-bundler.service");
-const ipfs_file_service_1 = require("../ipfs-file/ipfs-file.service");
-const file_service_1 = require("../file/file.service");
-const dts_generator_service_1 = require("../dts-generator/dts-generator.service");
-const tsconfig_generator_service_1 = require("../tsconfig-generator/tsconfig-generator.service");
-const table_service_1 = require("../table-service/table-service");
-const build_history_service_1 = require("../build-history/build-history.service");
-const previews_service_1 = require("../previews/previews.service");
-const error_reason_service_1 = require("../error-reason/error-reason.service");
+const file_user_service_1 = require("../../services/file/file-user.service");
+const parcel_bundler_service_1 = require("../../services/parcel-bundler/parcel-bundler.service");
+const ipfs_file_service_1 = require("../../services/ipfs-file/ipfs-file.service");
+const file_service_1 = require("../../services/file/file.service");
+const dts_generator_service_1 = require("../../services/dts-generator/dts-generator.service");
+const tsconfig_generator_service_1 = require("../../services/tsconfig-generator/tsconfig-generator.service");
+const table_service_1 = require("../../services/table-service/table-service");
+const build_history_service_1 = require("../../services/build-history/build-history.service");
+const previews_service_1 = require("../../services/previews/previews.service");
+const error_reason_service_1 = require("../../services/error-reason/error-reason.service");
 const status_service_1 = require("../../status/status.service");
-const arguments_service_1 = require("../arguments/arguments.service");
+const arguments_service_1 = require("../../services/arguments/arguments.service");
 let CompilePlugin = class CompilePlugin {
     constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previwsService, errorReasonService, statusService) {
         this.parcelBundler = parcelBundler;
@@ -73,6 +73,7 @@ let CompilePlugin = class CompilePlugin {
     }
     compile() {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(this.folder, this.fileName, this.commitMessage, this.namespace, this.outputConfigName);
             return this.completeBuildAndAddToIpfs(this.folder, this.fileName, this.commitMessage, this.namespace, this.outputConfigName)
                 .pipe(operators_1.tap((r) => this.logSuccess(r)), operators_1.switchMapTo(rxjs_1.interval(1000)), operators_1.take(this.resolutionTime), operators_1.map(v => (this.resolutionTime - 1) - v))
                 .subscribe((counter) => {
@@ -92,7 +93,7 @@ let CompilePlugin = class CompilePlugin {
         let ipfsModule;
         let ipfsMessage = [{ hash: '', path: '', size: 0, content: '' }];
         this.logger.log('Bundling Started!\n');
-        let m;
+        let currentModule;
         let dag;
         return rxjs_1.from(this.parcelBundler.prepareBundler(folder + '/' + file))
             .pipe(operators_1.tap(() => {
@@ -109,55 +110,30 @@ let CompilePlugin = class CompilePlugin {
             ipfsTypings = res;
             this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`);
         }), operators_1.switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${outputConfigName}`)), operators_1.switchMap((d) => __awaiter(this, void 0, void 0, function* () {
-            dag = JSON.parse(d);
-            m = dag;
-            if (dag.module === ipfsFile[0].hash) {
-                ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(dag, null, 4));
-                this.logger.log(`
-                    !! Warning !!
-                    Module is with the same integrity and will not be uploaded again!
-                    You need to make change to the module so it will be with different integrity!
-                        `);
-                this.statusService.setBuildStatus({
-                    file: 'WARNING',
-                    module: 'WARNING'
-                });
+            try {
+                dag = JSON.parse(d);
             }
-            else {
-                let iterable = dag.previews || [];
-                m = {
-                    name: namespace,
-                    typings: ipfsTypings[0].hash,
-                    module: ipfsFile[0].hash,
-                    date: new Date(),
-                    metadata: ipfsFileMetadata[0].hash,
-                    message: ipfsMessage[0].hash,
-                    previews: [...iterable]
-                };
-                ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(m, null, 4));
-                if (m.previews.length >= 20) {
-                    m.previews.shift();
-                }
-                m.previews = [...m.previews, ipfsModule[0].hash];
-                this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(m, null, 4));
-                return ipfsModule;
+            catch (e) {
+                throw new Error(`Cannot parse ${outputConfigName} from root directory!`);
             }
-            if (dag.typings === ipfsTypings[0].hash) {
-                this.logger.log(`
-                    !! Warning !!
-                    Typings are with the same integrity and will not be uploaded again!
-                    You need to make change to the module so it will be with different integrity!
-                        `);
-                this.statusService.setBuildStatus({
-                    typings: 'WARNING'
-                });
+            currentModule = {
+                name: namespace,
+                typings: ipfsTypings[0].hash,
+                module: ipfsFile[0].hash,
+                date: new Date(),
+                metadata: ipfsFileMetadata[0].hash,
+                message: ipfsMessage[0].hash,
+                previews: [...(dag.previews || [])]
+            };
+            ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(currentModule, null, 4));
+            if (currentModule.previews.length >= 20) {
+                currentModule.previews.shift();
             }
-            return rxjs_1.of(dag);
-        })), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.switchMap(() => rxjs_1.of({
-            file: ipfsFile,
-            typings: ipfsTypings,
-            module: ipfsModule
-        })), operators_1.tap(() => {
+            currentModule.previews = [...currentModule.previews, ipfsModule[0].hash];
+            this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 4));
+            this.integrityCheck(dag, ipfsFile, ipfsTypings);
+            return ipfsModule;
+        })), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.switchMap(() => rxjs_1.combineLatest([
             this.buildHistoryService.insert({
                 status: {
                     file: this.statusService.getBuildStatus().file,
@@ -171,23 +147,68 @@ let CompilePlugin = class CompilePlugin {
                 module: ipfsFile[0].hash,
                 metadata: ipfsFileMetadata[0].hash,
                 message: ipfsMessage[0].hash
-            })
-                .pipe(operators_1.switchMapTo(this.previwsService.insert({
+            }),
+            this.previwsService.insert({
                 name: namespace,
                 hash: ipfsModule[0].hash,
                 date: new Date()
-            })))
-                .subscribe(() => this.logger.log('Module saved to persistant history!'));
-            console.log('' + this.tableService.previewsVersions(m.previews));
-            console.log('' + this.tableService.previewsNext(m.previews));
+            })
+        ])), operators_1.map(() => ({
+            file: ipfsFile,
+            typings: ipfsTypings,
+            module: ipfsModule
+        })), operators_1.tap(() => {
+            this.logger.log('Module saved to persistant history!');
+            if (!ipfsModule) {
+                this.fileNotAddedToIpfs(ipfsModule);
+            }
+            console.log('' + this.tableService.previewsVersions(currentModule.previews));
+            console.log('' + this.tableService.previewsNext(currentModule.previews));
             console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
             console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-            this.showError(ipfsModule[0].hash);
+            this.showError(currentModule.previews[currentModule.previews.length - 1]);
         }));
+    }
+    fileNotAddedToIpfs(file) {
+        console.log(`File not added to ipfs for ${JSON.stringify(file)}`);
+        console.log(`More info can be found executing command: rxdi-deploy --find ${file[0].hash}`);
+    }
+    integrityCheck(dag, file, typings) {
+        const genericIntegrityError = 'Integrity is same like in the previews version!';
+        if (dag.module === file[0].hash) {
+            this.logger.log(`
+        !! Warning !!
+        Module is with the same integrity and will not be uploaded again!
+        You need to make change to the module so it will be with different integrity!
+            `);
+            this.statusService.setBuildStatus({
+                file: {
+                    status: 'WARNING',
+                    message: genericIntegrityError
+                },
+                module: {
+                    status: 'WARNING',
+                    message: genericIntegrityError
+                }
+            });
+        }
+        if (dag.typings === typings[0].hash) {
+            this.logger.log(`
+        !! Warning !!
+        Typings are with the same integrity and will not be uploaded again!
+        You need to make change to the module so it will be with different integrity!
+            `);
+            this.statusService.setBuildStatus({
+                typings: {
+                    status: 'WARNING',
+                    message: genericIntegrityError
+                }
+            });
+        }
     }
     showError(hash) {
         if (Object.keys(this.statusService.getBuildStatus())
-            .filter(k => this.statusService.getBuildStatus()[k] !== 'SUCCESS').length) {
+            .filter(k => this.statusService.getBuildStatus()[k].status !== 'SUCCESS').length) {
             this.errorReasonService.moduleIntegrityError(hash);
         }
     }
@@ -198,7 +219,7 @@ let CompilePlugin = class CompilePlugin {
         }));
     }
     logSuccess(res) {
-        console.log(`Module deploy finish ipfs node will shutdown in: ${this.resolutionTime} seconds`);
+        console.log(`Deploy finish ipfs node will shutdown in: ${this.resolutionTime} seconds`);
     }
     completeBuildAndAddToIpfs2(namespace = '@gapi/core') {
         const fileName = 'index';
@@ -246,7 +267,7 @@ __decorate([
     __metadata("design:type", String)
 ], CompilePlugin.prototype, "extension", void 0);
 CompilePlugin = __decorate([
-    core_1.Plugin({ init: arguments_service_1.nextOrDefault('--node-only', true, (f) => !f) }),
+    core_1.Plugin({ init: arguments_service_1.nextOrDefault('--node-only', true) }),
     __metadata("design:paramtypes", [parcel_bundler_service_1.ParcelBundlerService,
         core_1.BootstrapLogger,
         ipfs_file_service_1.FileIpfsService,
@@ -261,4 +282,4 @@ CompilePlugin = __decorate([
         status_service_1.StatusService])
 ], CompilePlugin);
 exports.CompilePlugin = CompilePlugin;
-//# sourceMappingURL=compile.service.js.map
+//# sourceMappingURL=compile.plugin.js.map

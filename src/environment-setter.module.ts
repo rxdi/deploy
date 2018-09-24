@@ -22,7 +22,8 @@ import {
     __SETTINGS_DATABASE,
     __BUILD_HISTORY_DATABASE,
     __PREVIWS_DATABASE,
-    __COMMIT_MESSAGE
+    __COMMIT_MESSAGE,
+    __CREATE_HTML_PAGE
 } from './env.injection.tokens';
 import { TsConfigGenratorService } from './app/services/tsconfig-generator/tsconfig-generator.service';
 import { FileService } from './app/services/file/file.service';
@@ -51,7 +52,7 @@ import * as Datastore from 'nedb';
                 if (hasArgument) {
                     return hasArgument;
                 }
-                if (args[2] && args[2].includes('--') || args[2] && args[2].includes('-')) {
+                if (args[2] && args[2].includes('--')) {
                     return '';
                 }
                 return args[2] || '';
@@ -91,7 +92,7 @@ import * as Datastore from 'nedb';
                 if (args[0] && args[0].includes('--file')) {
                     return nextOrDefault('--file', '');
                 }
-                if (args[0] && args[0].includes('-') || args[0] && args[0].includes('--')) {
+                if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/).length) {
                     return './index.ts';
                 }
                 return args[0] || './index.ts';
@@ -109,7 +110,7 @@ import * as Datastore from 'nedb';
                 if (args[1] && args[1].includes('--namespace')) {
                     return nextOrDefault('--namespace', '@rxdi');
                 }
-                if (args[1] && args[1].includes('--') || args[1] && args[1].includes('-')) {
+                if (args[1] && args[1].includes('--')) {
                     return '@rxdi';
                 }
                 return args[1] || '@rxdi';
@@ -127,7 +128,7 @@ import * as Datastore from 'nedb';
         },
         {
             provide: __IPFS_NODE_RESOLUTION_TIME,
-            useValue: nextOrDefault('--beat', 10, Number)
+            useValue: nextOrDefault('--beat', 20, Number)
         },
         {
             provide: __DEPLOYER_OUTPUT_CONFIG_NAME,
@@ -145,6 +146,11 @@ import * as Datastore from 'nedb';
             provide: __PROCESSING_TIME_END,
             deps: [ArgumentsService],
             useValue: nextOrDefault('--deployer-config-name', 'reactive.json')
+        },
+        {
+            provide: __CREATE_HTML_PAGE,
+            deps: [ArgumentsService],
+            useValue: nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
         },
         {
             provide: 'init-ts-config-file',

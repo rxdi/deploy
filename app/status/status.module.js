@@ -23,9 +23,18 @@ StatusModule = __decorate([
             {
                 provide: status_injection_tokens_1.FILE_DEPLOYMENT_STATUS,
                 useValue: new rxjs_1.BehaviorSubject({
-                    file: 'SUCCESS',
-                    typings: 'SUCCESS',
-                    module: 'SUCCESS'
+                    file: {
+                        status: 'SUCCESS',
+                        message: 'success'
+                    },
+                    typings: {
+                        status: 'SUCCESS',
+                        message: 'success'
+                    },
+                    module: {
+                        status: 'SUCCESS',
+                        message: 'success'
+                    }
                 })
             }
         ]

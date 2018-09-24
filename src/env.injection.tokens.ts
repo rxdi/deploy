@@ -21,13 +21,14 @@ export type __SETTINGS_DATABASE = Datastore;
 export type __BUILD_HISTORY_DATABASE = Datastore;
 export type __PREVIWS_DATABASE = Datastore;
 export type __COMMIT_MESSAGE = string;
+export type __CREATE_HTML_PAGE = string;
 
 export const __NODE_MODULES = new InjectionToken('local_node_modules');
 export const __DEPLOYER_ARGUMENTS = new InjectionToken('rxdi-deployer-command-arguments');
 export const __PARCEL_BROWSER_BUILD = new InjectionToken<boolean>('rxdi-deployer-parcel-is-browser-build');
 export const __PARCEL_MINIFY = new InjectionToken<boolean>('rxdi-deployer-parcel-minify');
 export const __PARCEL_BUILD_OUT_DIR = new InjectionToken<boolean>('rxdi-deployer-parcel-build-out-dir');
-export const __PARCEL_SETTINGS = new InjectionToken<boolean>('rxdi-deployer-parcel-settings');
+export const __PARCEL_SETTINGS = new InjectionToken('rxdi-deployer-parcel-settings');
 export const __GENERATE_TS_CONFIG = new InjectionToken<boolean>('rxdi-deployer-tsconfig-generate');
 export const __FILE_PATH = new InjectionToken<boolean>('rxdi-deployer-file-path');
 export const __FILE_NAME = new InjectionToken<boolean>('rxdi-deployer-file-name');
@@ -44,6 +45,7 @@ export const __BUILD_HISTORY_DATABASE = new InjectionToken<boolean>('rxdi-deploy
 export const __PREVIWS_DATABASE = new InjectionToken<boolean>('rxdi-deployer-previws-database');
 export const __HOME_DIR = new InjectionToken<boolean>('rxdi-deployer-home-directory');
 export const __COMMIT_MESSAGE = new InjectionToken<boolean>('rxdi-deployer-commit-message');
+export const __CREATE_HTML_PAGE = new InjectionToken<boolean>('rxdi-deployer-commit-message');
 
 export interface __PARCEL_SETTINGS {
     watch?: boolean;

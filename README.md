@@ -33,7 +33,7 @@ echo "export const rxdi_deploy = 'rxdi-deploy-test';" > index.ts
 
 ###### Deploy created file:
 ```bash
-rxdi-deploy ./index.ts @nonamespace "init(): init commit" -v --tsconfig --minify --beat 6
+rxdi-deploy ./index.ts @nonamespace "init(): init commit" -v --tsconfig
 ```
 
 #### After deploy screen:

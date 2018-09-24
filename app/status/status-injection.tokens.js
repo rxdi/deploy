@@ -1,11 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Token_1 = require("@rxdi/core/container/Token");
+class BuildStatus {
+    constructor() {
+        this.status = 'SUCCESS';
+        this.message = '';
+    }
+}
 class FILE_DEPLOYMENT_STATUS_INTERFACE {
     constructor() {
-        this.file = 'SUCCESS';
-        this.typings = 'SUCCESS';
-        this.module = 'SUCCESS';
+        this.file = new BuildStatus();
+        this.typings = new BuildStatus();
+        this.module = new BuildStatus();
     }
 }
 exports.FILE_DEPLOYMENT_STATUS_INTERFACE = FILE_DEPLOYMENT_STATUS_INTERFACE;
