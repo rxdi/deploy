@@ -10,8 +10,8 @@ const core_1 = require("@rxdi/core");
 let ErrorReasonService = class ErrorReasonService {
     moduleIntegrityError(hash) {
         console.log(`Module is with the same integrity like in the previws version ${hash}`);
-        console.log(`To check this version write rxdi-deploy --find ${hash}`);
-        console.log(`Nothing is deployed --find ${hash}`);
+        console.log(`To check this version write down following command rxdi-deploy --find ${hash}`);
+        console.log(`Nothing is deployed!`);
     }
 };
 ErrorReasonService = __decorate([

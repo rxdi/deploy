@@ -236,7 +236,7 @@ export class CompilePlugin {
     }
     logSuccess(res) {
         // this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
-        console.log(`Module deploy finish ipfs node will shitdown in: ${this.resolutionTime} seconds`);
+        console.log(`Module deploy finish ipfs node will shutdown in: ${this.resolutionTime} seconds`);
     }
 
     completeBuildAndAddToIpfs2(namespace: string = '@gapi/core') {

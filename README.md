@@ -4,7 +4,7 @@
 
 > Single command to deploy!
 
-> Version controll based on Hashes
+> Version control based on Hashes
 
 > Typescript and Javascript compatible
 
@@ -24,12 +24,49 @@ npm i @rxdi/deploy -g
 rxdi-deploy ./index.ts @yournamespace "fix(ManyThings): inside core module" -v --tsconfig
 ```
 
+#### Two liner test deploy
+
+###### Create typescript file:
+```bash
+echo "export const rxdi_deploy = 'rxdi-deploy-test';" > index.ts
+```
+
+###### Deploy created file:
+```bash
+rxdi-deploy ./index.ts @nonamespace "init(): init commit" -v --tsconfig --minify --beat 6
+```
+
+#### After deploy screen:
+
+![rxdi-package-system](https://cloudflare-ipfs.com/ipfs/QmQaUMabwM49XtzMzCBF8EPiS3QqFsXcUjtMBKXz4HSrgo)
+
+
+#### After deploy screen with warnings:
+![rxdi-package-system](https://cloudflare-ipfs.com/ipfs/QmSnfFEQdtUV3HdbxByRTMRr9y8QLHJF7mwqmaiamoLLJf)
+
+#### Installing deployed module
+###### Install global `@rxdi/core` this is our connection with the uploaded package
+
+```bash
+npm install -g @rxdi/core
+```
+
+##### Install module
+
+```bash
+rxdi install `ipfs-hash`
+```
+
+```bash
+rxdi i QmWxi1tiVRJfVCTkFD9upaeQoPgG4NzbagxyA1RQCt3X3P
+```
+
+
+#### Explanation
 
 ```bash
 rxdi-deploy `main-file` `namespace` `message` `...arguments`
 ```
-
-Where:
 
 `main-file`: This is the main bundle file
 
@@ -52,35 +89,16 @@ So to fix this we need to PING biggest IPFS nodes available at the moment with o
 Since some of them may be down or the connection may be slow the flow of Pinging content onto IPFS is separated from the main Deploy chain.
 This solution will provide us with stable independent build with correct end result.
 
-After uploading module to IPFS we sure want to install it:
-
-Install global `@rxdi/core` this is our connection with the uploaded package
-
-```bash
-npm install -g @rxdi/core
-```
-
-```bash
-rxdi install `ipfs-hash`
-```
-
-```bash
-rxdi i QmWxi1tiVRJfVCTkFD9upaeQoPgG4NzbagxyA1RQCt3X3P
-```
 
 
-One liner test
-```bash
-echo "export const rxdi_deploy = 'final_test53454';" > index.ts && rxdi-deploy ./index.ts @nonamespace "init(): init commit" -v --tsconfig --minify --beat 6
-```
 
-Adding other file than js
+#### Adding other file than `.ts` or `.js`
 
 ```bash
 rxdi-deploy P1010094.jpg
 ```
-
-If the file is bigger put `--beat 30` number is equivalent to seconds
+###### If the file is bigger put `--beat 30` number is equivalent to seconds
+###### This will ensure sucessfuly distributed file across main nodes
 
 ```bash
 rxdi-deploy P1010094.jpg --beat 30
