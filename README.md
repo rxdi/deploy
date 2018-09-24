@@ -41,12 +41,12 @@ Where:
   - (-v)- Verbose logging,
   - (--browser)- Build only for `browser` if none defaults to `node`
   - (--tsconfig)- If there is no tsconfig create it
-  - (--minify)- Will tell ParcelJS to minify bundle
+  - (--unminify)- Will tell ParcelJS to unminify bundle by default minify is set to true (Planet care)
   - (--beat)- Heart beat how many seconds will IPFS Daemon run after success finish build job
   - (--node-only)- Will start the builder as a IPFS node and will not build file
 
-
-Beat argument is created for better control over process termination.
+`unminify` - Reason that we don't have `minify` option and by `default` rxdi-deploy `minify` every bundle is that we care about Nature and for every deployed IPFS file even for testing will cost in the future many environmental changes for maintaining much larger space than we actualy can use.
+`beat` argument is created for better control over process termination.
 Reason this exist is internal mechanism since we ADD file to IPFS and then stop the Daemon no one can serve the file for us.
 So to fix this we need to PING biggest IPFS nodes available at the moment with our new generated HASH.
 Since some of them may be down or the connection may be slow the flow of Pinging content onto IPFS is separated from the main Deploy chain.

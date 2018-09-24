@@ -32,6 +32,12 @@ let FileIpfsService = class FileIpfsService {
         this.pingService = pingService;
         this.logger = logger;
         this.nodeInfo = this.ipfsDaemonNodeInfo.info;
+        this.providers = {
+            infura: 'https://ipfs.infura.io/ipfs/',
+            cloudflare: 'https://cloudflare-ipfs.com/ipfs/',
+            ipfsOriginal: 'https://ipfs.io/ipfs/',
+            thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`
+        };
     }
     addFile(file) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -40,13 +46,7 @@ let FileIpfsService = class FileIpfsService {
             content.push(null);
             const ipfsFile = yield this.ipfs.files.add([{ content }]);
             this.pingService.ping(ipfsFile[0].hash).subscribe();
-            const providers = {
-                infura: 'https://ipfs.infura.io/ipfs/',
-                cloudflare: 'https://cloudflare-ipfs.com/ipfs/',
-                ipfsOriginal: 'https://ipfs.io/ipfs/',
-                thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`
-            };
-            this.logger.log(`\Cloudflare: ${providers.cloudflare}${ipfsFile[0].hash}`);
+            this.logger.log(`\Cloudflare: ${this.providers.cloudflare}${ipfsFile[0].hash}`);
             return ipfsFile;
         });
     }
@@ -63,6 +63,13 @@ let FileIpfsService = class FileIpfsService {
     getIpfsFile(hash) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.ipfs.files.get(hash);
+        });
+    }
+    addRawFile(content) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ipfsFile = yield this.ipfs.files.add([{ content }]);
+            this.pingService.ping(ipfsFile[0].hash).subscribe();
+            return ipfsFile;
         });
     }
 };

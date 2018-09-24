@@ -42,6 +42,10 @@ EnvironemntSetterModule = __decorate([
                 provide: env_injection_tokens_1.__COMMIT_MESSAGE,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
                 useFactory: (args) => {
+                    const hasArgument = arguments_service_1.nextOrDefault('--message', false);
+                    if (hasArgument) {
+                        return hasArgument;
+                    }
                     if (args[2] && args[2].includes('--') || args[2] && args[2].includes('-')) {
                         return '';
                     }
@@ -56,7 +60,7 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__PARCEL_MINIFY,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => args.toString().includes('--minify')
+                useFactory: (args) => !args.toString().includes('--unminify')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR,
@@ -78,7 +82,15 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__FILE_PATH,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => args[0] || 'index.ts'
+                useFactory: (args) => {
+                    if (args[0] && args[0].includes('--file')) {
+                        return arguments_service_1.nextOrDefault('--file', '');
+                    }
+                    if (args[0] && args[0].includes('-') || args[0] && args[0].includes('--')) {
+                        return './index.ts';
+                    }
+                    return args[0] || './index.ts';
+                }
             },
             {
                 provide: env_injection_tokens_1.__FILE_NAME,
@@ -88,7 +100,15 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__NAMESPACE,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => args[1] || '@default'
+                useFactory: (args) => {
+                    if (args[1] && args[1].includes('--namespace')) {
+                        return arguments_service_1.nextOrDefault('--namespace', '@rxdi');
+                    }
+                    if (args[1] && args[1].includes('--') || args[1] && args[1].includes('-')) {
+                        return '@rxdi';
+                    }
+                    return args[1] || '@rxdi';
+                }
             },
             {
                 provide: env_injection_tokens_1.__FOLDER,
@@ -98,7 +118,7 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__FILE_EXTENSION,
                 deps: [env_injection_tokens_1.__FILE_PATH],
-                useFactory: (filePath) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i) ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'index.ts'
+                useFactory: (filePath) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i).length ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'ts'
             },
             {
                 provide: env_injection_tokens_1.__IPFS_NODE_RESOLUTION_TIME,

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { FileService as RxdiFileService, BootstrapLogger } from '@rxdi/core';
 export declare class FileService {
     private fileService;
@@ -11,4 +12,5 @@ export declare class FileService {
     private readFilePromisify;
     readFilePromisifyFallback(file: string): Promise<{}>;
     private writeFilePromisify;
+    readFileRaw(file: string): Promise<Buffer>;
 }

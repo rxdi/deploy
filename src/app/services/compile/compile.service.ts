@@ -5,7 +5,8 @@ import {
     __DEPLOYER_OUTPUT_CONFIG_NAME,
     __NAMESPACE,
     HistoryModel,
-    __COMMIT_MESSAGE
+    __COMMIT_MESSAGE,
+    __FILE_EXTENSION
 } from '../../../env.injection.tokens';
 import { Plugin, Inject, BootstrapLogger } from '@rxdi/core';
 import { tap, switchMapTo, take, map, switchMap } from 'rxjs/operators';
@@ -21,6 +22,7 @@ import { FILE_DEPLOYMENT_STATUS } from '../../status/status-injection.tokens';
 import { TableService } from '../table-service/table-service';
 import { BuildHistoryService } from '../build-history/build-history.service';
 import { PreviwsService } from '../previews/previews.service';
+import { ErrorReasonService } from '../error-reason/error-reason.service';
 
 @Plugin()
 export class CompilePlugin {
@@ -32,6 +34,7 @@ export class CompilePlugin {
     @Inject(__NAMESPACE) private namespace: __NAMESPACE;
     @Inject(FILE_DEPLOYMENT_STATUS) private $deploymentStatus: FILE_DEPLOYMENT_STATUS;
     @Inject(__COMMIT_MESSAGE) private commitMessage: __COMMIT_MESSAGE;
+    @Inject(__FILE_EXTENSION) private extension: __FILE_EXTENSION;
 
     constructor(
         private parcelBundler: ParcelBundlerService,
@@ -44,12 +47,11 @@ export class CompilePlugin {
         private tableService: TableService,
         private buildHistoryService: BuildHistoryService,
         private previwsService: PreviwsService,
-    ) {
-        console.log('INIT');
-    }
+        private errorReasonService: ErrorReasonService
+    ) {}
 
     async register() {
-        this.compile();
+       ['.ts', '.js'].filter(e => e === this.extension).length ? await this.compile() : await this.writeOtherFile(`${this.folder}${this.fileName}`).toPromise();
     }
 
     async compile() {
@@ -178,19 +180,28 @@ export class CompilePlugin {
                         metadata: ipfsFileMetadata[0].hash,
                         message: ipfsMessage[0].hash
                     })
-                    .pipe(
-                        switchMapTo(this.previwsService.insert({
-                            name: namespace,
-                            hash: ipfsModule[0].hash,
-                            date: new Date()
-                        }))
-                    )
-                    .subscribe(() => this.logger.log('Module saved to persistant history!'));
-
+                        .pipe(
+                            switchMapTo(this.previwsService.insert({
+                                name: namespace,
+                                hash: ipfsModule[0].hash,
+                                date: new Date()
+                            }))
+                        )
+                        .subscribe(() => this.logger.log('Module saved to persistant history!'));
+                    this.errorReasonService.moduleIntegrityError(ipfsModule[0].hash);
                 })
             );
     }
-
+    writeOtherFile(file) {
+        return from(this.fileService.readFileRaw(file))
+            .pipe(
+                switchMap(content => this.ipfsFile.addRawFile(content)),
+                tap(c => {
+                    console.log('' + this.tableService.fileUploadStatus(c));
+                    process.exit();
+                })
+            );
+    }
     logSuccess(res) {
         // this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
         console.log(`Module deploy finish ipfs node will shitdown in: ${this.resolutionTime} seconds`);

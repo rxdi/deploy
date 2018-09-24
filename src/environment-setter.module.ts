@@ -47,6 +47,10 @@ import * as Datastore from 'nedb';
             provide: __COMMIT_MESSAGE,
             deps: [__DEPLOYER_ARGUMENTS],
             useFactory: (args: __DEPLOYER_ARGUMENTS) => {
+                const hasArgument = nextOrDefault('--message', false);
+                if (hasArgument) {
+                    return hasArgument;
+                }
                 if (args[2] && args[2].includes('--') || args[2] && args[2].includes('-')) {
                     return '';
                 }
@@ -61,7 +65,7 @@ import * as Datastore from 'nedb';
         {
             provide: __PARCEL_MINIFY,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => args.toString().includes('--minify')
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => !args.toString().includes('--unminify')
         },
         {
             provide: __PARCEL_BUILD_OUT_DIR,
@@ -83,7 +87,15 @@ import * as Datastore from 'nedb';
         {
             provide: __FILE_PATH,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => args[0] || 'index.ts'
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => {
+                if (args[0] && args[0].includes('--file')) {
+                    return nextOrDefault('--file', '');
+                }
+                if (args[0] && args[0].includes('-') || args[0] && args[0].includes('--')) {
+                    return './index.ts';
+                }
+                return args[0] || './index.ts';
+             }
         },
         {
             provide: __FILE_NAME,
@@ -93,7 +105,15 @@ import * as Datastore from 'nedb';
         {
             provide: __NAMESPACE,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => args[1] || '@default'
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => {
+                if (args[1] && args[1].includes('--namespace')) {
+                    return nextOrDefault('--namespace', '@rxdi');
+                }
+                if (args[1] && args[1].includes('--') || args[1] && args[1].includes('-')) {
+                    return '@rxdi';
+                }
+                return args[1] || '@rxdi';
+            }
         },
         {
             provide: __FOLDER,
@@ -103,7 +123,7 @@ import * as Datastore from 'nedb';
         {
             provide: __FILE_EXTENSION,
             deps: [__FILE_PATH],
-            useFactory: (filePath) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i) ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'index.ts'
+            useFactory: (filePath: __FILE_PATH) => filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i).length ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'ts'
         },
         {
             provide: __IPFS_NODE_RESOLUTION_TIME,

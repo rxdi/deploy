@@ -31,8 +31,9 @@ const status_injection_tokens_1 = require("../../status/status-injection.tokens"
 const table_service_1 = require("../table-service/table-service");
 const build_history_service_1 = require("../build-history/build-history.service");
 const previews_service_1 = require("../previews/previews.service");
+const error_reason_service_1 = require("../error-reason/error-reason.service");
 let CompilePlugin = class CompilePlugin {
-    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previwsService) {
+    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previwsService, errorReasonService) {
         this.parcelBundler = parcelBundler;
         this.logger = logger;
         this.ipfsFile = ipfsFile;
@@ -43,11 +44,11 @@ let CompilePlugin = class CompilePlugin {
         this.tableService = tableService;
         this.buildHistoryService = buildHistoryService;
         this.previwsService = previwsService;
-        console.log('INIT');
+        this.errorReasonService = errorReasonService;
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.compile();
+            ['.ts', '.js'].filter(e => e === this.extension).length ? yield this.compile() : yield this.writeOtherFile(`${this.folder}${this.fileName}`).toPromise();
         });
     }
     compile() {
@@ -143,6 +144,14 @@ let CompilePlugin = class CompilePlugin {
                 date: new Date()
             })))
                 .subscribe(() => this.logger.log('Module saved to persistant history!'));
+            this.errorReasonService.moduleIntegrityError(ipfsModule[0].hash);
+        }));
+    }
+    writeOtherFile(file) {
+        return rxjs_1.from(this.fileService.readFileRaw(file))
+            .pipe(operators_1.switchMap(content => this.ipfsFile.addRawFile(content)), operators_1.tap(c => {
+            console.log('' + this.tableService.fileUploadStatus(c));
+            process.exit();
         }));
     }
     logSuccess(res) {
@@ -193,6 +202,10 @@ __decorate([
     core_1.Inject(env_injection_tokens_1.__COMMIT_MESSAGE),
     __metadata("design:type", String)
 ], CompilePlugin.prototype, "commitMessage", void 0);
+__decorate([
+    core_1.Inject(env_injection_tokens_1.__FILE_EXTENSION),
+    __metadata("design:type", String)
+], CompilePlugin.prototype, "extension", void 0);
 CompilePlugin = __decorate([
     core_1.Plugin(),
     __metadata("design:paramtypes", [parcel_bundler_service_1.ParcelBundlerService,
@@ -204,7 +217,8 @@ CompilePlugin = __decorate([
         tsconfig_generator_service_1.TsConfigGenratorService,
         table_service_1.TableService,
         build_history_service_1.BuildHistoryService,
-        previews_service_1.PreviwsService])
+        previews_service_1.PreviwsService,
+        error_reason_service_1.ErrorReasonService])
 ], CompilePlugin);
 exports.CompilePlugin = CompilePlugin;
 //# sourceMappingURL=compile.service.js.map

@@ -11,8 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const status_injection_tokens_1 = require("../../status/status-injection.tokens");
+const ipfs_file_service_1 = require("../ipfs-file/ipfs-file.service");
 var Table = require("terminal-table");
 let TableService = class TableService {
+    constructor(fileIpfsService) {
+        this.fileIpfsService = fileIpfsService;
+    }
     createTable(file, typings, m) {
         var t = new Table({
             borderStyle: 3,
@@ -25,6 +29,7 @@ let TableService = class TableService {
         const isTypingsDeployValid = this.$deploymentStatus.getValue().typings;
         const isModuleDeployValid = this.$deploymentStatus.getValue().module;
         const statuses = {
+            warning: 'WARNING',
             failed: 'FAILED',
             success: 'SUCCESS'
         };
@@ -179,13 +184,38 @@ let TableService = class TableService {
         });
         return t;
     }
+    fileUploadStatus(file) {
+        const t = new Table({
+            borderStyle: 3,
+            horizontalLine: true,
+            width: ['100%'],
+            rightPadding: 0,
+            leftPadding: 1
+        });
+        t.push(["File upload status"]);
+        t.push([`\File size: ${file[0].size} bytes`]);
+        t.push([`\File added to IPFS: ${this.fileIpfsService.providers.cloudflare}${file[0].hash}`]);
+        t.attrRange({ row: [0, 1] }, {
+            align: "center",
+            color: "green",
+            bg: "black"
+        });
+        t.attrRange({
+            row: [1],
+            column: [1]
+        }, {
+            leftPadding: 5
+        });
+        return t;
+    }
 };
 __decorate([
     core_1.Inject(status_injection_tokens_1.FILE_DEPLOYMENT_STATUS),
     __metadata("design:type", Object)
 ], TableService.prototype, "$deploymentStatus", void 0);
 TableService = __decorate([
-    core_1.Service()
+    core_1.Service(),
+    __metadata("design:paramtypes", [ipfs_file_service_1.FileIpfsService])
 ], TableService);
 exports.TableService = TableService;
 //# sourceMappingURL=table-service.js.map

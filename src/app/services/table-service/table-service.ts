@@ -3,12 +3,16 @@ import { Service, Inject } from '@rxdi/core';
 import { IPFSFile } from '@gapi/ipfs';
 import { FILE_DEPLOYMENT_STATUS } from '../../status/status-injection.tokens';
 import { HistoryModel } from 'env.injection.tokens';
+import { FileIpfsService } from '../ipfs-file/ipfs-file.service';
 var Table = require("terminal-table");
 
 @Service()
 export class TableService {
-    table;
     @Inject(FILE_DEPLOYMENT_STATUS) private $deploymentStatus: FILE_DEPLOYMENT_STATUS;
+
+    constructor(
+        private fileIpfsService: FileIpfsService
+    ) {}
 
     createTable(file: IPFSFile[], typings: IPFSFile[], m: IPFSFile[]) {
         var t = new Table({
@@ -22,9 +26,11 @@ export class TableService {
         const isTypingsDeployValid = this.$deploymentStatus.getValue().typings;
         const isModuleDeployValid = this.$deploymentStatus.getValue().module;
         const statuses = {
+            warning: 'WARNING',
             failed: 'FAILED',
             success: 'SUCCESS'
         };
+
         t.push(["", "Deploy status", "File Type", "Size", "Gateway"]);
         t.push([isFileDeployValid ? "✔" : "✘", isFileDeployValid ? statuses.success : statuses.failed, "Bundle", `${file[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${file[0].hash}`]);
         t.push([isTypingsDeployValid ? "✔" : "✘", isTypingsDeployValid ? statuses.success : statuses.failed, "Typings", `${typings[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${typings[0].hash}`]);
@@ -207,5 +213,36 @@ export class TableService {
 
         return t;
     }
+
+
+    fileUploadStatus(file: IPFSFile[]) {
+        const t = new Table({
+            borderStyle: 3,
+            horizontalLine: true,
+            width: ['100%'],
+            rightPadding: 0,
+            leftPadding: 1
+        });
+
+        t.push(["File upload status"]);
+        t.push([`\File size: ${file[0].size} bytes`]);
+        t.push([`\File added to IPFS: ${this.fileIpfsService.providers.cloudflare}${file[0].hash}`]);
+
+        t.attrRange({ row: [0, 1] }, {
+            align: "center",
+            color: "green",
+            bg: "black"
+        });
+
+        t.attrRange({
+            row: [1],
+            column: [1]
+        }, {
+                leftPadding: 5
+            });
+
+        return t;
+    }
+
 
 }

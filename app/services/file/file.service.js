@@ -84,6 +84,16 @@ let FileService = class FileService {
             });
         });
     }
+    readFileRaw(file) {
+        return new Promise((resolve, reject) => {
+            fs_1.readFile(file, (err, data) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(data);
+            });
+        });
+    }
 };
 FileService = __decorate([
     core_1.Service(),

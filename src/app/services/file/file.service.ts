@@ -71,4 +71,15 @@ export class FileService {
         });
     }
 
+    readFileRaw(file: string): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            readFile(file, (err, data) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(data);
+            });
+        });
+    }
+
 }

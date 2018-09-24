@@ -10,6 +10,7 @@ import { TsConfigGenratorService } from '../tsconfig-generator/tsconfig-generato
 import { TableService } from '../table-service/table-service';
 import { BuildHistoryService } from '../build-history/build-history.service';
 import { PreviwsService } from '../previews/previews.service';
+import { ErrorReasonService } from '../error-reason/error-reason.service';
 export declare class CompilePlugin {
     private parcelBundler;
     private logger;
@@ -21,6 +22,7 @@ export declare class CompilePlugin {
     private tableService;
     private buildHistoryService;
     private previwsService;
+    private errorReasonService;
     private fileName;
     private folder;
     private resolutionTime;
@@ -28,10 +30,12 @@ export declare class CompilePlugin {
     private namespace;
     private $deploymentStatus;
     private commitMessage;
-    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previwsService: PreviwsService);
+    private extension;
+    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previwsService: PreviwsService, errorReasonService: ErrorReasonService);
     register(): Promise<void>;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;
     completeBuildAndAddToIpfs(folder: string, file: string, message: any, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME): import("rxjs/internal/Observable").Observable<{}>;
+    writeOtherFile(file: any): import("rxjs/internal/Observable").Observable<IPFSFile[]>;
     logSuccess(res: any): void;
     completeBuildAndAddToIpfs2(namespace?: string): import("rxjs/internal/Observable").Observable<IPFSFile[]>;
 }
