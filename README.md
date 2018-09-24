@@ -73,3 +73,15 @@ One liner test
 ```bash
 echo "export const rxdi_deploy = 'final_test53454';" > index.ts && rxdi-deploy ./index.ts @nonamespace "init(): init commit" -v --tsconfig --minify --beat 6
 ```
+
+Adding other file than js
+
+```bash
+rxdi-deploy P1010094.jpg
+```
+
+If the file is bigger put `--beat 30` number is equivalent to seconds
+
+```bash
+rxdi-deploy P1010094.jpg --beat 30
+```

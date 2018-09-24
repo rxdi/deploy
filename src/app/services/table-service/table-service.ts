@@ -12,7 +12,26 @@ export class TableService {
 
     constructor(
         private fileIpfsService: FileIpfsService
-    ) {}
+    ) { }
+
+    createGenericTableStatus(ModuleStatus) {
+        let Icon, Color;
+
+        if (ModuleStatus === 'WARNING') {
+            Icon = '⚠';
+            Color = 'yellow';
+        }
+        if (ModuleStatus === 'FAILED') {
+            Icon = '✘';
+            Color = 'red';
+        }
+
+        if (ModuleStatus === 'SUCCESS') {
+            Icon = '✔';
+            Color = 'green';
+        }
+        return { Icon, Color };
+    }
 
     createTable(file: IPFSFile[], typings: IPFSFile[], m: IPFSFile[]) {
         var t = new Table({
@@ -22,19 +41,19 @@ export class TableService {
             rightPadding: 0,
             leftPadding: 1
         });
-        const isFileDeployValid = this.$deploymentStatus.getValue().file;
-        const isTypingsDeployValid = this.$deploymentStatus.getValue().typings;
-        const isModuleDeployValid = this.$deploymentStatus.getValue().module;
-        const statuses = {
-            warning: 'WARNING',
-            failed: 'FAILED',
-            success: 'SUCCESS'
-        };
+
+
+        let FileStatus = this.$deploymentStatus.getValue().file;
+        let TypingsStatus = this.$deploymentStatus.getValue().typings;
+        let ModuleStatus = this.$deploymentStatus.getValue().module;
+        const statusFile = this.createGenericTableStatus(FileStatus);
+        const statusTypings = this.createGenericTableStatus(TypingsStatus);
+        const statusModule = this.createGenericTableStatus(ModuleStatus);
 
         t.push(["", "Deploy status", "File Type", "Size", "Gateway"]);
-        t.push([isFileDeployValid ? "✔" : "✘", isFileDeployValid ? statuses.success : statuses.failed, "Bundle", `${file[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${file[0].hash}`]);
-        t.push([isTypingsDeployValid ? "✔" : "✘", isTypingsDeployValid ? statuses.success : statuses.failed, "Typings", `${typings[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${typings[0].hash}`]);
-        t.push([isModuleDeployValid ? "✔" : "✘", isModuleDeployValid ? statuses.success : statuses.failed, "Module", `${m[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${m[0].hash}`]);
+        t.push([statusFile.Icon, FileStatus, "Bundle", `${file[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${file[0].hash}`]);
+        t.push([statusTypings.Icon, TypingsStatus, "Typings", `${typings[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${typings[0].hash}`]);
+        t.push([statusModule.Icon, ModuleStatus, "Module", `${m[0].size} bytes`, `https://cloudflare-ipfs.com/ipfs/${m[0].hash}`]);
 
         t.attrRange({ row: [0, 1] }, {
             align: "center",
@@ -50,26 +69,15 @@ export class TableService {
         t.attrRange({ column: [0, 1], row: [0, 2] }, {
             color: "green"
         });
-
-        if (!isFileDeployValid) {
-            t.attrRange({ column: [0, 2], row: [0, 2] }, {
-                color: "red"
-            });
-        }
-
-        if (!isTypingsDeployValid) {
-            t.attrRange({ column: [0, 2], row: [2, 3] }, {
-                color: "red"
-            });
-        }
-
-        if (!isModuleDeployValid) {
-            t.attrRange({ column: [0, 2], row: [3, 4] }, {
-                color: "red"
-            });
-        }
-
-
+        t.attrRange({ column: [0, 2], row: [0, 2] }, {
+            color: statusFile.Color
+        });
+        t.attrRange({ column: [0, 2], row: [2, 3] }, {
+            color: statusTypings.Color
+        });
+        t.attrRange({ column: [0, 2], row: [3, 4] }, {
+            color: statusModule.Color
+        });
         t.attrRange({
             row: [1],
             column: [1]
@@ -226,7 +234,7 @@ export class TableService {
 
         t.push(["File upload status"]);
         t.push([`\File size: ${file[0].size} bytes`]);
-        t.push([`\File added to IPFS: ${this.fileIpfsService.providers.cloudflare}${file[0].hash}`]);
+        t.push([`\IPFS address: ${this.fileIpfsService.providers.cloudflare}${file[0].hash}`]);
 
         t.attrRange({ row: [0, 1] }, {
             align: "center",

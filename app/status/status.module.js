@@ -9,11 +9,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const rxjs_1 = require("rxjs");
 const status_injection_tokens_1 = require("./status-injection.tokens");
+const status_service_1 = require("./status.service");
 let StatusModule = class StatusModule {
 };
 StatusModule = __decorate([
     core_1.Module({
         services: [
+            status_service_1.StatusService,
             {
                 provide: status_injection_tokens_1.START,
                 useValue: new rxjs_1.BehaviorSubject(true)
@@ -21,9 +23,9 @@ StatusModule = __decorate([
             {
                 provide: status_injection_tokens_1.FILE_DEPLOYMENT_STATUS,
                 useValue: new rxjs_1.BehaviorSubject({
-                    file: true,
-                    typings: true,
-                    module: true
+                    file: 'SUCCESS',
+                    typings: 'SUCCESS',
+                    module: 'SUCCESS'
                 })
             }
         ]

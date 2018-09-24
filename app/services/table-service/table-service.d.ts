@@ -5,6 +5,10 @@ export declare class TableService {
     private fileIpfsService;
     private $deploymentStatus;
     constructor(fileIpfsService: FileIpfsService);
+    createGenericTableStatus(ModuleStatus: any): {
+        Icon: any;
+        Color: any;
+    };
     createTable(file: IPFSFile[], typings: IPFSFile[], m: IPFSFile[]): any;
     previewsVersions(previewsVersions: string[]): any;
     endInstallCommand(hash: any): any;
