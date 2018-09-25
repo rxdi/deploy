@@ -12,6 +12,7 @@
 
 > Readme data (TODO)
 
+> Parcel Lazy Module import for Browser (currently not supported) files will not be downloaded so the resolver will not find them (TODO)
 
 #### Install globally
 ```bash
