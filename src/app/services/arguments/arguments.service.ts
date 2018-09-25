@@ -1,7 +1,8 @@
 
 import { Service } from '@rxdi/core';
+import { Commands } from '../../../commands';
 
-export const nextOrDefault = (i: string, fb: any = true, type = (p) => (p)) => {
+export const nextOrDefault = (i: Commands, fb: any = true, type = (p) => (p)) => {
     if (process.argv.toString().includes(i)) {
         const isNextArgumentPresent = process.argv[process.argv.indexOf(i) + 1];
         if (!isNextArgumentPresent) {
@@ -12,12 +13,12 @@ export const nextOrDefault = (i: string, fb: any = true, type = (p) => (p)) => {
     return fb;
 }
 
-export const includes = (i) => process.argv.toString().includes(i);
+export const includes = (i: Commands) => process.argv.toString().includes(i);
 
 @Service()
 export class ArgumentsService {
 
-    nextOrDefault(i: string, fallback: any = null, type = (p) => (p)) {
+    nextOrDefault(i: Commands, fallback: any = null, type = (p) => (p)) {
         return nextOrDefault(i, fallback, type);
     }
 

@@ -1,0 +1,21 @@
+export declare const Commands: {
+    "--message": "--message";
+    "--out-dir": "--out-dir";
+    "--file": "--file";
+    "--namespace": "--namespace";
+    "--beat": "--beat";
+    "--html": "--html";
+    "--webui": "--webui";
+    "--open-browser": "--open-browser";
+    "--graphiql-playground": "--graphiql-playground";
+    "--node-only": "--node-only";
+    "--silent": "--silent";
+    "--unminify": "--unminify";
+    "--browser": "--browser";
+    "--v": "--v";
+    "--tsconfig": "--tsconfig";
+    "--verbose": "--verbose";
+    "--default-ipfs-node": "--default-ipfs-node";
+    "--deployer-config-name": "--deployer-config-name";
+};
+export declare type Commands = keyof typeof Commands;

@@ -59,12 +59,12 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__PARCEL_BROWSER_BUILD,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => args.toString().includes('--browser')
+                useFactory: (args) => arguments_service_1.includes('--browser')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_MINIFY,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => !args.toString().includes('--unminify')
+                useFactory: (args) => !arguments_service_1.includes('--unminify')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR,
@@ -81,7 +81,7 @@ EnvironemntSetterModule = __decorate([
             {
                 provide: env_injection_tokens_1.__GENERATE_TS_CONFIG,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => args.toString().includes('--tsconfig')
+                useFactory: (args) => arguments_service_1.includes('--tsconfig')
             },
             {
                 provide: env_injection_tokens_1.__FILE_PATH,

@@ -1,10 +1,12 @@
-function strEnum<T extends string>(o: Array<T>): {[K in T]: K} {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+function strEnum(o) {
     return o.reduce((res, key) => {
         res[key] = key;
         return res;
     }, Object.create(null));
 }
-export const Commands = strEnum([
+exports.Commands = strEnum([
     '--message',
     '--out-dir',
     '--file',
@@ -24,4 +26,4 @@ export const Commands = strEnum([
     '--default-ipfs-node',
     '--deployer-config-name'
 ]);
-export type Commands = keyof typeof Commands;
+//# sourceMappingURL=commands.js.map

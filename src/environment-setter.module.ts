@@ -1,5 +1,5 @@
 import { Module } from '@rxdi/core';
-import { ArgumentsService, nextOrDefault } from './app/services/arguments/arguments.service';
+import { ArgumentsService, nextOrDefault, includes } from './app/services/arguments/arguments.service';
 import {
     __NODE_MODULES,
     __DEPLOYER_ARGUMENTS,
@@ -66,12 +66,12 @@ import * as Datastore from 'nedb';
         {
             provide: __PARCEL_BROWSER_BUILD,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => args.toString().includes('--browser')
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => includes('--browser')
         },
         {
             provide: __PARCEL_MINIFY,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => !args.toString().includes('--unminify')
+            useFactory: (args: __DEPLOYER_ARGUMENTS) => !includes('--unminify')
         },
         {
             provide: __PARCEL_BUILD_OUT_DIR,
@@ -88,7 +88,7 @@ import * as Datastore from 'nedb';
         {
             provide: __GENERATE_TS_CONFIG,
             deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS): __GENERATE_TS_CONFIG => args.toString().includes('--tsconfig')
+            useFactory: (args: __DEPLOYER_ARGUMENTS): __GENERATE_TS_CONFIG => includes('--tsconfig')
         },
         {
             provide: __FILE_PATH,
