@@ -23,7 +23,8 @@ import {
     __BUILD_HISTORY_DATABASE,
     __PREVIWS_DATABASE,
     __COMMIT_MESSAGE,
-    __CREATE_HTML_PAGE
+    __CREATE_HTML_PAGE,
+    __ROOT_FOLDER
 } from './env.injection.tokens';
 import { TsConfigGenratorService } from './app/services/tsconfig-generator/tsconfig-generator.service';
 import { FileService } from './app/services/file/file.service';
@@ -35,6 +36,10 @@ import * as Datastore from 'nedb';
         {
             provide: __NODE_MODULES,
             useValue: __dirname + '/node_modules'
+        },
+        {
+            provide: __ROOT_FOLDER,
+            useValue: __dirname
         },
         {
             provide: __HOME_DIR,

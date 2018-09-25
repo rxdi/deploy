@@ -33,7 +33,7 @@ export declare class CompilePlugin implements PluginInterface {
     private commitMessage;
     private extension;
     constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previwsService: PreviwsService, errorReasonService: ErrorReasonService, statusService: StatusService);
-    register(): Promise<{}>;
+    register(): Promise<void | {}>;
     isJavascriptCompilation(): boolean;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;
     completeBuildAndAddToIpfs(folder: string, file: string, message: any, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME): import("rxjs/internal/Observable").Observable<{}>;

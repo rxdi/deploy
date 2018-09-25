@@ -18,7 +18,7 @@ Container.get(ConfigService).setConfig({
     init: false,
     initOptions: {
         services: true,
-        pluginsAfter: false
+        plugins: true
     }
 });
 

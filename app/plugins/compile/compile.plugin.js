@@ -50,6 +50,9 @@ let CompilePlugin = class CompilePlugin {
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (arguments_service_1.includes('--webui') || arguments_service_1.includes('--node-only')) {
+                return yield Promise.resolve();
+            }
             if (this.isJavascriptCompilation()) {
                 return yield this.compile();
             }
@@ -166,7 +169,7 @@ let CompilePlugin = class CompilePlugin {
             console.log('' + this.tableService.previewsNext(currentModule.previews));
             console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
             console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-            this.showError(currentModule.previews[currentModule.previews.length - 1]);
+            this.showError(currentModule.previews[currentModule.previews.length - 2]);
         }));
     }
     fileNotAddedToIpfs(file) {
@@ -267,7 +270,7 @@ __decorate([
     __metadata("design:type", String)
 ], CompilePlugin.prototype, "extension", void 0);
 CompilePlugin = __decorate([
-    core_1.Plugin({ init: arguments_service_1.nextOrDefault('--node-only', true) }),
+    core_1.Plugin(),
     __metadata("design:paramtypes", [parcel_bundler_service_1.ParcelBundlerService,
         core_1.BootstrapLogger,
         ipfs_file_service_1.FileIpfsService,

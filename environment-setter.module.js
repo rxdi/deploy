@@ -31,6 +31,10 @@ EnvironemntSetterModule = __decorate([
                 useValue: __dirname + '/node_modules'
             },
             {
+                provide: env_injection_tokens_1.__ROOT_FOLDER,
+                useValue: __dirname
+            },
+            {
                 provide: env_injection_tokens_1.__HOME_DIR,
                 useValue: os_1.homedir()
             },

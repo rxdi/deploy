@@ -7,10 +7,12 @@ export const nextOrDefault = (i: string, fb: any = true, type = (p) => (p)) => {
         if (!isNextArgumentPresent) {
             return fb;
         }
-         return type(isNextArgumentPresent);
+        return type(isNextArgumentPresent);
     }
     return fb;
 }
+
+export const includes = (i) => process.argv.toString().includes(i);
 
 @Service()
 export class ArgumentsService {

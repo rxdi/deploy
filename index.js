@@ -18,7 +18,7 @@ core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.
     }
 }) : ({}), { init: false, initOptions: {
         services: true,
-        pluginsAfter: false
+        plugins: true
     } }));
 core_1.BootstrapFramework(app_module_1.AppModule, [environment_setter_module_1.EnvironemntSetterModule])
     .subscribe(() => {

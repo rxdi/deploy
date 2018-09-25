@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
+exports.__ROOT_FOLDER = new core_1.InjectionToken('root_folder');
 exports.__NODE_MODULES = new core_1.InjectionToken('local_node_modules');
 exports.__DEPLOYER_ARGUMENTS = new core_1.InjectionToken('rxdi-deployer-command-arguments');
 exports.__PARCEL_BROWSER_BUILD = new core_1.InjectionToken('rxdi-deployer-parcel-is-browser-build');
@@ -20,7 +21,7 @@ exports.__PROCESSING_TIME_FINISH = new core_1.InjectionToken('rxdi-deployer-proc
 exports.__PROCESSING_TIME_END = new core_1.InjectionToken('rxdi-deployer-processin-time-end');
 exports.__SETTINGS_DATABASE = new core_1.InjectionToken('rxdi-deployer-home-settings');
 exports.__BUILD_HISTORY_DATABASE = new core_1.InjectionToken('rxdi-deployer-build-history-database');
-exports.__PREVIWS_DATABASE = new core_1.InjectionToken('rxdi-deployer-previws-database');
+exports.__PREVIWS_DATABASE = new core_1.InjectionToken('rxdi-deployer-previews-database');
 exports.__HOME_DIR = new core_1.InjectionToken('rxdi-deployer-home-directory');
 exports.__COMMIT_MESSAGE = new core_1.InjectionToken('rxdi-deployer-commit-message');
 exports.__CREATE_HTML_PAGE = new core_1.InjectionToken('rxdi-deployer-commit-message');

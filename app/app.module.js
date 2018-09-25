@@ -23,17 +23,20 @@ const error_reason_service_1 = require("./services/error-reason/error-reason.ser
 const compile_plugin_1 = require("./plugins/compile/compile.plugin");
 const time_service_1 = require("./services/time/time.service");
 const services_1 = require("./services");
+const server_module_1 = require("./server/server.module");
+const _IMPORTS = [
+    ipfs_daemon_1.IpfsDaemonModule.forRoot({
+        type: arguments_service_1.nextOrDefault('--default-ipfs-node', 'js')
+    }),
+    ipfs_1.IpfsModule.forRoot(),
+    status_module_1.StatusModule,
+];
+arguments_service_1.includes('--webui') ? _IMPORTS.push(server_module_1.ServerModule) : null;
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     core_1.Module({
-        imports: [
-            ipfs_daemon_1.IpfsDaemonModule.forRoot({
-                type: arguments_service_1.nextOrDefault('--default-ipfs-node', 'js')
-            }),
-            ipfs_1.IpfsModule.forRoot(),
-            status_module_1.StatusModule
-        ],
+        imports: _IMPORTS,
         services: [
             ipfs_file_service_1.FileIpfsService,
             file_service_1.FileService,
@@ -47,7 +50,7 @@ AppModule = __decorate([
             time_service_1.TimeService,
             services_1.HtmlTemplateBuilder
         ],
-        afterPlugins: [compile_plugin_1.CompilePlugin]
+        plugins: [compile_plugin_1.CompilePlugin]
     })
 ], AppModule);
 exports.AppModule = AppModule;

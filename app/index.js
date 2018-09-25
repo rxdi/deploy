@@ -5,4 +5,5 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./app.module"));
 __export(require("./services/index"));
+__export(require("./server/index"));
 //# sourceMappingURL=index.js.map

@@ -17,6 +17,7 @@ exports.nextOrDefault = (i, fb = true, type = (p) => (p)) => {
     }
     return fb;
 };
+exports.includes = (i) => process.argv.toString().includes(i);
 let ArgumentsService = class ArgumentsService {
     nextOrDefault(i, fallback = null, type = (p) => (p)) {
         return exports.nextOrDefault(i, fallback, type);

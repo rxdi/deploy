@@ -8,7 +8,7 @@ import {
     __COMMIT_MESSAGE,
     __FILE_EXTENSION
 } from '../../../env.injection.tokens';
-import { Plugin, Inject, BootstrapLogger, PluginInterface } from '@rxdi/core';
+import { Inject, BootstrapLogger, PluginInterface, Plugin } from '@rxdi/core';
 import { tap, switchMapTo, take, map, switchMap } from 'rxjs/operators';
 import { interval, from, of, combineLatest } from 'rxjs';
 import { FileUserService } from '../../services/file/file-user.service';
@@ -23,9 +23,9 @@ import { BuildHistoryService } from '../../services/build-history/build-history.
 import { PreviwsService } from '../../services/previews/previews.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
-import { nextOrDefault } from '../../services/arguments/arguments.service';
+import { includes } from '../../services/arguments/arguments.service';
 
-@Plugin({ init: nextOrDefault('--node-only', true) })
+@Plugin()
 export class CompilePlugin implements PluginInterface {
 
     @Inject(__FILE_NAME) private fileName: __FILE_NAME;
@@ -52,6 +52,9 @@ export class CompilePlugin implements PluginInterface {
     ) { }
 
     async register() {
+        if (includes('--webui') || includes('--node-only')) {
+            return await Promise.resolve();   
+        }
         if (this.isJavascriptCompilation()) {
             return await this.compile();
         }
@@ -203,7 +206,7 @@ export class CompilePlugin implements PluginInterface {
                         console.log('' + this.tableService.previewsNext(currentModule.previews));
                         console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
                         console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-                        this.showError(currentModule.previews[currentModule.previews.length -1]);
+                        this.showError(currentModule.previews[currentModule.previews.length - 2]);
                 })
             );
     }

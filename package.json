@@ -25,6 +25,8 @@
   "author": "Kristiyan Tachev",
   "license": "MIT",
   "dependencies": {
+    "@gapi/auth": "^1.4.20",
+    "@gapi/core": "^1.4.20",
     "@gapi/ipfs": "1.4.19",
     "@gapi/ipfs-daemon": "1.4.19",
     "@rxdi/core": "^0.0.296",
@@ -36,6 +38,7 @@
     "typescript": "3.0.3"
   },
   "devDependencies": {
+    "@types/hapi": "^17.0.19",
     "@types/nedb": "^1.8.6",
     "@types/node": "10.10.2"
   }
