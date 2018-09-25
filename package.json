@@ -12,7 +12,7 @@
     "stop": "docker rm -f rxdi-deployer",
     "tsc": "./node_modules/.bin/tsc",
     "test": "jest",
-    "lint": "tslint -c tslint.json 'development/**/*.{ts,tsx}'",
+    "lint": "echo lint",
     "pretest": "npm run lint"
   },
   "bin": {
@@ -25,7 +25,6 @@
   "author": "Kristiyan Tachev",
   "license": "MIT",
   "dependencies": {
-    "@gapi/auth": "^1.4.20",
     "@gapi/core": "^1.4.20",
     "@gapi/ipfs": "1.4.19",
     "@gapi/ipfs-daemon": "1.4.19",

@@ -5,7 +5,7 @@ import { Server as HapiServer } from 'hapi';
 import { HAPI_SERVER, OpenService } from '@rxdi/hapi';
 import { Subject, Observable, timer } from 'rxjs';
 import { tap, filter, take, switchMapTo } from 'rxjs/operators';
-import { includes } from '../../services';
+import { includes, nextOrDefault } from '../../services';
 
 @Service()
 export class ServerPushService implements PluginInterface {
@@ -35,7 +35,7 @@ export class ServerPushService implements PluginInterface {
                 switchMapTo(this.waitXSeconds(5)),
                 take(1),
                 filter(() => !this.connected),
-                filter(() => includes('--webui')),
+                filter(() => includes('--open-browser')),
                 tap(() => this.openService.openPage(`http://${this.server.info.address}:${this.server.info.port}/webui`))
             ).subscribe();
     }
@@ -48,7 +48,7 @@ export class ServerPushService implements PluginInterface {
     }
 
     async register() {
-        if (includes('--webui')) {
+        if (includes('--server-watcher')) {
             this.createServerWatcher();
         }
     }
@@ -57,9 +57,9 @@ export class ServerPushService implements PluginInterface {
         return await new Promise((resolve) => this.serverWatcher.close(() => resolve()));
     }
 
-    createServerWatcher() {
+    private createServerWatcher() {
         this.serverWatcher = createServer(this.OnRequest.bind(this));
-        this.serverWatcher.listen(8968);
+        this.serverWatcher.listen(nextOrDefault('--server-watcher-port', 8968));
     }
 
     OnRequest(req: IncomingMessage, res: ServerResponse) {

@@ -7,15 +7,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
-const framework_imports_1 = require("./framework-imports");
 const webui_service_1 = require("./services/webui.service");
 const server_push_service_1 = require("./services/server-push.service");
+const user_queries_controller_1 = require("./user/user-queries.controller");
 let ServerModule = class ServerModule {
 };
 ServerModule = __decorate([
     core_1.Module({
-        imports: [framework_imports_1.FrameworkImports],
         services: [webui_service_1.WebUiService, server_push_service_1.ServerPushService],
+        controllers: [user_queries_controller_1.UserQueriesController]
     })
 ], ServerModule);
 exports.ServerModule = ServerModule;

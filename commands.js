@@ -24,6 +24,16 @@ exports.Commands = strEnum([
     '--tsconfig',
     '--verbose',
     '--default-ipfs-node',
-    '--deployer-config-name'
+    '--deployer-config-name',
+    '--graphiql',
+    '--open-browser-graphiql',
+    '--server-watcher',
+    '--server-watcher-port',
+    '--graphiql-subscription-endpoint',
+    '--graphiql-auth-token',
+    '--graphql-endpoint',
+    '--write-effects',
+    '--graphiql-endpoint',
+    '--graphql-api-port'
 ]);
 //# sourceMappingURL=commands.js.map

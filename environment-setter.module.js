@@ -58,13 +58,11 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BROWSER_BUILD,
-                deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => arguments_service_1.includes('--browser')
+                useFactory: () => arguments_service_1.includes('--browser')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_MINIFY,
-                deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => !arguments_service_1.includes('--unminify')
+                useFactory: () => !arguments_service_1.includes('--unminify')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR,
@@ -80,14 +78,13 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__GENERATE_TS_CONFIG,
-                deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
-                useFactory: (args) => arguments_service_1.includes('--tsconfig')
+                useFactory: () => arguments_service_1.includes('--tsconfig')
             },
             {
                 provide: env_injection_tokens_1.__FILE_PATH,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
                 useFactory: (args) => {
-                    if (args[0] && args[0].includes('--file')) {
+                    if (arguments_service_1.includes('--file')) {
                         return arguments_service_1.nextOrDefault('--file', '');
                     }
                     if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/)) {
@@ -105,7 +102,7 @@ EnvironemntSetterModule = __decorate([
                 provide: env_injection_tokens_1.__NAMESPACE,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
                 useFactory: (args) => {
-                    if (args[1] && args[1].includes('--namespace')) {
+                    if (arguments_service_1.includes('--namespace')) {
                         return arguments_service_1.nextOrDefault('--namespace', '@rxdi');
                     }
                     if (args[1] && args[1].includes('--')) {

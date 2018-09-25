@@ -65,13 +65,11 @@ import * as Datastore from 'nedb';
         },
         {
             provide: __PARCEL_BROWSER_BUILD,
-            deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => includes('--browser')
+            useFactory: () => includes('--browser')
         },
         {
             provide: __PARCEL_MINIFY,
-            deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS) => !includes('--unminify')
+            useFactory: () => !includes('--unminify')
         },
         {
             provide: __PARCEL_BUILD_OUT_DIR,
@@ -87,14 +85,13 @@ import * as Datastore from 'nedb';
         },
         {
             provide: __GENERATE_TS_CONFIG,
-            deps: [__DEPLOYER_ARGUMENTS],
-            useFactory: (args: __DEPLOYER_ARGUMENTS): __GENERATE_TS_CONFIG => includes('--tsconfig')
+            useFactory: (): __GENERATE_TS_CONFIG => includes('--tsconfig')
         },
         {
             provide: __FILE_PATH,
             deps: [__DEPLOYER_ARGUMENTS],
             useFactory: (args: __DEPLOYER_ARGUMENTS) => {
-                if (args[0] && args[0].includes('--file')) {
+                if (includes('--file')) {
                     return nextOrDefault('--file', '');
                 }
                 if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/)) {
@@ -112,7 +109,7 @@ import * as Datastore from 'nedb';
             provide: __NAMESPACE,
             deps: [__DEPLOYER_ARGUMENTS],
             useFactory: (args: __DEPLOYER_ARGUMENTS) => {
-                if (args[1] && args[1].includes('--namespace')) {
+                if (includes('--namespace')) {
                     return nextOrDefault('--namespace', '@rxdi');
                 }
                 if (args[1] && args[1].includes('--')) {

@@ -1,10 +1,10 @@
 import { Module } from '@rxdi/core';
-import { FrameworkImports } from './framework-imports';
 import { WebUiService } from './services/webui.service';
 import { ServerPushService } from './services/server-push.service';
+import { UserQueriesController } from './user/user-queries.controller';
 
 @Module({
-    imports: [FrameworkImports],
     services: [WebUiService, ServerPushService],
+    controllers: [UserQueriesController]
 })
 export class ServerModule {}

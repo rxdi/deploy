@@ -1,9 +1,12 @@
 #!/usr/bin/env node
-process.argv.toString().includes('--silent') ? console.log = () => null : null;
+import { includes } from './app/services/arguments/arguments.service';
+
+includes('--silent') || includes('--webui') ? console.log = () => null : null;
 
 import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { EnvironemntSetterModule } from './environment-setter.module';
 import { AppModule } from './app/app.module';
+import { FrameworkImports } from './framework-imports';
 
 Container.get(ConfigService).setConfig({
     ...(process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) ? ({
@@ -15,14 +18,19 @@ Container.get(ConfigService).setConfig({
             fileService: true
         }
     }) : ({}),
-    init: false,
+    init: true,
     initOptions: {
         services: true,
-        plugins: true
+        plugins: true,
+        controllers: true
     }
 });
 
-BootstrapFramework(AppModule, [EnvironemntSetterModule])
+const _FRAMEWORK_IMPORTS = [EnvironemntSetterModule];
+
+includes('--webui') ? _FRAMEWORK_IMPORTS.push(FrameworkImports) : null;
+
+BootstrapFramework(AppModule, _FRAMEWORK_IMPORTS)
     .subscribe(
         () => {
             console.log('Bootstrap success!');
@@ -33,4 +41,4 @@ BootstrapFramework(AppModule, [EnvironemntSetterModule])
     );
 
 export * from './app/index';
-
+export * from './framework-imports';

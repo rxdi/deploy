@@ -1,3 +1,90 @@
+config:
+# Application configuration
+  app:
+    local:
+      ETHEREUM_HOST: http://localhost
+      ETHEREUM_PORT: 7545
+      OPEN_BROWSER: true
+      API_PORT: 9000
+      API_CERT: ./cert.key
+      WRITE_EFFECTS: false
+      NODE_ENV: development
+      MONGO_HOST: localhost
+      MONGO_PORT: 27017
+      MONGO_DATABASE: test
+      AMQP_HOST: 182.10.0.5
+      AMQP_PORT: 5672
+      LOGGING: false
+      GRAPHIQL: true 
+      GRAPHIQL_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo
+      ENDPOINT_TESTING: http://localhost:9000/graphql
+      TOKEN_TESTING: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJVU0VSIl0sImlhdCI6MTUzNDMyMjM5OX0.-CX8FLdX578OD-jET9UREqbg772gLgAkNMRXs2jp7Ts
+    prod:
+      ETHEREUM_HOST: http://127.0.0.1
+      ETHEREUM_PORT: 8545
+      API_PORT: 9000
+      API_CERT: ./cert.key
+      NODE_ENV: production
+      MONGO_HOST: 182.10.0.6
+      MONGO_PORT: 27017
+      MONGO_DATABASE: test
+      MONGO_USERNAME: karaquestups
+      MONGO_PASSWORD: hytqa1k34ik
+      AMQP_HOST: 182.10.0.5
+      AMQP_PORT: 5672
+      GRAPHIQL: true
+      GRAPHIQL_WS_SSH: true
+      DEPLOY_PLATFORM: heroku 
+      GRAPHIQL_WS_PATH: questups.youvolio.com/api/
+      GRAPHIQL_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo
+      ENDPOINT_TESTING: http://localhost:9000/graphql
+      TOKEN_TESTING: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJVU0VSIl0sImlhdCI6MTUzNDMyMjM5OX0.-CX8FLdX578OD-jET9UREqbg772gLgAkNMRXs2jp7Ts
+    testing:
+      API_PORT: 9000
+      API_CERT: ./cert.key
+      NODE_ENV: development
+      MONGO_HOST: 182.10.0.6
+      MONGO_PORT: 27017
+      MONGO_DATABASE: test
+      MONGO_USERNAME: karaquestups
+      MONGO_PASSWORD: hytqa1k34ik
+      LOGGING: true
+      ENDPOINT_TESTING: http://localhost:9000/graphql
+      TOKEN_TESTING: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJVU0VSIl0sImlhdCI6MTUzNDMyMjM5OX0.-CX8FLdX578OD-jET9UREqbg772gLgAkNMRXs2jp7Ts
+    hackaton:
+      ETHEREUM_HOST: http://localhost
+      ETHEREUM_PORT: 7545
+      OPEN_BROWSER: true
+      API_PORT: 9000
+      API_CERT: ./cert.key
+      WRITE_EFFECTS: false
+      NODE_ENV: development
+      MONGO_HOST: questups.com
+      MONGO_PORT: 27017
+      MONGO_DATABASE: test
+      LOGGING: true
+      GRAPHIQL: true
+      GRAPHIQL_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo
+      ENDPOINT_TESTING: http://localhost:9000/graphql
+      TOKEN_TESTING: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJVU0VSIl0sImlhdCI6MTUzNDMyMjM5OX0.-CX8FLdX578OD-jET9UREqbg772gLgAkNMRXs2jp7Ts
+
+
+      # Testing configuration for local(dev) or worker(running tests as a separate worker with separate environment)
+  test: 
+    local: extends app/local
+    testing: extends app/testing
+    worker:
+      API_PORT: 9000
+      API_CERT: ./cert.key
+      NODE_ENV: production
+      AMQP_HOST: 182.10.0.5
+      AMQP_PORT: 5672
+      ENDPOINT_TESTING: http://182.10.0.101:9000/graphql
+      TOKEN_TESTING: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJVU0VSIl0sImlhdCI6MTUzNDMyMjM5OX0.-CX8FLdX578OD-jET9UREqbg772gLgAkNMRXs2jp7Ts
+
+  schema:
+    introspectionEndpoint: http://localhost:9000/graphql
+    introspectionOutputFolder: ./src/app/core/api-introspection
 
 commands:
   testing:
@@ -18,3 +105,62 @@ commands:
       - jsipfs add index.d.ts
     deploy-config:
       - jsipfs add index.json
+  testing:
+    stop:
+      - docker rm -f questups-api-prod-worker-tests-executor
+      - docker rm -f questups-api-prod-worker-tests-provider
+    start:
+      - gapi testing start-provider
+      - sleep 10
+      - gapi testing start-executor
+      - echo Cleaning...
+      - gapi testing stop
+    start-provider: docker run -d --network=questups_gapi --ip=182.10.0.101 --name questups-api-prod-worker-tests-provider gapi/api/prod
+    start-executor:
+      - docker run -d --network=questups_gapi --ip=182.10.0.100 --name questups-api-prod-worker-tests-executor gapi/api/prod
+      - docker exec questups-api-prod-worker-tests-provider npm -v
+      - gapi test --worker
+
+  workers:
+    start:
+      - gapi workers start-1
+      - gapi workers start-2
+      - gapi workers start-3
+      - gapi workers start-4
+    stop:
+      - docker rm -f questups-api-prod-worker-1
+      - docker rm -f questups-api-prod-worker-2
+      - docker rm -f questups-api-prod-worker-3
+      - docker rm -f questups-api-prod-worker-4
+    start-1: docker run -d --network=questups_gapi --ip=182.10.0.21 --name questups-api-prod-worker-1 gapi/api/prod
+    start-2: docker run -d --network=questups_gapi --ip=182.10.0.22 --name questups-api-prod-worker-2 gapi/api/prod
+    start-3: docker run -d --network=questups_gapi --ip=182.10.0.23 --name questups-api-prod-worker-3 gapi/api/prod
+    start-4: docker run -d --network=questups_gapi --ip=182.10.0.24 --name questups-api-prod-worker-4 gapi/api/prod
+    example-worker-with-port: docker run -d --network=questups_gapi --ip=182.10.0.25 --name questups-api-prod-worker-5 -p 9001:9000 gapi/api/prod
+
+  app:
+    start:
+      - docker-compose -p questups-api-prod up --force-recreate -d 
+      - gapi rabbitmq enable-dashboard
+    stop:
+      - gapi nginx stop
+      - gapi api stop
+      - gapi rabbitmq stop
+    build: docker build -t gapi/api/prod .
+
+  api:
+    stop: docker rm -f questups-api-prod
+
+  nginx:
+    stop: docker rm -f questups-api-nginx
+
+  rabbitmq:
+    stop: docker rm -f questups-api-rabbitmq
+    restart: docker restart questups-api-rabbitmq
+    enable-dashboard: docker exec questups-api-rabbitmq rabbitmq-plugins enable rabbitmq_management
+
+# You can define your custom commands for example 
+# commands:
+#   your-cli:
+#     my-command: 'npm -v'
+# This command can be executed as "gapi your-cli my-command"

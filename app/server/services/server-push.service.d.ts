@@ -18,6 +18,6 @@ export declare class ServerPushService implements PluginInterface {
     waitXSeconds(sec: any): Observable<any>;
     register(): Promise<void>;
     stopServerWatcher(): Promise<{}>;
-    createServerWatcher(): void;
+    private createServerWatcher;
     OnRequest(req: IncomingMessage, res: ServerResponse): void;
 }

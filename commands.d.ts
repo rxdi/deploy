@@ -17,5 +17,15 @@ export declare const Commands: {
     "--verbose": "--verbose";
     "--default-ipfs-node": "--default-ipfs-node";
     "--deployer-config-name": "--deployer-config-name";
+    "--graphiql": "--graphiql";
+    "--open-browser-graphiql": "--open-browser-graphiql";
+    "--server-watcher": "--server-watcher";
+    "--server-watcher-port": "--server-watcher-port";
+    "--graphiql-subscription-endpoint": "--graphiql-subscription-endpoint";
+    "--graphiql-auth-token": "--graphiql-auth-token";
+    "--graphql-endpoint": "--graphql-endpoint";
+    "--write-effects": "--write-effects";
+    "--graphiql-endpoint": "--graphiql-endpoint";
+    "--graphql-api-port": "--graphql-api-port";
 };
 export declare type Commands = keyof typeof Commands;
