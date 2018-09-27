@@ -35,10 +35,19 @@ export declare class CompilePlugin implements PluginInterface {
     private namespace;
     private commitMessage;
     private extension;
+    fileNotDeployed: string;
+    initIpfsModule: {
+        size: number;
+        hash: string;
+        path: string;
+        content: string;
+    }[];
     constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previwsService: PreviwsService, errorReasonService: ErrorReasonService, statusService: StatusService, packageJsonService: PackageJsonService, rxdiFileService: RxdiFileService);
     register(): Promise<void | {}>;
     isJavascriptCompilation(): boolean;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;
+    parcelBuild(path: string): Promise<{}>;
+    createCommitMessage(message?: string): Promise<IPFSFile[]>;
     completeBuildAndAddToIpfs(folder: string, file: string, message: any, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME): import("rxjs/internal/Observable").Observable<{}>;
     fileNotAddedToIpfs(file: IPFSFile[]): void;
     integrityCheck(dag: DagModel, file: IPFSFile[], typings: IPFSFile[]): void;

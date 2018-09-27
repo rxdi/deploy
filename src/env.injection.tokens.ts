@@ -70,13 +70,16 @@ export interface __PARCEL_SETTINGS {
 
 export class DagModel {
     name: string;
-    typings: string;
+    typings?: string;
     module: string;
-    metadata: {};
-    message: string;
+    metadata?: {};
+    message?: string;
     hash?: string;
     date?: Date;
-    previews?: string[]
+    previews?: string[];
+    dependencies?: string[];
+    packages?: { name: string; version: string }[];
+    ipfs?: {provider: string; dependencies: string[]}[]
 }
 
 export class PreviewsModel {

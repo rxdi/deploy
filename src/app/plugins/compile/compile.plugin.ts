@@ -24,7 +24,7 @@ import { PreviwsService } from '../../services/previews/previews.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
-import { includes } from '../../services/helpers/helpers';
+import { includes, nextOrDefault } from '../../services/helpers/helpers';
 
 @Plugin()
 export class CompilePlugin implements PluginInterface {
@@ -36,7 +36,13 @@ export class CompilePlugin implements PluginInterface {
     @Inject(__NAMESPACE) private namespace: __NAMESPACE;
     @Inject(__COMMIT_MESSAGE) private commitMessage: __COMMIT_MESSAGE;
     @Inject(__FILE_EXTENSION) private extension: __FILE_EXTENSION;
-
+    fileNotDeployed: string = '';
+    initIpfsModule = [{
+        size: 0,
+        hash: this.fileNotDeployed,
+        path: this.fileNotDeployed,
+        content: this.fileNotDeployed
+    }];
     constructor(
         private parcelBundler: ParcelBundlerService,
         private logger: BootstrapLogger,
@@ -109,22 +115,46 @@ export class CompilePlugin implements PluginInterface {
             );
     }
 
+    async parcelBuild(path: string) {
+        return this.parcelBundler.prepareBundler(path)
+    }
+    async createCommitMessage(message: string = '') {
+        if (includes('--html')) {
+            let file;
+            const filePath = nextOrDefault('--html', './index.html');
+            try {
+                file = await this.fileService.readFileRaw(filePath);
+            } catch (e) {
+                console.log(`
+Error loading file ${filePath}
+                `);
+                process.exit(0);
+            }
+            return await this.ipfsFile.addRawFile(file);
+        } else {
+            if (!!message && !message.includes('--') && !message.includes('-')) {
+                return await this.ipfsFile.addFile(message);
+            } else {
+                return await Promise.resolve(this.initIpfsModule);
+            }
+        }
+    }
     completeBuildAndAddToIpfs(folder: string, file: string, message, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME) {
         let ipfsFile: IPFSFile[];
-        let ipfsFileMetadata: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
-        let ipfsTypings: IPFSFile[];
         let ipfsModule: IPFSFile[];
-        let ipfsMessage: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
-        this.logger.log('Bundling Started!\n');
-        let currentModule;
+        let ipfsTypings: IPFSFile[] = this.initIpfsModule;
+        let ipfsMessage: IPFSFile[] = this.initIpfsModule;
+        let ipfsFileMetadata: IPFSFile[] = this.initIpfsModule;
+        let currentModule: DagModel;
         let dag: DagModel;
-        return from(this.parcelBundler.prepareBundler(folder + '/' + file))
+        this.logger.log('Bundling Started!\n');
+        return from(this.parcelBuild(folder + '/' + file))
             .pipe(
                 tap(() => {
                     this.logger.log('Bundling finished!\n');
                     this.logger.log(`Adding commit message ${message}...\n`);
                 }),
-                switchMap(() => this.ipfsFile.addFile(message)),
+                switchMap(async () => this.createCommitMessage(message)),
                 tap(res => {
                     ipfsMessage = res;
                     this.logger.log(`Commit message added...\n`)
@@ -140,11 +170,25 @@ export class CompilePlugin implements PluginInterface {
                 switchMap(() => from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))),
                 tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)),
                 switchMap(() => this.fileService.readFile(`./build/index.d.ts`)),
-                tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
-                switchMap((res: string) => this.ipfsFile.addFile(res)),
+                tap((res) => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
+                switchMap((res: string) => {
+                    if (!!res) {
+                        return this.ipfsFile.addFile(res);
+                    } else {
+                        this.statusService.setBuildStatus({
+                            typings: {
+                                status: 'WARNING',
+                                message: 'Missing typescript definition.Typings will not be uploaded!'
+                            }
+                        });
+                        return Promise.resolve(this.initIpfsModule);
+                    }
+                }),
                 tap(res => {
                     ipfsTypings = res;
-                    this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`);
+                    if (ipfsTypings[0].hash) {
+                        this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`);
+                    }
                 }),
                 switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${outputConfigName}`)),
                 switchMap(async (d: string) => {
@@ -153,20 +197,26 @@ export class CompilePlugin implements PluginInterface {
                     } catch (e) {
                         throw new Error(`Cannot parse ${outputConfigName} from root directory!`);
                     }
-                    currentModule = <DagModel>{
+                    currentModule = {
                         name: namespace,
-                        typings: ipfsTypings[0].hash,
                         module: ipfsFile[0].hash,
                         date: new Date(),
-                        metadata: ipfsFileMetadata[0].hash,
-                        message: ipfsMessage[0].hash,
-                        previews: [...(dag.previews || [])]
                     };
 
-                    let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = {ipfs: []};
-                    
+                    if (ipfsTypings[0].hash) {
+                        currentModule.typings = ipfsTypings[0].hash
+                    }
 
+                    if (ipfsMessage[0].hash) {
+                        currentModule.message = ipfsMessage[0].hash
+                    }
 
+                    if (ipfsFileMetadata[0].hash) {
+                        currentModule.metadata = ipfsFileMetadata[0].hash;
+                    }
+
+                    currentModule.previews = [...(dag.previews || [])];
+                    let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = { ipfs: [] };
                     if (this.rxdiFileService.isPresent(`./${this.outputConfigName}`)) {
                         this.logger.log(`Reactive file present ${this.outputConfigName} package dependencies will be taken from it`);
                         try {
@@ -196,7 +246,6 @@ export class CompilePlugin implements PluginInterface {
                     if (currentModule.previews.length >= 20) {
                         currentModule.previews.shift();
                     }
-
                     currentModule.previews = [...currentModule.previews, ipfsModule[0].hash];
                     if (f.ipfs) {
                         currentModule.ipfs = f.ipfs;
@@ -204,7 +253,6 @@ export class CompilePlugin implements PluginInterface {
                     delete currentModule.dependencies;
                     await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
                     this.integrityCheck(dag, ipfsFile, ipfsTypings);
-
                     return ipfsModule;
                 }),
                 tap(() => this.logger.log(`Module configuration added to ipfs!\n`)),

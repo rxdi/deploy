@@ -50,6 +50,13 @@ let CompilePlugin = class CompilePlugin {
         this.statusService = statusService;
         this.packageJsonService = packageJsonService;
         this.rxdiFileService = rxdiFileService;
+        this.fileNotDeployed = '';
+        this.initIpfsModule = [{
+                size: 0,
+                hash: this.fileNotDeployed,
+                path: this.fileNotDeployed,
+                content: this.fileNotDeployed
+            }];
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -91,29 +98,75 @@ let CompilePlugin = class CompilePlugin {
             });
         });
     }
+    parcelBuild(path) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.parcelBundler.prepareBundler(path);
+        });
+    }
+    createCommitMessage(message = '') {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (helpers_1.includes('--html')) {
+                let file;
+                const filePath = helpers_1.nextOrDefault('--html', './index.html');
+                try {
+                    file = yield this.fileService.readFileRaw(filePath);
+                }
+                catch (e) {
+                    console.log(`
+Error loading file ${filePath}
+                `);
+                    process.exit(0);
+                }
+                return yield this.ipfsFile.addRawFile(file);
+            }
+            else {
+                if (!!message && !message.includes('--') && !message.includes('-')) {
+                    return yield this.ipfsFile.addFile(message);
+                }
+                else {
+                    return yield Promise.resolve(this.initIpfsModule);
+                }
+            }
+        });
+    }
     completeBuildAndAddToIpfs(folder, file, message, namespace, outputConfigName) {
         let ipfsFile;
-        let ipfsFileMetadata = [{ hash: '', path: '', size: 0, content: '' }];
-        let ipfsTypings;
         let ipfsModule;
-        let ipfsMessage = [{ hash: '', path: '', size: 0, content: '' }];
-        this.logger.log('Bundling Started!\n');
+        let ipfsTypings = this.initIpfsModule;
+        let ipfsMessage = this.initIpfsModule;
+        let ipfsFileMetadata = this.initIpfsModule;
         let currentModule;
         let dag;
-        return rxjs_1.from(this.parcelBundler.prepareBundler(folder + '/' + file))
+        this.logger.log('Bundling Started!\n');
+        return rxjs_1.from(this.parcelBuild(folder + '/' + file))
             .pipe(operators_1.tap(() => {
             this.logger.log('Bundling finished!\n');
             this.logger.log(`Adding commit message ${message}...\n`);
-        }), operators_1.switchMap(() => this.ipfsFile.addFile(message)), operators_1.tap(res => {
+        }), operators_1.switchMap(() => __awaiter(this, void 0, void 0, function* () { return this.createCommitMessage(message); })), operators_1.tap(res => {
             ipfsMessage = res;
             this.logger.log(`Commit message added...\n`);
         }), operators_1.switchMap(() => this.fileService.readFile(`./build/${file.split('.')[0]}.js`)), operators_1.tap(() => this.logger.log(`Reading bundle ./build/${file.split('.')[0]}.js finished!\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => {
             ipfsFile = res;
             this.logger.log(`Bundle added to ipfs ./build/${file.split('.')[0]}.js\n`);
             this.logger.log(`Typescript definitions merge started!\n`);
-        }), operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => {
+        }), operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap((res) => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => {
+            if (!!res) {
+                return this.ipfsFile.addFile(res);
+            }
+            else {
+                this.statusService.setBuildStatus({
+                    typings: {
+                        status: 'WARNING',
+                        message: 'Missing typescript definition.Typings will not be uploaded!'
+                    }
+                });
+                return Promise.resolve(this.initIpfsModule);
+            }
+        }), operators_1.tap(res => {
             ipfsTypings = res;
-            this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`);
+            if (ipfsTypings[0].hash) {
+                this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`);
+            }
         }), operators_1.switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${outputConfigName}`)), operators_1.switchMap((d) => __awaiter(this, void 0, void 0, function* () {
             try {
                 dag = JSON.parse(d);
@@ -123,13 +176,19 @@ let CompilePlugin = class CompilePlugin {
             }
             currentModule = {
                 name: namespace,
-                typings: ipfsTypings[0].hash,
                 module: ipfsFile[0].hash,
                 date: new Date(),
-                metadata: ipfsFileMetadata[0].hash,
-                message: ipfsMessage[0].hash,
-                previews: [...(dag.previews || [])]
             };
+            if (ipfsTypings[0].hash) {
+                currentModule.typings = ipfsTypings[0].hash;
+            }
+            if (ipfsMessage[0].hash) {
+                currentModule.message = ipfsMessage[0].hash;
+            }
+            if (ipfsFileMetadata[0].hash) {
+                currentModule.metadata = ipfsFileMetadata[0].hash;
+            }
+            currentModule.previews = [...(dag.previews || [])];
             let f = { ipfs: [] };
             if (this.rxdiFileService.isPresent(`./${this.outputConfigName}`)) {
                 this.logger.log(`Reactive file present ${this.outputConfigName} package dependencies will be taken from it`);
