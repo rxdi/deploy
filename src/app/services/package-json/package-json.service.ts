@@ -1,7 +1,7 @@
 import { FileService } from '../file/file.service';
 import { Service, Inject } from '@rxdi/core';
 import { __DEPLOYER_OUTPUT_CONFIG_NAME } from '../../../env.injection.tokens';
-import { includes } from '../arguments/arguments.service';
+import { includes } from '../helpers/helpers';
 
 @Service()
 export class PackageJsonService {

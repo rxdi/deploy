@@ -29,5 +29,10 @@ export declare const Commands: {
     "--graphql-api-port": "--graphql-api-port";
     "--disable-package-collection": "--disable-package-collection";
     "--collect-packages": "--collect-packages";
+    "--help": "--help";
 };
 export declare type Commands = keyof typeof Commands;
+export declare const ExcludedFromHelpers: {
+    "--v": "--v";
+};
+export declare type ExcludedFromHelpers = keyof typeof ExcludedFromHelpers;

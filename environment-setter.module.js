@@ -21,11 +21,16 @@ const tsconfig_generator_service_1 = require("./app/services/tsconfig-generator/
 const file_service_1 = require("./app/services/file/file.service");
 const os_1 = require("os");
 const Datastore = require("nedb");
+const helpers_1 = require("./app/services/helpers/helpers");
 let EnvironemntSetterModule = class EnvironemntSetterModule {
 };
 EnvironemntSetterModule = __decorate([
     core_1.Module({
         services: [
+            {
+                provide: env_injection_tokens_1.__DEPLOYER_ARGUMENTS,
+                useFactory: () => process.argv.slice(2)
+            },
             {
                 provide: env_injection_tokens_1.__NODE_MODULES,
                 useValue: __dirname + '/node_modules'
@@ -39,14 +44,10 @@ EnvironemntSetterModule = __decorate([
                 useValue: os_1.homedir()
             },
             {
-                provide: env_injection_tokens_1.__DEPLOYER_ARGUMENTS,
-                useValue: process.argv.slice(2)
-            },
-            {
                 provide: env_injection_tokens_1.__COMMIT_MESSAGE,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
                 useFactory: (args) => {
-                    const hasArgument = arguments_service_1.nextOrDefault('--message', false);
+                    const hasArgument = helpers_1.nextOrDefault('--message', false);
                     if (hasArgument) {
                         return hasArgument;
                     }
@@ -58,15 +59,15 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BROWSER_BUILD,
-                useFactory: () => arguments_service_1.includes('--browser')
+                useFactory: () => helpers_1.includes('--browser')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_MINIFY,
-                useFactory: () => !arguments_service_1.includes('--unminify')
+                useFactory: () => !helpers_1.includes('--unminify')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR,
-                useFactory: () => arguments_service_1.nextOrDefault('--out-dir', 'build')
+                useFactory: () => helpers_1.nextOrDefault('--out-dir', 'build')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_SETTINGS,
@@ -78,14 +79,14 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__GENERATE_TS_CONFIG,
-                useFactory: () => arguments_service_1.includes('--tsconfig')
+                useFactory: () => helpers_1.includes('--tsconfig')
             },
             {
                 provide: env_injection_tokens_1.__FILE_PATH,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
                 useFactory: (args) => {
-                    if (arguments_service_1.includes('--file')) {
-                        return arguments_service_1.nextOrDefault('--file', '');
+                    if (helpers_1.includes('--file')) {
+                        return helpers_1.nextOrDefault('--file', '');
                     }
                     if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/)) {
                         return './index.ts';
@@ -102,8 +103,8 @@ EnvironemntSetterModule = __decorate([
                 provide: env_injection_tokens_1.__NAMESPACE,
                 deps: [env_injection_tokens_1.__DEPLOYER_ARGUMENTS],
                 useFactory: (args) => {
-                    if (arguments_service_1.includes('--namespace')) {
-                        return arguments_service_1.nextOrDefault('--namespace', '@rxdi');
+                    if (helpers_1.includes('--namespace')) {
+                        return helpers_1.nextOrDefault('--namespace', '@rxdi');
                     }
                     if (args[1] && args[1].includes('--')) {
                         return '@rxdi';
@@ -125,11 +126,11 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__IPFS_NODE_RESOLUTION_TIME,
-                useFactory: () => arguments_service_1.nextOrDefault('--beat', 20, Number)
+                useFactory: () => helpers_1.nextOrDefault('--beat', 20, Number)
             },
             {
                 provide: env_injection_tokens_1.__DEPLOYER_OUTPUT_CONFIG_NAME,
-                useValue: arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useValue: helpers_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_INIT,
@@ -137,17 +138,17 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_FINISH,
-                useFactory: () => arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useFactory: () => helpers_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_END,
                 deps: [arguments_service_1.ArgumentsService],
-                useFactory: () => arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useFactory: () => helpers_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: env_injection_tokens_1.__CREATE_HTML_PAGE,
                 deps: [arguments_service_1.ArgumentsService],
-                useFactory: () => arguments_service_1.nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
+                useFactory: () => helpers_1.nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
             },
             {
                 provide: 'init-ts-config-file',

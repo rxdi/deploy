@@ -1,5 +1,5 @@
 import { CoreModule, Module } from '@gapi/core';
-import { includes, nextOrDefault } from './app/services/arguments/arguments.service';
+import { nextOrDefault, includes } from './app/services/helpers/helpers';
 
 @Module({
     imports: [

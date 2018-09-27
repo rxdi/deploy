@@ -7,7 +7,6 @@ import { FileService } from './services/file/file.service';
 import { ParcelBundlerService } from './services/parcel-bundler/parcel-bundler.service';
 import { FileUserService } from './services/file/file-user.service';
 import { TypescriptDefinitionGeneratorService } from './services/dts-generator/dts-generator.service';
-import { nextOrDefault, includes } from './services/arguments/arguments.service';
 import { TsConfigGenratorService } from './services/tsconfig-generator/tsconfig-generator.service';
 import { TableService } from './services/table-service/table-service';
 import { StatusModule } from './status/status.module';
@@ -15,7 +14,7 @@ import { BuildHistoryService } from './services/build-history/build-history.serv
 import { ErrorReasonService } from './services/error-reason/error-reason.service';
 import { CompilePlugin } from './plugins/compile/compile.plugin';
 import { TimeService } from './services/time/time.service';
-import { HtmlTemplateBuilder, PackageJsonService } from './services';
+import { HtmlTemplateBuilder, PackageJsonService, nextOrDefault, includes } from './services';
 import { ServerModule } from './server/server.module';
 
 const _IMPORTS = [

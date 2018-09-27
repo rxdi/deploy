@@ -67,7 +67,7 @@ export class TableService {
         }
 
         const t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width,
             rightPadding: 0,
@@ -129,7 +129,7 @@ export class TableService {
 
     previewsVersions(previewsVersions: string[]) {
         var t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['50%', '50%'],
             rightPadding: 0,
@@ -159,7 +159,7 @@ export class TableService {
 
     endInstallCommand(hash) {
         const t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['50%'],
             rightPadding: 0,
@@ -188,7 +188,7 @@ export class TableService {
 
     previewsNext(previewsVersions: string[]) {
         var t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['50%', '50%'],
             rightPadding: 0,
@@ -231,7 +231,7 @@ export class TableService {
 
     getHistoryTable(history: DagModel[]) {
         var t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: [3, '50%', '50%'],
             rightPadding: 0,
@@ -263,7 +263,7 @@ export class TableService {
 
     fileUploadStatus(file: IPFSFile[]) {
         const t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['100%'],
             rightPadding: 0,

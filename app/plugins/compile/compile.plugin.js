@@ -32,8 +32,8 @@ const build_history_service_1 = require("../../services/build-history/build-hist
 const previews_service_1 = require("../../services/previews/previews.service");
 const error_reason_service_1 = require("../../services/error-reason/error-reason.service");
 const status_service_1 = require("../../status/status.service");
-const arguments_service_1 = require("../../services/arguments/arguments.service");
 const package_json_service_1 = require("../../services/package-json/package-json.service");
+const helpers_1 = require("../../services/helpers/helpers");
 let CompilePlugin = class CompilePlugin {
     constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previwsService, errorReasonService, statusService, packageJsonService, rxdiFileService) {
         this.parcelBundler = parcelBundler;
@@ -53,7 +53,7 @@ let CompilePlugin = class CompilePlugin {
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (arguments_service_1.includes('--webui') || arguments_service_1.includes('--node-only')) {
+            if (helpers_1.includes('--webui') || helpers_1.includes('--node-only')) {
                 return yield Promise.resolve();
             }
             if (this.isJavascriptCompilation()) {
@@ -152,7 +152,7 @@ let CompilePlugin = class CompilePlugin {
             }
             this.logger.log(`Current module before deploy ${JSON.stringify(currentModule)}`);
             const packages = yield this.packageJsonService.prepareDependencies();
-            if (packages.length && !arguments_service_1.includes('--disable-package-collection')) {
+            if (packages.length && !helpers_1.includes('--disable-package-collection')) {
                 currentModule.packages = packages;
             }
             ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));

@@ -60,7 +60,7 @@ let TableService = class TableService {
             moduleRow.push(ModuleStatus.message);
         }
         const t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width,
             rightPadding: 0,
@@ -110,7 +110,7 @@ let TableService = class TableService {
     }
     previewsVersions(previewsVersions) {
         var t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['50%', '50%'],
             rightPadding: 0,
@@ -135,7 +135,7 @@ let TableService = class TableService {
     }
     endInstallCommand(hash) {
         const t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['50%'],
             rightPadding: 0,
@@ -158,7 +158,7 @@ let TableService = class TableService {
     }
     previewsNext(previewsVersions) {
         var t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['50%', '50%'],
             rightPadding: 0,
@@ -196,7 +196,7 @@ let TableService = class TableService {
     }
     getHistoryTable(history) {
         var t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: [3, '50%', '50%'],
             rightPadding: 0,
@@ -222,7 +222,7 @@ let TableService = class TableService {
     }
     fileUploadStatus(file) {
         const t = new Table({
-            borderStyle: 3,
+            borderStyle: 2,
             horizontalLine: true,
             width: ['100%'],
             rightPadding: 0,

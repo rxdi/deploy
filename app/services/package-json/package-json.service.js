@@ -23,14 +23,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const file_service_1 = require("../file/file.service");
 const core_1 = require("@rxdi/core");
 const env_injection_tokens_1 = require("../../../env.injection.tokens");
-const arguments_service_1 = require("../arguments/arguments.service");
+const helpers_1 = require("../helpers/helpers");
 let PackageJsonService = class PackageJsonService {
     constructor(fileService, deployerOutputConfigName) {
         this.fileService = fileService;
         this.deployerOutputConfigName = deployerOutputConfigName;
     }
     OnInit() {
-        if (arguments_service_1.includes('--collect-packages')) {
+        if (helpers_1.includes('--collect-packages')) {
             this.defaultOutputConfig = 'package.json';
         }
         else {

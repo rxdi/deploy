@@ -17,4 +17,5 @@ __export(require("./error-reason/error-reason.service"));
 __export(require("./time/time.service"));
 __export(require("./package-json/package-json.service"));
 __export(require("./html-template-builder/html-template-builder.service"));
+__export(require("./helpers/helpers"));
 //# sourceMappingURL=index.js.map

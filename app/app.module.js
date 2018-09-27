@@ -14,7 +14,6 @@ const file_service_1 = require("./services/file/file.service");
 const parcel_bundler_service_1 = require("./services/parcel-bundler/parcel-bundler.service");
 const file_user_service_1 = require("./services/file/file-user.service");
 const dts_generator_service_1 = require("./services/dts-generator/dts-generator.service");
-const arguments_service_1 = require("./services/arguments/arguments.service");
 const tsconfig_generator_service_1 = require("./services/tsconfig-generator/tsconfig-generator.service");
 const table_service_1 = require("./services/table-service/table-service");
 const status_module_1 = require("./status/status.module");
@@ -26,12 +25,12 @@ const services_1 = require("./services");
 const server_module_1 = require("./server/server.module");
 const _IMPORTS = [
     ipfs_daemon_1.IpfsDaemonModule.forRoot({
-        type: arguments_service_1.nextOrDefault('--default-ipfs-node', 'js')
+        type: services_1.nextOrDefault('--default-ipfs-node', 'js')
     }),
     ipfs_1.IpfsModule.forRoot(),
     status_module_1.StatusModule,
 ];
-arguments_service_1.includes('--webui') ? _IMPORTS.push(server_module_1.ServerModule) : null;
+services_1.includes('--webui') ? _IMPORTS.push(server_module_1.ServerModule) : null;
 let AppModule = class AppModule {
 };
 AppModule = __decorate([

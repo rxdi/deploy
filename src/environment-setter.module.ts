@@ -1,5 +1,5 @@
 import { Module } from '@rxdi/core';
-import { ArgumentsService, nextOrDefault, includes } from './app/services/arguments/arguments.service';
+import { ArgumentsService } from './app/services/arguments/arguments.service';
 import {
     __NODE_MODULES,
     __DEPLOYER_ARGUMENTS,
@@ -30,9 +30,15 @@ import { TsConfigGenratorService } from './app/services/tsconfig-generator/tscon
 import { FileService } from './app/services/file/file.service';
 import { homedir } from 'os';
 import * as Datastore from 'nedb';
+import { includes, nextOrDefault } from './app/services/helpers/helpers';
+
 
 @Module({
     services: [
+        {
+            provide: __DEPLOYER_ARGUMENTS,
+            useFactory: () => process.argv.slice(2)  
+        },
         {
             provide: __NODE_MODULES,
             useValue: __dirname + '/node_modules'
@@ -44,10 +50,6 @@ import * as Datastore from 'nedb';
         {
             provide: __HOME_DIR,
             useValue: homedir()
-        },
-        {
-            provide: __DEPLOYER_ARGUMENTS,
-            useValue: process.argv.slice(2)
         },
         {
             provide: __COMMIT_MESSAGE,
@@ -98,7 +100,7 @@ import * as Datastore from 'nedb';
                     return './index.ts';
                 }
                 return args[0] || './index.ts';
-             }
+            }
         },
         {
             provide: __FILE_NAME,

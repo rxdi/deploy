@@ -23,8 +23,8 @@ import { BuildHistoryService } from '../../services/build-history/build-history.
 import { PreviwsService } from '../../services/previews/previews.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
-import { includes } from '../../services/arguments/arguments.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
+import { includes } from '../../services/helpers/helpers';
 
 @Plugin()
 export class CompilePlugin implements PluginInterface {
