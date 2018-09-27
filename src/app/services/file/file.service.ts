@@ -13,7 +13,7 @@ export class FileService {
         return this.fileService.mkdirp(dir);
     }
 
-    async readFile(file: string) {
+    async readFile(file: string): Promise<string> {
         return await this.readFilePromisify(file);
     }
 
@@ -29,7 +29,7 @@ export class FileService {
         return this.fileService.fileWalker(folder);
     }
 
-    private readFilePromisify(file: string) {
+    private readFilePromisify(file: string): Promise<string>{
         return new Promise((resolve, reject) => {
             readFile(file, 'utf8', (err, data) => {
                 if (err) {
@@ -52,17 +52,17 @@ export class FileService {
                         message: '',
                         previews: []
                     }))
-                    .then(async () => resolve(await this.readFilePromisify(file)))
-                    .catch(e => reject(e));
+                        .then(async () => resolve(await this.readFilePromisify(file)))
+                        .catch(e => reject(e));
                 }
                 return resolve(data);
             });
         });
     }
 
-    private writeFilePromisify(path: string, data: any): Promise<boolean> {
+    private writeFilePromisify(path: string, data: any, encoding: string = 'utf-8'): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            writeFile(path, data, (err) => {
+            writeFile(path, data, { encoding }, (err) => {
                 if (err) {
                     reject(err);
                 }

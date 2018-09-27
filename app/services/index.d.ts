@@ -10,4 +10,5 @@ export * from './build-history/build-history.service';
 export * from './previews/previews.service';
 export * from './error-reason/error-reason.service';
 export * from './time/time.service';
+export * from './package-json/package-json.service';
 export * from './html-template-builder/html-template-builder.service';

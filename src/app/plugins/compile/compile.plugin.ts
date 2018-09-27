@@ -4,11 +4,11 @@ import {
     __FILE_NAME,
     __DEPLOYER_OUTPUT_CONFIG_NAME,
     __NAMESPACE,
-    HistoryModel,
+    DagModel,
     __COMMIT_MESSAGE,
     __FILE_EXTENSION
 } from '../../../env.injection.tokens';
-import { Inject, BootstrapLogger, PluginInterface, Plugin } from '@rxdi/core';
+import { Inject, BootstrapLogger, PluginInterface, Plugin, FileService as RxdiFileService } from '@rxdi/core';
 import { tap, switchMapTo, take, map, switchMap } from 'rxjs/operators';
 import { interval, from, of, combineLatest } from 'rxjs';
 import { FileUserService } from '../../services/file/file-user.service';
@@ -24,6 +24,7 @@ import { PreviwsService } from '../../services/previews/previews.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
 import { includes } from '../../services/arguments/arguments.service';
+import { PackageJsonService } from '../../services/package-json/package-json.service';
 
 @Plugin()
 export class CompilePlugin implements PluginInterface {
@@ -48,12 +49,14 @@ export class CompilePlugin implements PluginInterface {
         private buildHistoryService: BuildHistoryService,
         private previwsService: PreviwsService,
         private errorReasonService: ErrorReasonService,
-        private statusService: StatusService
+        private statusService: StatusService,
+        private packageJsonService: PackageJsonService,
+        private rxdiFileService: RxdiFileService
     ) { }
 
     async register() {
         if (includes('--webui') || includes('--node-only')) {
-            return await Promise.resolve();   
+            return await Promise.resolve();
         }
         if (this.isJavascriptCompilation()) {
             return await this.compile();
@@ -86,7 +89,6 @@ export class CompilePlugin implements PluginInterface {
     }
 
     async compile() {
-        console.log(this.folder, this.fileName, this.commitMessage, this.namespace, this.outputConfigName);
         return this.completeBuildAndAddToIpfs(this.folder, this.fileName, this.commitMessage, this.namespace, this.outputConfigName)
             .pipe(
                 tap((r) => this.logSuccess(r)),
@@ -115,7 +117,7 @@ export class CompilePlugin implements PluginInterface {
         let ipfsMessage: IPFSFile[] = [{ hash: '', path: '', size: 0, content: '' }];
         this.logger.log('Bundling Started!\n');
         let currentModule;
-        let dag: HistoryModel;
+        let dag: DagModel;
         return from(this.parcelBundler.prepareBundler(folder + '/' + file))
             .pipe(
                 tap(() => {
@@ -151,7 +153,7 @@ export class CompilePlugin implements PluginInterface {
                     } catch (e) {
                         throw new Error(`Cannot parse ${outputConfigName} from root directory!`);
                     }
-                    currentModule = <HistoryModel>{
+                    currentModule = <DagModel>{
                         name: namespace,
                         typings: ipfsTypings[0].hash,
                         module: ipfsFile[0].hash,
@@ -160,19 +162,54 @@ export class CompilePlugin implements PluginInterface {
                         message: ipfsMessage[0].hash,
                         previews: [...(dag.previews || [])]
                     };
-                    ipfsModule = await this.ipfsFile.addFile(JSON.stringify(currentModule, null, 4));
+
+                    let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = {ipfs: []};
+                    
+
+
+                    if (this.rxdiFileService.isPresent(`./${this.outputConfigName}`)) {
+                        this.logger.log(`Reactive file present ${this.outputConfigName} package dependencies will be taken from it`);
+                        try {
+                            f = JSON.parse(await this.fileService.readFile(`./${this.outputConfigName}`));
+                        } catch (e) {
+                            throw new Error(`Cannot parce reactive file at ./${this.outputConfigName}`);
+                        }
+
+                        if (f.dependencies) {
+                            currentModule.dependencies = f.dependencies;
+                        }
+                        const dependencies: string[] = [];
+                        if (f.ipfs && f.ipfs.length) {
+                            f.ipfs.forEach(p => p.dependencies.forEach(d => dependencies.push(d)));
+                            if (dependencies.length) {
+                                currentModule.dependencies = dependencies;
+                            }
+                        }
+                    }
+                    this.logger.log(`Current module before deploy ${JSON.stringify(currentModule)}`);
+                    const packages = await this.packageJsonService.prepareDependencies();
+                    if (packages.length && !includes('--disable-package-collection')) {
+                        currentModule.packages = packages;
+                    }
+                    ipfsModule = await this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
+
                     if (currentModule.previews.length >= 20) {
                         currentModule.previews.shift();
                     }
+
                     currentModule.previews = [...currentModule.previews, ipfsModule[0].hash];
-                    this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 4));
+                    if (f.ipfs) {
+                        currentModule.ipfs = f.ipfs;
+                    }
+                    delete currentModule.dependencies;
+                    await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
                     this.integrityCheck(dag, ipfsFile, ipfsTypings);
 
                     return ipfsModule;
                 }),
                 tap(() => this.logger.log(`Module configuration added to ipfs!\n`)),
                 switchMap(() => combineLatest([
-                    this.buildHistoryService.insert(<HistoryModel>{
+                    this.buildHistoryService.insert(<DagModel>{
                         status: {
                             file: this.statusService.getBuildStatus().file,
                             typings: this.statusService.getBuildStatus().typings,
@@ -198,15 +235,15 @@ export class CompilePlugin implements PluginInterface {
                     module: ipfsModule
                 })),
                 tap(() => {
-                        this.logger.log('Module saved to persistant history!');
-                        if (!ipfsModule) {
-                            this.fileNotAddedToIpfs(ipfsModule);
-                        }
-                        console.log('' + this.tableService.previewsVersions(currentModule.previews));
-                        console.log('' + this.tableService.previewsNext(currentModule.previews));
-                        console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
-                        console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-                        this.showError(currentModule.previews[currentModule.previews.length - 2]);
+                    this.logger.log('Module saved to persistant history!');
+                    if (!ipfsModule) {
+                        this.fileNotAddedToIpfs(ipfsModule);
+                    }
+                    console.log('' + this.tableService.previewsVersions(currentModule.previews));
+                    console.log('' + this.tableService.previewsNext(currentModule.previews));
+                    console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
+                    console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
+                    this.showError(currentModule.previews[currentModule.previews.length - 2]);
                 })
             );
     }
@@ -216,7 +253,7 @@ export class CompilePlugin implements PluginInterface {
         console.log(`More info can be found executing command: rxdi-deploy --find ${file[0].hash}`);
     }
 
-    integrityCheck(dag: HistoryModel, file: IPFSFile[], typings: IPFSFile[]) {
+    integrityCheck(dag: DagModel, file: IPFSFile[], typings: IPFSFile[]) {
         const genericIntegrityError = 'Integrity is same like in the previews version!';
         if (dag.module === file[0].hash) {
             this.logger.log(`

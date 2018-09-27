@@ -2,8 +2,8 @@
 import { Service, Inject } from '@rxdi/core';
 import { IPFSFile } from '@gapi/ipfs';
 import { FILE_DEPLOYMENT_STATUS } from '../../status/status-injection.tokens';
-import { HistoryModel } from 'env.injection.tokens';
 import { FileIpfsService } from '../ipfs-file/ipfs-file.service';
+import { DagModel } from '../../../env.injection.tokens';
 var Table = require('terminal-table');
 
 @Service()
@@ -229,7 +229,7 @@ export class TableService {
         return t;
     }
 
-    getHistoryTable(history: HistoryModel[]) {
+    getHistoryTable(history: DagModel[]) {
         var t = new Table({
             borderStyle: 3,
             horizontalLine: true,

@@ -74,9 +74,9 @@ let FileService = class FileService {
             });
         }));
     }
-    writeFilePromisify(path, data) {
+    writeFilePromisify(path, data, encoding = 'utf-8') {
         return new Promise((resolve, reject) => {
-            fs_1.writeFile(path, data, (err) => {
+            fs_1.writeFile(path, data, { encoding }, (err) => {
                 if (err) {
                     reject(err);
                 }

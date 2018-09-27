@@ -27,7 +27,7 @@ export class TsConfigGenratorService {
         "skipLibCheck": true,
         "typeRoots": [
             "node_modules/@types"
-        ],
+        ]
     },
     "include": [
         "."

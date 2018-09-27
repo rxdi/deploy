@@ -5,7 +5,7 @@ export declare class FileService {
     private logger;
     constructor(fileService: RxdiFileService, logger: BootstrapLogger);
     ensureDir(dir: string): import("rxjs/internal/Observable").Observable<boolean>;
-    readFile(file: string): Promise<{}>;
+    readFile(file: string): Promise<string>;
     writeFile(path: string, data: any): Promise<boolean>;
     createFolder(folder: string): Promise<boolean>;
     fileWalker(folder: string): import("rxjs/internal/Observable").Observable<string[]>;

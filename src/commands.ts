@@ -32,6 +32,8 @@ export const Commands = strEnum([
     '--graphql-endpoint',
     '--write-effects',
     '--graphiql-endpoint',
-    '--graphql-api-port'
+    '--graphql-api-port',
+    '--disable-package-collection',
+    '--collect-packages'
 ]);
 export type Commands = keyof typeof Commands;

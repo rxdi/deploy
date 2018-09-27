@@ -13,7 +13,7 @@ export type __NAMESPACE = '@rxdi/core';
 export type __FOLDER = string;
 export type __FILE_EXTENSION = '.ts' | '.js';
 export type __IPFS_NODE_RESOLUTION_TIME = number;
-export type __DEPLOYER_OUTPUT_CONFIG_NAME = 'reactive.json';
+export type __DEPLOYER_OUTPUT_CONFIG_NAME = 'reactive.json' | 'package.json';
 export type __PROCESSING_TIME_INIT = Date;
 export type __PROCESSING_TIME_FINISH = Date;
 export type __PROCESSING_TIME_END = Date;
@@ -68,7 +68,7 @@ export interface __PARCEL_SETTINGS {
     detailedReports?: boolean;
 };
 
-export class HistoryModel {
+export class DagModel {
     name: string;
     typings: string;
     module: string;

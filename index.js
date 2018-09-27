@@ -5,7 +5,7 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 const arguments_service_1 = require("./app/services/arguments/arguments.service");
-arguments_service_1.includes('--silent') || arguments_service_1.includes('--webui') ? console.log = () => null : null;
+arguments_service_1.includes('--silent') ? console.log = () => null : null;
 const core_1 = require("@rxdi/core");
 const environment_setter_module_1 = require("./environment-setter.module");
 const app_module_1 = require("./app/app.module");
@@ -18,7 +18,7 @@ core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.
         exitHandler: true,
         fileService: true
     }
-}) : ({}), { init: true, initOptions: {
+}) : ({}), { init: false, initOptions: {
         services: true,
         plugins: true,
         controllers: true

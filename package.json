@@ -25,9 +25,9 @@
   "author": "Kristiyan Tachev",
   "license": "MIT",
   "dependencies": {
-    "@gapi/core": "^1.4.20",
-    "@gapi/ipfs": "1.4.19",
-    "@gapi/ipfs-daemon": "1.4.19",
+    "@gapi/core": "^1.4.22",
+    "@gapi/ipfs": "1.4.22",
+    "@gapi/ipfs-daemon": "1.4.22",
     "@rxdi/core": "^0.0.298",
     "@rxdi/dts-merge": "^0.0.298",
     "graphql-request": "^1.8.2",

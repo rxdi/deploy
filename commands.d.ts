@@ -27,5 +27,7 @@ export declare const Commands: {
     "--write-effects": "--write-effects";
     "--graphiql-endpoint": "--graphiql-endpoint";
     "--graphql-api-port": "--graphql-api-port";
+    "--disable-package-collection": "--disable-package-collection";
+    "--collect-packages": "--collect-packages";
 };
 export declare type Commands = keyof typeof Commands;

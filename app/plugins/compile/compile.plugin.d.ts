@@ -1,5 +1,5 @@
-import { __DEPLOYER_OUTPUT_CONFIG_NAME, HistoryModel } from '../../../env.injection.tokens';
-import { BootstrapLogger, PluginInterface } from '@rxdi/core';
+import { __DEPLOYER_OUTPUT_CONFIG_NAME, DagModel } from '../../../env.injection.tokens';
+import { BootstrapLogger, PluginInterface, FileService as RxdiFileService } from '@rxdi/core';
 import { FileUserService } from '../../services/file/file-user.service';
 import { IPFSFile } from '@gapi/ipfs';
 import { ParcelBundlerService } from '../../services/parcel-bundler/parcel-bundler.service';
@@ -12,6 +12,7 @@ import { BuildHistoryService } from '../../services/build-history/build-history.
 import { PreviwsService } from '../../services/previews/previews.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
+import { PackageJsonService } from '../../services/package-json/package-json.service';
 export declare class CompilePlugin implements PluginInterface {
     private parcelBundler;
     private logger;
@@ -25,6 +26,8 @@ export declare class CompilePlugin implements PluginInterface {
     private previwsService;
     private errorReasonService;
     private statusService;
+    private packageJsonService;
+    private rxdiFileService;
     private fileName;
     private folder;
     private resolutionTime;
@@ -32,13 +35,13 @@ export declare class CompilePlugin implements PluginInterface {
     private namespace;
     private commitMessage;
     private extension;
-    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previwsService: PreviwsService, errorReasonService: ErrorReasonService, statusService: StatusService);
+    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previwsService: PreviwsService, errorReasonService: ErrorReasonService, statusService: StatusService, packageJsonService: PackageJsonService, rxdiFileService: RxdiFileService);
     register(): Promise<void | {}>;
     isJavascriptCompilation(): boolean;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;
     completeBuildAndAddToIpfs(folder: string, file: string, message: any, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME): import("rxjs/internal/Observable").Observable<{}>;
     fileNotAddedToIpfs(file: IPFSFile[]): void;
-    integrityCheck(dag: HistoryModel, file: IPFSFile[], typings: IPFSFile[]): void;
+    integrityCheck(dag: DagModel, file: IPFSFile[], typings: IPFSFile[]): void;
     showError(hash: string): void;
     writeOtherFile(file: any): import("rxjs/internal/Observable").Observable<IPFSFile[]>;
     logSuccess(res: any): void;

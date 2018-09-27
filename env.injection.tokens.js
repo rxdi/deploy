@@ -26,9 +26,9 @@ exports.__HOME_DIR = new core_1.InjectionToken('rxdi-deployer-home-directory');
 exports.__COMMIT_MESSAGE = new core_1.InjectionToken('rxdi-deployer-commit-message');
 exports.__CREATE_HTML_PAGE = new core_1.InjectionToken('rxdi-deployer-commit-message');
 ;
-class HistoryModel {
+class DagModel {
 }
-exports.HistoryModel = HistoryModel;
+exports.DagModel = DagModel;
 class PreviewsModel {
 }
 exports.PreviewsModel = PreviewsModel;

@@ -48,7 +48,8 @@ AppModule = __decorate([
             build_history_service_1.BuildHistoryService,
             error_reason_service_1.ErrorReasonService,
             time_service_1.TimeService,
-            services_1.HtmlTemplateBuilder
+            services_1.HtmlTemplateBuilder,
+            services_1.PackageJsonService
         ],
         plugins: [compile_plugin_1.CompilePlugin]
     })

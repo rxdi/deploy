@@ -42,7 +42,7 @@ FrameworkImports = __decorate([
                     path: arguments_service_1.nextOrDefault('--graphql-endpoint', '/graphql'),
                     openBrowser: arguments_service_1.includes('--open-browser-graphiql'),
                     watcherPort: arguments_service_1.nextOrDefault('--open-browser-graphiql', 8967),
-                    writeEffects: arguments_service_1.nextOrDefault('--write-effects', '/graphql'),
+                    writeEffects: arguments_service_1.includes('--write-effects'),
                     graphiql: arguments_service_1.includes('--graphiql'),
                     graphiQlPlayground: arguments_service_1.includes('--graphiql-playground'),
                     graphiQlPath: arguments_service_1.nextOrDefault('--graphiql-endpoint', '/graphiql'),

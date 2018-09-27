@@ -33,7 +33,7 @@ import { includes, nextOrDefault } from './app/services/arguments/arguments.serv
                 path: nextOrDefault('--graphql-endpoint', '/graphql'),
                 openBrowser: includes('--open-browser-graphiql'),
                 watcherPort: nextOrDefault('--open-browser-graphiql', 8967),
-                writeEffects: nextOrDefault('--write-effects', '/graphql'),
+                writeEffects: includes('--write-effects'),
                 graphiql: includes('--graphiql'),
                 graphiQlPlayground: includes('--graphiql-playground'),
                 graphiQlPath: nextOrDefault('--graphiql-endpoint', '/graphiql'),

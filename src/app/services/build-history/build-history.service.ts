@@ -1,6 +1,6 @@
 import { Service, Inject } from '@rxdi/core';
 import { Observable } from 'rxjs';
-import { __BUILD_HISTORY_DATABASE, HistoryModel } from '../../../env.injection.tokens';
+import { __BUILD_HISTORY_DATABASE, DagModel } from '../../../env.injection.tokens';
 import { TableService } from '../table-service/table-service';
 
 @Service()
@@ -11,7 +11,7 @@ export class BuildHistoryService {
     ) {
         // console.log('' + this.showHistoryTable());
     }
-    insert(doc: HistoryModel): Observable<HistoryModel> {
+    insert(doc: DagModel): Observable<DagModel> {
         return new Observable(o => {
             this.buildHistoryDatabase.insert(doc, (e, d) => {
                 if (e) {
@@ -22,7 +22,7 @@ export class BuildHistoryService {
         })
     }
 
-    find(doc: HistoryModel | {}): Observable<HistoryModel> {
+    find(doc: DagModel | {}): Observable<DagModel> {
         return new Observable(o => {
             this.buildHistoryDatabase.find(doc, (e, d) => {
                 if (e) {
@@ -33,7 +33,7 @@ export class BuildHistoryService {
         })
     }
 
-    showHistoryTable(): Observable<HistoryModel> {
+    showHistoryTable(): Observable<DagModel> {
         console.log(this.findAll());
         const table = this.tableService.getHistoryTable(<any>this.findAll());
         console.log('', table);

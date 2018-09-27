@@ -33,8 +33,9 @@ const previews_service_1 = require("../../services/previews/previews.service");
 const error_reason_service_1 = require("../../services/error-reason/error-reason.service");
 const status_service_1 = require("../../status/status.service");
 const arguments_service_1 = require("../../services/arguments/arguments.service");
+const package_json_service_1 = require("../../services/package-json/package-json.service");
 let CompilePlugin = class CompilePlugin {
-    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previwsService, errorReasonService, statusService) {
+    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previwsService, errorReasonService, statusService, packageJsonService, rxdiFileService) {
         this.parcelBundler = parcelBundler;
         this.logger = logger;
         this.ipfsFile = ipfsFile;
@@ -47,6 +48,8 @@ let CompilePlugin = class CompilePlugin {
         this.previwsService = previwsService;
         this.errorReasonService = errorReasonService;
         this.statusService = statusService;
+        this.packageJsonService = packageJsonService;
+        this.rxdiFileService = rxdiFileService;
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -76,7 +79,6 @@ let CompilePlugin = class CompilePlugin {
     }
     compile() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(this.folder, this.fileName, this.commitMessage, this.namespace, this.outputConfigName);
             return this.completeBuildAndAddToIpfs(this.folder, this.fileName, this.commitMessage, this.namespace, this.outputConfigName)
                 .pipe(operators_1.tap((r) => this.logSuccess(r)), operators_1.switchMapTo(rxjs_1.interval(1000)), operators_1.take(this.resolutionTime), operators_1.map(v => (this.resolutionTime - 1) - v))
                 .subscribe((counter) => {
@@ -128,12 +130,41 @@ let CompilePlugin = class CompilePlugin {
                 message: ipfsMessage[0].hash,
                 previews: [...(dag.previews || [])]
             };
-            ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(currentModule, null, 4));
+            let f = { ipfs: [] };
+            if (this.rxdiFileService.isPresent(`./${this.outputConfigName}`)) {
+                this.logger.log(`Reactive file present ${this.outputConfigName} package dependencies will be taken from it`);
+                try {
+                    f = JSON.parse(yield this.fileService.readFile(`./${this.outputConfigName}`));
+                }
+                catch (e) {
+                    throw new Error(`Cannot parce reactive file at ./${this.outputConfigName}`);
+                }
+                if (f.dependencies) {
+                    currentModule.dependencies = f.dependencies;
+                }
+                const dependencies = [];
+                if (f.ipfs && f.ipfs.length) {
+                    f.ipfs.forEach(p => p.dependencies.forEach(d => dependencies.push(d)));
+                    if (dependencies.length) {
+                        currentModule.dependencies = dependencies;
+                    }
+                }
+            }
+            this.logger.log(`Current module before deploy ${JSON.stringify(currentModule)}`);
+            const packages = yield this.packageJsonService.prepareDependencies();
+            if (packages.length && !arguments_service_1.includes('--disable-package-collection')) {
+                currentModule.packages = packages;
+            }
+            ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
             if (currentModule.previews.length >= 20) {
                 currentModule.previews.shift();
             }
             currentModule.previews = [...currentModule.previews, ipfsModule[0].hash];
-            this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 4));
+            if (f.ipfs) {
+                currentModule.ipfs = f.ipfs;
+            }
+            delete currentModule.dependencies;
+            yield this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
             this.integrityCheck(dag, ipfsFile, ipfsTypings);
             return ipfsModule;
         })), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.switchMap(() => rxjs_1.combineLatest([
@@ -282,7 +313,9 @@ CompilePlugin = __decorate([
         build_history_service_1.BuildHistoryService,
         previews_service_1.PreviwsService,
         error_reason_service_1.ErrorReasonService,
-        status_service_1.StatusService])
+        status_service_1.StatusService,
+        package_json_service_1.PackageJsonService,
+        core_1.FileService])
 ], CompilePlugin);
 exports.CompilePlugin = CompilePlugin;
 //# sourceMappingURL=compile.plugin.js.map

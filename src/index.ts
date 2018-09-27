@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { includes } from './app/services/arguments/arguments.service';
 
-includes('--silent') || includes('--webui') ? console.log = () => null : null;
+includes('--silent') ? console.log = () => null : null;
 
 import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { EnvironemntSetterModule } from './environment-setter.module';
@@ -18,7 +18,7 @@ Container.get(ConfigService).setConfig({
             fileService: true
         }
     }) : ({}),
-    init: true,
+    init: false,
     initOptions: {
         services: true,
         plugins: true,

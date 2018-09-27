@@ -66,15 +66,15 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_BUILD_OUT_DIR,
-                useValue: arguments_service_1.nextOrDefault('--out-dir', 'build')
+                useFactory: () => arguments_service_1.nextOrDefault('--out-dir', 'build')
             },
             {
                 provide: env_injection_tokens_1.__PARCEL_SETTINGS,
-                useValue: {
+                useFactory: () => ({
                     watch: false,
                     logLevel: 3,
                     detailedReport: true
-                }
+                })
             },
             {
                 provide: env_injection_tokens_1.__GENERATE_TS_CONFIG,
@@ -125,7 +125,7 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__IPFS_NODE_RESOLUTION_TIME,
-                useValue: arguments_service_1.nextOrDefault('--beat', 20, Number)
+                useFactory: () => arguments_service_1.nextOrDefault('--beat', 20, Number)
             },
             {
                 provide: env_injection_tokens_1.__DEPLOYER_OUTPUT_CONFIG_NAME,
@@ -133,21 +133,21 @@ EnvironemntSetterModule = __decorate([
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_INIT,
-                useValue: Date.now()
+                useFactory: () => Date.now()
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_FINISH,
-                useValue: arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useFactory: () => arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: env_injection_tokens_1.__PROCESSING_TIME_END,
                 deps: [arguments_service_1.ArgumentsService],
-                useValue: arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
+                useFactory: () => arguments_service_1.nextOrDefault('--deployer-config-name', 'reactive.json')
             },
             {
                 provide: env_injection_tokens_1.__CREATE_HTML_PAGE,
                 deps: [arguments_service_1.ArgumentsService],
-                useValue: arguments_service_1.nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
+                useFactory: () => arguments_service_1.nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
             },
             {
                 provide: 'init-ts-config-file',

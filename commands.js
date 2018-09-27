@@ -34,6 +34,8 @@ exports.Commands = strEnum([
     '--graphql-endpoint',
     '--write-effects',
     '--graphiql-endpoint',
-    '--graphql-api-port'
+    '--graphql-api-port',
+    '--disable-package-collection',
+    '--collect-packages'
 ]);
 //# sourceMappingURL=commands.js.map

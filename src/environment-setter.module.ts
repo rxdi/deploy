@@ -73,15 +73,15 @@ import * as Datastore from 'nedb';
         },
         {
             provide: __PARCEL_BUILD_OUT_DIR,
-            useValue: nextOrDefault('--out-dir', 'build')
+            useFactory: () => nextOrDefault('--out-dir', 'build')
         },
         {
             provide: __PARCEL_SETTINGS,
-            useValue: {
+            useFactory: () => ({
                 watch: false,
                 logLevel: 3,
                 detailedReport: true
-            }
+            })
         },
         {
             provide: __GENERATE_TS_CONFIG,
@@ -132,7 +132,7 @@ import * as Datastore from 'nedb';
         },
         {
             provide: __IPFS_NODE_RESOLUTION_TIME,
-            useValue: nextOrDefault('--beat', 20, Number)
+            useFactory: () => nextOrDefault('--beat', 20, Number)
         },
         {
             provide: __DEPLOYER_OUTPUT_CONFIG_NAME,
@@ -140,21 +140,21 @@ import * as Datastore from 'nedb';
         },
         {
             provide: __PROCESSING_TIME_INIT,
-            useValue: Date.now()
+            useFactory: () => Date.now()
         },
         {
             provide: __PROCESSING_TIME_FINISH,
-            useValue: nextOrDefault('--deployer-config-name', 'reactive.json')
+            useFactory: () => nextOrDefault('--deployer-config-name', 'reactive.json')
         },
         {
             provide: __PROCESSING_TIME_END,
             deps: [ArgumentsService],
-            useValue: nextOrDefault('--deployer-config-name', 'reactive.json')
+            useFactory: () => nextOrDefault('--deployer-config-name', 'reactive.json')
         },
         {
             provide: __CREATE_HTML_PAGE,
             deps: [ArgumentsService],
-            useValue: nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
+            useFactory: () => nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
         },
         {
             provide: 'init-ts-config-file',
