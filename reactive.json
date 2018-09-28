@@ -1,11 +1,10 @@
 {
-  "name": "@pesho",
-  "module": "QmRLHVsCUu66h3cL6yVaLu48owtGymcPUqjte1BeNiTHtA",
-  "date": "2018-09-28T02:14:43.218Z",
-  "typings": "QmTWgSdHaFMNp5wdF1XP3Jm2f1f7GLUKq23awwSQdki4ne",
-  "message": "QmfEVVysEGnMB5oiaCt4oQ57exVFpossNd46Axy2R5qzXr",
+  "name": "@test",
+  "module": "QmWPm2p4AL5iHPSVaKPHqW6YfD8rC5Pa6nWB9butDZmBEG",
+  "date": "2018-09-28T22:37:58.215Z",
+  "typings": "Qmc8dFVJhxY1pQeVjN2C9ANmGgfxnoHSbXe5oKPy7t2sUn",
+  "message": "QmUWMLjzQzGDMAWPZcmCkjoKhmBT7y5pRkZBWoFfVqcjr6",
   "previews": [
-    "QmUHyNjftyCZSxHQDhEAUhFTNZawXZG6SkejdEmhR36G9n",
     "QmZpBg2ejXyKgaiNm4QPYhveNZCuBQr6wbWiDjjEwkqSpF",
     "QmTTPcz2LDRq9BpaLoGHhNmBUnRTo3v9H6FTuHeKqrvc8H",
     "QmXGL4ZVvVNQsjmKmdtmXqWH9RNs4rNJEQUs2ETCZjCDs1",
@@ -24,6 +23,7 @@
     "QmSezuSjDHMw9FHrt5vzZyz321BXGq68jWVD4x3B1KkqyX",
     "QmXhrnwTrpiChpR9aevt6jAVT1SjhZ61x8eEqSEC1jraTW",
     "QmeF2Lrf9WHEonZUG9R3dLMJP6ma28NGEobMenFaXYYHph",
-    "QmXNTM4GkrryFJYTSGCfzBPdearkwvQ3GLzw992Mxv1geC"
+    "QmXNTM4GkrryFJYTSGCfzBPdearkwvQ3GLzw992Mxv1geC",
+    "QmYRV11d68bwNJe88YzFGqGvp18Uw1MAzyaRa29tWdFjaA"
   ]
 }
