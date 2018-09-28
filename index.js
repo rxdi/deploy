@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const check_arguments_1 = require("./check-arguments");
 const commands_description_1 = require("./commands-description");
 const helpers_1 = require("./app/services/helpers/helpers");
-let Table = require('terminal-table');
+const Table = require('terminal-table');
 helpers_1.includes('--silent') ? console.log = () => null : null;
 if (helpers_1.includes('--help')) {
     const t = new Table({
@@ -31,7 +31,7 @@ check_arguments_1.checkArguments();
 const core_1 = require("@rxdi/core");
 const environment_setter_module_1 = require("./environment-setter.module");
 const app_module_1 = require("./app/app.module");
-const framework_imports_1 = require("./framework-imports");
+const gapi_framework_imports_1 = require("./gapi-framework-imports");
 core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) ? ({
     logger: {
         logging: true,
@@ -45,8 +45,7 @@ core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.
         plugins: true,
         controllers: true
     } }));
-const _FRAMEWORK_IMPORTS = [environment_setter_module_1.EnvironemntSetterModule];
-helpers_1.includes('--webui') ? _FRAMEWORK_IMPORTS.push(framework_imports_1.FrameworkImports) : null;
+const _FRAMEWORK_IMPORTS = [environment_setter_module_1.EnvironemntSetterModule, gapi_framework_imports_1.GapiFrameworkImports.forRoot(helpers_1.includes('--webui') || helpers_1.includes('--graphql-server-only'))];
 core_1.BootstrapFramework(app_module_1.AppModule, _FRAMEWORK_IMPORTS)
     .subscribe(() => {
     console.log('Bootstrap success!');
@@ -54,5 +53,9 @@ core_1.BootstrapFramework(app_module_1.AppModule, _FRAMEWORK_IMPORTS)
     throw new Error(error);
 });
 __export(require("./app/index"));
-__export(require("./framework-imports"));
+__export(require("./gapi-framework-imports"));
+__export(require("./env.injection.tokens"));
+__export(require("./commands"));
+__export(require("./check-arguments"));
+__export(require("./commands-description"));
 //# sourceMappingURL=index.js.map

@@ -26,8 +26,8 @@ export const Commands = strEnum([
     '--default-ipfs-node',
     '--deployer-config-name',
     '--open-browser-graphiql',
-    '--server-watcher',
-    '--server-watcher-port',
+    '--webui-server-watcher',
+    '--webui-server-watcher-port',
     '--random-port',
     '--graphiql',
     '--graphiql-subscription-endpoint',
@@ -40,7 +40,11 @@ export const Commands = strEnum([
     '--disable-package-collection',
     '--collect-packages',
     '--server-push-interval',
-    '--help'
+    '--help',
+    '--ipfs-api-gateway',
+    '--ipfs-api-port',
+    '--ipfs-swarms',
+    '--graphql-server-only'
 ]);
 export type Commands = keyof typeof Commands;
 

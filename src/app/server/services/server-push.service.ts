@@ -52,7 +52,7 @@ export class ServerPushService implements PluginInterface {
     }
 
     async register() {
-        if (includes('--server-watcher')) {
+        if (includes('--webui-server-watcher') || includes('--webui')) {
             this.createServerWatcher();
         }
     }
@@ -63,7 +63,7 @@ export class ServerPushService implements PluginInterface {
 
     private createServerWatcher() {
         this.serverWatcher = createServer(this.OnRequest.bind(this));
-        this.serverWatcher.listen(nextOrDefault('--server-watcher-port', 8957));
+        this.serverWatcher.listen(nextOrDefault('--webui-server-watcher-port', 8957));
     }
 
     OnRequest(req: IncomingMessage, res: ServerResponse) {

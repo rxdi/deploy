@@ -53,7 +53,7 @@ let ServerPushService = class ServerPushService {
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (services_1.includes('--server-watcher')) {
+            if (services_1.includes('--webui-server-watcher') || services_1.includes('--webui')) {
                 this.createServerWatcher();
             }
         });
@@ -65,7 +65,7 @@ let ServerPushService = class ServerPushService {
     }
     createServerWatcher() {
         this.serverWatcher = http_1.createServer(this.OnRequest.bind(this));
-        this.serverWatcher.listen(services_1.nextOrDefault('--server-watcher-port', 8957));
+        this.serverWatcher.listen(services_1.nextOrDefault('--webui-server-watcher-port', 8957));
     }
     OnRequest(req, res) {
         if (req.url === '/status') {

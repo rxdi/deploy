@@ -8,12 +8,16 @@ services:
     cpu_shares: 73
     container_name: rxdi-ipfs-deployer
     environment:
-      - API_PORT=9000
+      - API_PORT=9353
       - RANDOM_PORT=false
+      - IPFS_API_GATEWAY=/ip4/127.0.0.1/tcp/8080
+      - IPFS_API_PORT=/ip4/127.0.0.1/tcp/5001
     ports:
-      - "9200:9000"
+      - "9353:9353"
+      - "5001:5001"
+      - "8080:8080"
+      - "8957:8957"
     volumes:
       - ./packages:/usr/src/app/packages
       - ./.rxdi:/root/.rxdi
       - ./.jsipfs:/root/.jsipfs
-    command: ./packages/index.ts @yournamespace "init() init commit" -v --tsconfig

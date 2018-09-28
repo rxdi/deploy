@@ -17,8 +17,8 @@ export declare const Commands: {
     "--default-ipfs-node": "--default-ipfs-node";
     "--deployer-config-name": "--deployer-config-name";
     "--open-browser-graphiql": "--open-browser-graphiql";
-    "--server-watcher": "--server-watcher";
-    "--server-watcher-port": "--server-watcher-port";
+    "--webui-server-watcher": "--webui-server-watcher";
+    "--webui-server-watcher-port": "--webui-server-watcher-port";
     "--random-port": "--random-port";
     "--graphiql": "--graphiql";
     "--graphiql-subscription-endpoint": "--graphiql-subscription-endpoint";
@@ -32,6 +32,10 @@ export declare const Commands: {
     "--collect-packages": "--collect-packages";
     "--server-push-interval": "--server-push-interval";
     "--help": "--help";
+    "--ipfs-api-gateway": "--ipfs-api-gateway";
+    "--ipfs-api-port": "--ipfs-api-port";
+    "--ipfs-swarms": "--ipfs-swarms";
+    "--graphql-server-only": "--graphql-server-only";
 };
 export declare type Commands = keyof typeof Commands;
 export declare const ExcludedFromHelpers: {

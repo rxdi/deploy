@@ -76,22 +76,51 @@ rxdi-deploy `main-file` `namespace` `message` `...arguments`
 `message`: Short message representing what is changed in this version
 
 `...aruments`: 
-  - (-v)- Verbose logging,
-  - (--browser)- Build only for `browser` if none defaults to `node`
-  - (--tsconfig)- If there is no tsconfig create it
-  - (--unminify)- Will tell ParcelJS to unminify bundle by default minify is set to true (Planet care)
-  - (--beat)- Heart beat how many seconds will IPFS Daemon run after success finish build job
-  - (--node-only)- Will start the builder as a IPFS node and will not build file
+
+    (--message): Simple commit message when deploying module
+    (--out-dir): Parcel build out dir
+    (--file): Pass file path after this argument
+    (--namespace): `How this module will be named ? Later when you install it you can use it as follow import { MyModule } from @mynamespace
+    (--beat): `How many seconds the application should stay after deploy recomended 20 seconds so file will be distributed accross the network
+    (--html): Pass your html file this will override --message or 3-th argument message and you can put whole html
+    (--webui): `Will spawn web ui with many settings, history, last deployed module etc. can be passed with --open-browser argument
+    (--open-browser): `Will open browser for web user interface
+    (--graphiql-playground): `Development purposes open graphiql-playground dev tools
+    (--node-only): `Will just spawn node so you can use it for persistent data
+    (--silent): `Will silent every program output log
+    (--unminify): Tell ParcelJS to not minify or uglify current deployed module
+    (--browser): Will tell ParcelJS to build current module for browser
+    (--tsconfig): `Create tsconfig file if not exist
+    (--verbose): Better logging or you can use -v argument for simplicity
+    (--default-ipfs-node): `Default ipfs node is JS but if you want you can use GO --default-ipfs-node go you need to spawn your own daemon
+    (--ipfs-api-gateway): This is the address of the IPFS Gatway default: /ip4/127.0.0.1/tcp/8080
+    (--ipfs-api-port): This is the port of the IPFS Api default: /ip4/127.0.0.1/tcp/5001
+    (--ipfs-swarms): `These are the swarms for the Ipfs daemon passing them with comma separated example: --ipfs-swarms /ip4/0.0.0.0/tcp/4001,/ip6/::/tcp/4001, etc...
+    (--deployer-config-name): `This is default reactive.json filename you can change with other but in this moment is not tested very well
+    (--graphiql): `Open GraphiQL dev screen
+    (--open-browser-graphiql): Open browser for development purposes with Graphiql Dev tools
+    (--webui-server-watcher): If this argument passed we can spawn our server watcher so we can manage syncronization with UI and passing data from the rxdi-deploy server
+    (--webui-server-watcher-port): Watcher port is the main status port for webui if changed webui will not work defaults: 8957
+    (--graphiql-subscription-endpoint): Graphiql Dev tool subscription endpoint
+    (--graphiql-auth-token): Authentication token for graphiql dev tools
+    (--graphql-endpoint): Endpoint for the Graphql webserver
+    (--write-effects): Development effects are for graphql webserver can be checked here for more info https://github.com/Stradivario/gapi
+    (--graphql-server-only) : This argument will start also graphql web server so you can start making queries and interact with deployer only via API
+    (--graphiql-endpoint): `Endpoint for Graphiql development tools
+    (--graphql-api-port): Development server api port is random, if set --random-port false will default to: 9353 if --graphql-api-port 8*** is not set
+    (--random-port): This parameter will set random port to Graphql Server if for example you dont have the port avalable
+    (--disable-package-collection): `Disable collecting dependencies from package.json
+    (--collect-packages): Collect dependencies from package.json and transfer it to reactive.json
+    (--server-push-interval): Interval for server push service this is how fast the data will update by default is 7 seconds
+    (--help): `This help suite :)
 
 `unminify` - Reason that we don't have `minify` option and by `default` rxdi-deploy `minify` every bundle is that we care about Nature and for every deployed IPFS file even for testing will cost in the future many environmental changes for maintaining much larger space than we actualy can use.
+
 `beat` argument is created for better control over process termination.
 Reason this exist is internal mechanism since we ADD file to IPFS and then stop the Daemon no one can serve the file for us.
 So to fix this we need to PING biggest IPFS nodes available at the moment with our new generated HASH.
 Since some of them may be down or the connection may be slow the flow of Pinging content onto IPFS is separated from the main Deploy chain.
 This solution will provide us with stable independent build with correct end result.
-
-
-
 
 #### Adding other file than `.ts` or `.js`
 
@@ -117,7 +146,7 @@ docker build -t rxdi/deployer .
 docker-compose up -d
 ```
 
-Open browser to http://localhost:9200
+Open browser to http://localhost:9353
 To change the port open `docker-compose.yml`
 
 ```yml
@@ -131,12 +160,17 @@ services:
     cpu_shares: 73
     container_name: rxdi-ipfs-deployer
     environment:
-      - API_PORT=9000
+      - API_PORT=9353
       - RANDOM_PORT=false
+      - IPFS_API_GATEWAY=/ip4/127.0.0.1/tcp/8080
+      - IPFS_API_PORT=/ip4/127.0.0.1/tcp/5001
     ports:
-      - "9200:9000"
+      - "9353:9353"
+      - "5001:5001"
+      - "8080:8080"
+      - "8957:8957"
     volumes:
       - ./packages:/usr/src/app/packages
       - ./.rxdi:/root/.rxdi
-      - ./.rxdi:/root/.rxdi
+      - ./.jsipfs:/root/.jsipfs
 ```
