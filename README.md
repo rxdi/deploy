@@ -104,3 +104,39 @@ rxdi-deploy P1010094.jpg
 ```bash
 rxdi-deploy P1010094.jpg --beat 30
 ```
+
+
+#### Docker
+
+
+```bash
+docker build -t rxdi/deployer .
+```
+
+```bash
+docker-compose up -d
+```
+
+Open browser to http://localhost:9200
+To change the port open `docker-compose.yml`
+
+```yml
+version: '2'
+services:
+
+  rxdi-ipfs-deployer:
+    image: rxdi/deployer:latest
+    restart: always
+    mem_limit: 1000000000
+    cpu_shares: 73
+    container_name: rxdi-ipfs-deployer
+    environment:
+      - API_PORT=9000
+      - RANDOM_PORT=false
+    ports:
+      - "9200:9000"
+    volumes:
+      - ./packages:/usr/src/app/packages
+      - ./.rxdi:/root/.rxdi
+      - ./.rxdi:/root/.rxdi
+```

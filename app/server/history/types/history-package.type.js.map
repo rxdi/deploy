@@ -1,0 +1,1 @@
+{"version":3,"file":"history-package.type.js","sourceRoot":"","sources":["../../../../src/app/server/history/types/history-package.type.ts"],"names":[],"mappings":";;AAAA,qCAA2D;AAE9C,QAAA,kBAAkB,GAAG,IAAI,2BAAiB,CAAC;IACpD,IAAI,EAAE,oBAAoB;IAC1B,MAAM,EAAE;QACJ,IAAI,EAAE;YACF,IAAI,EAAE,uBAAa;SACtB;QACD,OAAO,EAAE;YACL,IAAI,EAAE,uBAAa;SACtB;KACJ;CACJ,CAAC,CAAA"}

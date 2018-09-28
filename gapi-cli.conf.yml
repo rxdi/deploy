@@ -83,7 +83,7 @@ config:
       TOKEN_TESTING: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJBRE1JTiJdLCJpYXQiOjE1MzQzMjUyNDl9.vylzw70nljWCTl3AICBobtk_vm-3u32QulYmEjrhrgo.eyJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwiaWQiOiI1YjczMmFjZTYzOTNjMjA4ZjlkMmM0MWEiLCJzY29wZSI6WyJVU0VSIl0sImlhdCI6MTUzNDMyMjM5OX0.-CX8FLdX578OD-jET9UREqbg772gLgAkNMRXs2jp7Ts
 
   schema:
-    introspectionEndpoint: http://localhost:9000/graphql
+    introspectionEndpoint: http://localhost:43453/graphql
     introspectionOutputFolder: ./src/app/core/api-introspection
 
 commands:

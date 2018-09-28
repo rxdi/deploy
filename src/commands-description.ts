@@ -19,14 +19,16 @@ export const CommandDescription = {
     '--graphiql': `Open GraphiQL dev screen`,
     '--open-browser-graphiql': 'Open browser for development purposes with Graphiql Dev tools',
     '--server-watcher': 'If this argument passed we can spawn our server watcher so we can manage syncronization with UI and passing data from the rxdi-deploy server',
-    '--server-watcher-port': 'Watcher port',
+    '--server-watcher-port': 'Watcher port is the main status port for webui if changed webui will not work defaults: 8957',
     '--graphiql-subscription-endpoint': 'Graphiql Dev tool subscription endpoint',
     '--graphiql-auth-token': 'Authentication token for graphiql dev tools',
     '--graphql-endpoint': 'Endpoint for the Graphql webserver',
     '--write-effects': 'Development effects are for graphql webserver can be checked here for more info https://github.com/Stradivario/gapi',
     '--graphiql-endpoint': `Endpoint for Graphiql development tools`,
-    '--graphql-api-port': 'Development server api port',
+    '--graphql-api-port': 'Development server api port is random, if set --random-port false will default to: 9353 if --graphql-api-port 8*** is not set',
+    '--random-port': '',
     '--disable-package-collection': `Disable collecting dependencies from package.json`,
     '--collect-packages': 'Collect dependencies from package.json and transfer it to reactive.json',
-    '--help': `This help suite :)`
+    '--help': `This help suite :)`,
+    '--server-push-interval': 'Interval for server push service this is how fast the data will update by default is 7 seconds'
 };

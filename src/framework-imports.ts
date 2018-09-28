@@ -5,8 +5,9 @@ import { nextOrDefault, includes } from './app/services/helpers/helpers';
     imports: [
         CoreModule.forRoot({
             server: {
+                randomPort: !process.env.RANDOM_PORT ? nextOrDefault('--random-port', false, Boolean) : false,
                 hapi: {
-                    port: nextOrDefault('--graphql-api-port', 9000),
+                    port: process.env.API_PORT ? process.env.API_PORT : nextOrDefault('--graphql-api-port', 9353, Number),
                     routes: {
                         cors: {
                             origin: ['*'],

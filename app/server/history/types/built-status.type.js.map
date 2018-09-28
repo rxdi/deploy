@@ -1,0 +1,1 @@
+{"version":3,"file":"built-status.type.js","sourceRoot":"","sources":["../../../../src/app/server/history/types/built-status.type.ts"],"names":[],"mappings":";;AAAA,qCAA2D;AAE9C,QAAA,eAAe,GAAG,IAAI,2BAAiB,CAAC;IACjD,IAAI,EAAE,iBAAiB;IACvB,MAAM,EAAE;QACJ,MAAM,EAAE;YACJ,IAAI,EAAE,uBAAa;SACtB;KACJ;CACJ,CAAC,CAAC"}

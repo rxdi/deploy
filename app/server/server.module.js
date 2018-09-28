@@ -10,11 +10,16 @@ const core_1 = require("@rxdi/core");
 const webui_service_1 = require("./services/webui.service");
 const server_push_service_1 = require("./services/server-push.service");
 const user_queries_controller_1 = require("./user/user-queries.controller");
+const history_module_1 = require("./history/history.module");
+const compile_service_1 = require("./services/compile.service");
 let ServerModule = class ServerModule {
 };
 ServerModule = __decorate([
     core_1.Module({
-        services: [webui_service_1.WebUiService, server_push_service_1.ServerPushService],
+        imports: [
+            history_module_1.HistoryModule
+        ],
+        services: [webui_service_1.WebUiService, server_push_service_1.ServerPushService, compile_service_1.CompileService],
         controllers: [user_queries_controller_1.UserQueriesController]
     })
 ], ServerModule);

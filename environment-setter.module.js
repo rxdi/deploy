@@ -22,11 +22,32 @@ const file_service_1 = require("./app/services/file/file.service");
 const os_1 = require("os");
 const Datastore = require("nedb");
 const helpers_1 = require("./app/services/helpers/helpers");
+const fs_1 = require("fs");
 let EnvironemntSetterModule = class EnvironemntSetterModule {
 };
 EnvironemntSetterModule = __decorate([
     core_1.Module({
         services: [
+            {
+                provide: 'isLockExists',
+                deps: [file_service_1.FileService],
+                lazy: true,
+                useFactory: (fileService) => __awaiter(this, void 0, void 0, function* () {
+                    const repoLockPath = `${os_1.homedir()}/.jsipfs/repo.lock`;
+                    const lockPath = `${os_1.homedir()}/.jsipfs/datastore/LOCK`;
+                    try {
+                        yield fileService.readFile(repoLockPath);
+                        fs_1.unlinkSync(repoLockPath);
+                    }
+                    catch (e) { }
+                    try {
+                        yield fileService.readFile(lockPath);
+                        fs_1.unlinkSync(lockPath);
+                    }
+                    catch (e) { }
+                    return true;
+                })
+            },
             {
                 provide: env_injection_tokens_1.__DEPLOYER_ARGUMENTS,
                 useFactory: () => process.argv.slice(2)

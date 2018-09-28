@@ -16,6 +16,6 @@ COPY . .
 
 RUN tsc
 
-ENTRYPOINT ["node", "./index.js"]
+VOLUME [ "/packages" ]
 
-RUN dir
+ENTRYPOINT ["node", "./index.js", "--webui", "--verbose", "--graphiql"]

@@ -37,8 +37,8 @@ let ServerPushService = class ServerPushService {
         this.sendTime = new rxjs_1.Subject();
         this.clientConnected = new rxjs_1.Subject();
         this.exitHandler.errorHandler.subscribe((e) => __awaiter(this, void 0, void 0, function* () { return yield this.stopServerWatcher(); }));
-        this.server.events.on('response', (request) => this.sendToClient.next({ query: request.payload, response: request.response['source'] }));
-        rxjs_1.timer(0, 1000).pipe(operators_1.tap(() => this.sendTime.next(true))).subscribe();
+        const interval = services_1.nextOrDefault('--server-push-interval', 1000 * 7, (a) => Number(a * 1000));
+        rxjs_1.timer(0, interval).pipe(operators_1.tap(() => this.sendTime.next(true))).subscribe();
         this.afterStarterService.appStarted
             .pipe(operators_1.switchMapTo(this.waitXSeconds(5)), operators_1.take(1), operators_1.filter(() => !this.connected), operators_1.filter(() => services_1.includes('--open-browser')), operators_1.tap(() => this.openService.openPage(`http://${this.server.info.address}:${this.server.info.port}/webui`))).subscribe();
     }
@@ -47,6 +47,9 @@ let ServerPushService = class ServerPushService {
             const timeout = setTimeout(() => o.next(true), sec * 1000);
             return () => clearTimeout(timeout);
         });
+    }
+    OnInit() {
+        this.register();
     }
     register() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,7 +65,7 @@ let ServerPushService = class ServerPushService {
     }
     createServerWatcher() {
         this.serverWatcher = http_1.createServer(this.OnRequest.bind(this));
-        this.serverWatcher.listen(services_1.nextOrDefault('--server-watcher-port', 8968));
+        this.serverWatcher.listen(services_1.nextOrDefault('--server-watcher-port', 8957));
     }
     OnRequest(req, res) {
         if (req.url === '/status') {

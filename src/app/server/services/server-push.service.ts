@@ -24,11 +24,11 @@ export class ServerPushService implements PluginInterface {
     ) {
         this.exitHandler.errorHandler.subscribe(async (e) => await this.stopServerWatcher());
 
-        this.server.events.on('response',
-            (request) => this.sendToClient.next({ query: request.payload, response: request.response['source'] })
-        );
-
-        timer(0, 1000).pipe(tap(() => this.sendTime.next(true))).subscribe();
+        // this.server.events.on('response',
+        //     (request) => this.sendToClient.next({ query: request.payload, response: request.response['source'] })
+        // );
+        const interval = nextOrDefault('--server-push-interval', 1000 * 7, (a) => Number(a * 1000));
+        timer(0, interval).pipe(tap(() => this.sendTime.next(true))).subscribe();
 
         this.afterStarterService.appStarted
             .pipe(
@@ -47,6 +47,10 @@ export class ServerPushService implements PluginInterface {
         });
     }
 
+    OnInit() {
+        this.register();
+    }
+
     async register() {
         if (includes('--server-watcher')) {
             this.createServerWatcher();
@@ -59,7 +63,7 @@ export class ServerPushService implements PluginInterface {
 
     private createServerWatcher() {
         this.serverWatcher = createServer(this.OnRequest.bind(this));
-        this.serverWatcher.listen(nextOrDefault('--server-watcher-port', 8968));
+        this.serverWatcher.listen(nextOrDefault('--server-watcher-port', 8957));
     }
 
     OnRequest(req: IncomingMessage, res: ServerResponse) {

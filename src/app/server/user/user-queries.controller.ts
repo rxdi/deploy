@@ -2,15 +2,19 @@ import { Controller } from '@rxdi/core';
 import { Type, Query, Subscription, Subscribe, PubSubService } from '@gapi/core';
 import { GraphQLString } from 'graphql';
 import { UserType } from './types/user.type';
+import { CompileService } from '../services/compile.service';
 
 @Controller()
 export class UserQueriesController {
-
+    
     constructor(
-        private pubsub: PubSubService
+        private pubsub: PubSubService,
+        private compileService: CompileService
     ) {
+        let counter = 0;
         setInterval(() => {
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { id: 1 });
+            counter++;
+            this.pubsub.publish('CREATE_SIGNAL_BASIC', { id: String(counter) });
         }, 3000);
     }
 
@@ -20,7 +24,8 @@ export class UserQueriesController {
             type: GraphQLString
         }
     })
-    findUser(root, { id }, context) {
+    async findUser(root, { id }, context) {
+        setTimeout(async () => await this.compileService.buildFile().toPromise());
         return {
             id
         }
@@ -29,7 +34,7 @@ export class UserQueriesController {
     @Type(UserType)
     @Subscribe((self: UserQueriesController) => self.pubsub.asyncIterator('CREATE_SIGNAL_BASIC'))
     @Subscription()
-    subscribeToUserMessagesBasic() {
-        return { id: '1' };
+    subscribeToUserMessagesBasic({id}: {id: string}) {
+        return { id };
     }
 }

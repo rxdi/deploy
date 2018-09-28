@@ -15,8 +15,9 @@ FrameworkImports = __decorate([
         imports: [
             core_1.CoreModule.forRoot({
                 server: {
+                    randomPort: !process.env.RANDOM_PORT ? helpers_1.nextOrDefault('--random-port', false, Boolean) : false,
                     hapi: {
-                        port: helpers_1.nextOrDefault('--graphql-api-port', 9000),
+                        port: process.env.API_PORT ? process.env.API_PORT : helpers_1.nextOrDefault('--graphql-api-port', 9353, Number),
                         routes: {
                             cors: {
                                 origin: ['*'],

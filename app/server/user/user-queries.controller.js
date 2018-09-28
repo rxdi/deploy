@@ -8,25 +8,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const core_2 = require("@gapi/core");
 const graphql_1 = require("graphql");
 const user_type_1 = require("./types/user.type");
+const compile_service_1 = require("../services/compile.service");
 let UserQueriesController = class UserQueriesController {
-    constructor(pubsub) {
+    constructor(pubsub, compileService) {
         this.pubsub = pubsub;
+        this.compileService = compileService;
+        let counter = 0;
         setInterval(() => {
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { id: 1 });
+            counter++;
+            this.pubsub.publish('CREATE_SIGNAL_BASIC', { id: String(counter) });
         }, 3000);
     }
     findUser(root, { id }, context) {
-        return {
-            id
-        };
+        return __awaiter(this, void 0, void 0, function* () {
+            setTimeout(() => __awaiter(this, void 0, void 0, function* () { return yield this.compileService.buildFile().toPromise(); }));
+            return {
+                id
+            };
+        });
     }
-    subscribeToUserMessagesBasic() {
-        return { id: '1' };
+    subscribeToUserMessagesBasic({ id }) {
+        return { id };
     }
 };
 __decorate([
@@ -38,19 +53,20 @@ __decorate([
     }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserQueriesController.prototype, "findUser", null);
 __decorate([
     core_2.Type(user_type_1.UserType),
     core_2.Subscribe((self) => self.pubsub.asyncIterator('CREATE_SIGNAL_BASIC')),
     core_2.Subscription(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UserQueriesController.prototype, "subscribeToUserMessagesBasic", null);
 UserQueriesController = __decorate([
     core_1.Controller(),
-    __metadata("design:paramtypes", [core_2.PubSubService])
+    __metadata("design:paramtypes", [core_2.PubSubService,
+        compile_service_1.CompileService])
 ], UserQueriesController);
 exports.UserQueriesController = UserQueriesController;
 //# sourceMappingURL=user-queries.controller.js.map

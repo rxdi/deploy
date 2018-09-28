@@ -16,6 +16,7 @@ export declare class ServerPushService implements PluginInterface {
     clientConnected: Subject<boolean>;
     constructor(server: HapiServer, exitHandler: ExitHandlerService, afterStarterService: AfterStarterService, openService: OpenService);
     waitXSeconds(sec: any): Observable<any>;
+    OnInit(): void;
     register(): Promise<void>;
     stopServerWatcher(): Promise<{}>;
     private createServerWatcher;

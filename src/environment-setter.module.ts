@@ -31,10 +31,29 @@ import { FileService } from './app/services/file/file.service';
 import { homedir } from 'os';
 import * as Datastore from 'nedb';
 import { includes, nextOrDefault } from './app/services/helpers/helpers';
+import { unlinkSync } from 'fs';
 
 
 @Module({
     services: [
+        {
+            provide: 'isLockExists',
+            deps: [FileService],
+            lazy: true,
+            useFactory: async (fileService: FileService) => {
+                const repoLockPath = `${homedir()}/.jsipfs/repo.lock`;
+                const lockPath = `${homedir()}/.jsipfs/datastore/LOCK`;
+                try {
+                    await fileService.readFile(repoLockPath);
+                    unlinkSync(repoLockPath);
+                } catch (e) {}
+                try {
+                    await fileService.readFile(lockPath);
+                    unlinkSync(lockPath);
+                } catch(e) {}
+                return true;
+            }
+        },
         {
             provide: __DEPLOYER_ARGUMENTS,
             useFactory: () => process.argv.slice(2)  

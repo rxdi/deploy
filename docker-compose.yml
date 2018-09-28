@@ -7,6 +7,13 @@ services:
     mem_limit: 1000000000
     cpu_shares: 73
     container_name: rxdi-ipfs-deployer
+    environment:
+      - API_PORT=9000
+      - RANDOM_PORT=false
+    ports:
+      - "9200:9000"
     volumes:
-      - ./proba:/usr/src/app/proba
-    command: './proba/index.ts @yournamespace "init(): init commit" -v --tsconfig'
+      - ./packages:/usr/src/app/packages
+      - ./.rxdi:/root/.rxdi
+      - ./.jsipfs:/root/.jsipfs
+    command: ./packages/index.ts @yournamespace "init() init commit" -v --tsconfig

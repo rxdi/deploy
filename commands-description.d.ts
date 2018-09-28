@@ -26,7 +26,9 @@ export declare const CommandDescription: {
     '--write-effects': string;
     '--graphiql-endpoint': string;
     '--graphql-api-port': string;
+    '--random-port': string;
     '--disable-package-collection': string;
     '--collect-packages': string;
     '--help': string;
+    '--server-push-interval': string;
 };

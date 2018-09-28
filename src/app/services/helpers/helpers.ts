@@ -7,7 +7,7 @@ export const nextOrDefault = (i: Commands, fb: any = true, type = (p) => (p)) =>
         if (!isNextArgumentPresent) {
             return fb;
         }
-        if (!isNextArgumentPresent.includes('--')) {
+        if (isNextArgumentPresent.includes('--')) {
             return fb;
         }
         return type(isNextArgumentPresent);
