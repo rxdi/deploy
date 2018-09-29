@@ -7,7 +7,7 @@ export * from './dts-generator/dts-generator.service';
 export * from './tsconfig-generator/tsconfig-generator.service';
 export * from './table-service/table-service';
 export * from './build-history/build-history.service';
-export * from './previews/previews.service';
+export * from './previous/previous.service';
 export * from './error-reason/error-reason.service';
 export * from './time/time.service';
 export * from './package-json/package-json.service';

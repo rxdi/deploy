@@ -12,7 +12,7 @@ __export(require("./dts-generator/dts-generator.service"));
 __export(require("./tsconfig-generator/tsconfig-generator.service"));
 __export(require("./table-service/table-service"));
 __export(require("./build-history/build-history.service"));
-__export(require("./previews/previews.service"));
+__export(require("./previous/previous.service"));
 __export(require("./error-reason/error-reason.service"));
 __export(require("./time/time.service"));
 __export(require("./package-json/package-json.service"));

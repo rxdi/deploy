@@ -25,11 +25,12 @@ const services_1 = require("./services");
 const server_module_1 = require("./server/server.module");
 const _IMPORTS = [
     ipfs_daemon_1.IpfsDaemonModule.forRoot({
-        type: services_1.nextOrDefault('--default-ipfs-node', 'js'),
+        type: services_1.nextOrDefault('--default-ipfs-node', 'go'),
         config: {
             Addresses: {
                 API: process.env.IPFS_API_PORT ? process.env.IPFS_API_PORT : services_1.nextOrDefault('--ipfs-api-port', '/ip4/127.0.0.1/tcp/5001', (a) => `/ip4/127.0.0.1/tcp/${a}`),
                 Gateway: process.env.IPFS_API_GATEWAY ? process.env.IPFS_API_GATEWAY : services_1.nextOrDefault('--ipfs-api-gateway', '/ip4/127.0.0.1/tcp/8080', (a) => `/ip4/127.0.0.1/tcp/${a}`),
+                Swarm: services_1.nextOrDefault('--ipfs-swarms', ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001'], (a) => a.split(',')),
             }
         }
     }),
@@ -54,7 +55,8 @@ AppModule = __decorate([
             error_reason_service_1.ErrorReasonService,
             time_service_1.TimeService,
             services_1.HtmlTemplateBuilder,
-            services_1.PackageJsonService
+            services_1.PackageJsonService,
+            services_1.PreviousService
         ],
         plugins: [compile_plugin_1.CompilePlugin]
     })

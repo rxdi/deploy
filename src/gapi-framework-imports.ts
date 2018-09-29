@@ -11,7 +11,7 @@ export class GapiFrameworkImports {
                 server: {
                     randomPort: !process.env.RANDOM_PORT ? nextOrDefault('--random-port', false, Boolean) : false,
                     hapi: {
-                        port: process.env.API_PORT ? process.env.API_PORT : nextOrDefault('--graphql-api-port', 9353, Number),
+                        port: process.env.API_PORT ? process.env.API_PORT : nextOrDefault('--graphql-api-port', 9300, Number),
                         routes: {
                             cors: {
                                 origin: ['*'],

@@ -29,13 +29,13 @@ const dts_generator_service_1 = require("../../services/dts-generator/dts-genera
 const tsconfig_generator_service_1 = require("../../services/tsconfig-generator/tsconfig-generator.service");
 const table_service_1 = require("../../services/table-service/table-service");
 const build_history_service_1 = require("../../services/build-history/build-history.service");
-const previews_service_1 = require("../../services/previews/previews.service");
+const previous_service_1 = require("../../services/previous/previous.service");
 const error_reason_service_1 = require("../../services/error-reason/error-reason.service");
 const status_service_1 = require("../../status/status.service");
 const package_json_service_1 = require("../../services/package-json/package-json.service");
 const helpers_1 = require("../../services/helpers/helpers");
 let CompilePlugin = class CompilePlugin {
-    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previwsService, errorReasonService, statusService, packageJsonService, rxdiFileService) {
+    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previousService, errorReasonService, statusService, packageJsonService, rxdiFileService) {
         this.parcelBundler = parcelBundler;
         this.logger = logger;
         this.ipfsFile = ipfsFile;
@@ -45,7 +45,7 @@ let CompilePlugin = class CompilePlugin {
         this.tsConfigGenerator = tsConfigGenerator;
         this.tableService = tableService;
         this.buildHistoryService = buildHistoryService;
-        this.previwsService = previwsService;
+        this.previousService = previousService;
         this.errorReasonService = errorReasonService;
         this.statusService = statusService;
         this.packageJsonService = packageJsonService;
@@ -149,7 +149,7 @@ Error loading file ${filePath}
             ipfsFile = res;
             this.logger.log(`Bundle added to ipfs ./build/${file.split('.')[0]}.js\n`);
             this.logger.log(`Typescript definitions merge started!\n`);
-        }), operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap((res) => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => {
+        }), operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`./build/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => {
             if (!!res) {
                 return this.ipfsFile.addFile(res);
             }
@@ -188,7 +188,7 @@ Error loading file ${filePath}
             if (ipfsFileMetadata[0].hash) {
                 currentModule.metadata = ipfsFileMetadata[0].hash;
             }
-            currentModule.previews = [...(dag.previews || [])];
+            currentModule.previous = [...(dag.previous || [])];
             let f = { ipfs: [] };
             if (this.rxdiFileService.isPresent(`./${this.outputConfigName}`)) {
                 this.logger.log(`Reactive file present ${this.outputConfigName} package dependencies will be taken from it`);
@@ -215,10 +215,10 @@ Error loading file ${filePath}
                 currentModule.packages = packages;
             }
             ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
-            if (currentModule.previews.length >= 20) {
-                currentModule.previews.shift();
+            if (currentModule.previous.length >= 20) {
+                currentModule.previous.shift();
             }
-            currentModule.previews = [...currentModule.previews, ipfsModule[0].hash];
+            currentModule.previous = [...currentModule.previous, ipfsModule[0].hash];
             if (f.ipfs) {
                 currentModule.ipfs = f.ipfs;
             }
@@ -241,7 +241,7 @@ Error loading file ${filePath}
                 metadata: ipfsFileMetadata[0].hash,
                 message: ipfsMessage[0].hash
             }),
-            this.previwsService.insert({
+            this.previousService.insert({
                 name: namespace,
                 hash: ipfsModule[0].hash,
                 date: new Date()
@@ -255,11 +255,11 @@ Error loading file ${filePath}
             if (!ipfsModule) {
                 this.fileNotAddedToIpfs(ipfsModule);
             }
-            console.log('' + this.tableService.previewsVersions(currentModule.previews));
-            console.log('' + this.tableService.previewsNext(currentModule.previews));
+            console.log('' + this.tableService.previewsVersions(currentModule.previous));
+            console.log('' + this.tableService.previewsNext(currentModule.previous));
             console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
             console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-            this.showError(currentModule.previews[currentModule.previews.length - 2]);
+            this.showError(currentModule.previous[currentModule.previous.length - 2]);
         }));
     }
     fileNotAddedToIpfs(file) {
@@ -370,7 +370,7 @@ CompilePlugin = __decorate([
         tsconfig_generator_service_1.TsConfigGenratorService,
         table_service_1.TableService,
         build_history_service_1.BuildHistoryService,
-        previews_service_1.PreviwsService,
+        previous_service_1.PreviousService,
         error_reason_service_1.ErrorReasonService,
         status_service_1.StatusService,
         package_json_service_1.PackageJsonService,

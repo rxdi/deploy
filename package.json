@@ -30,6 +30,7 @@
     "@gapi/ipfs-daemon": "1.4.23",
     "@rxdi/core": "^0.0.308",
     "@rxdi/dts-merge": "^0.0.308",
+    "go-ipfs": "^0.4.17",
     "graphql-request": "^1.8.2",
     "nedb": "^1.8.0",
     "parcel-bundler": "1.9.7",

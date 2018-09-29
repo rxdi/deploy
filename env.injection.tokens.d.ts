@@ -75,7 +75,7 @@ export declare class DagModel {
     message?: string;
     hash?: string;
     date?: Date;
-    previews?: string[];
+    previous?: string[];
     dependencies?: string[];
     packages?: {
         name: string;
@@ -86,7 +86,7 @@ export declare class DagModel {
         dependencies: string[];
     }[];
 }
-export declare class PreviewsModel {
+export declare class PreviousModel {
     id?: string;
     name: string;
     hash: string;

@@ -17,7 +17,7 @@ FrameworkImports = __decorate([
                 server: {
                     randomPort: !process.env.RANDOM_PORT ? helpers_1.nextOrDefault('--random-port', false, Boolean) : false,
                     hapi: {
-                        port: process.env.API_PORT ? process.env.API_PORT : helpers_1.nextOrDefault('--graphql-api-port', 9353, Number),
+                        port: process.env.API_PORT ? process.env.API_PORT : helpers_1.nextOrDefault('--graphql-api-port', 9300, Number),
                         routes: {
                             cors: {
                                 origin: ['*'],

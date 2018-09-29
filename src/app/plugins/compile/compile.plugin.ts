@@ -20,7 +20,7 @@ import { TypescriptDefinitionGeneratorService } from '../../services/dts-generat
 import { TsConfigGenratorService } from '../../services/tsconfig-generator/tsconfig-generator.service';
 import { TableService } from '../../services/table-service/table-service';
 import { BuildHistoryService } from '../../services/build-history/build-history.service';
-import { PreviwsService } from '../../services/previews/previews.service';
+import { PreviousService } from '../../services/previous/previous.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
@@ -53,7 +53,7 @@ export class CompilePlugin implements PluginInterface {
         private tsConfigGenerator: TsConfigGenratorService,
         private tableService: TableService,
         private buildHistoryService: BuildHistoryService,
-        private previwsService: PreviwsService,
+        private previousService: PreviousService,
         private errorReasonService: ErrorReasonService,
         private statusService: StatusService,
         private packageJsonService: PackageJsonService,
@@ -170,7 +170,7 @@ Error loading file ${filePath}
                 switchMap(() => from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))),
                 tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)),
                 switchMap(() => this.fileService.readFile(`./build/index.d.ts`)),
-                tap((res) => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
+                tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
                 switchMap((res: string) => {
                     if (!!res) {
                         return this.ipfsFile.addFile(res);
@@ -215,7 +215,7 @@ Error loading file ${filePath}
                         currentModule.metadata = ipfsFileMetadata[0].hash;
                     }
 
-                    currentModule.previews = [...(dag.previews || [])];
+                    currentModule.previous = [...(dag.previous || [])];
                     let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = { ipfs: [] };
                     if (this.rxdiFileService.isPresent(`./${this.outputConfigName}`)) {
                         this.logger.log(`Reactive file present ${this.outputConfigName} package dependencies will be taken from it`);
@@ -243,10 +243,10 @@ Error loading file ${filePath}
                     }
                     ipfsModule = await this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
 
-                    if (currentModule.previews.length >= 20) {
-                        currentModule.previews.shift();
+                    if (currentModule.previous.length >= 20) {
+                        currentModule.previous.shift();
                     }
-                    currentModule.previews = [...currentModule.previews, ipfsModule[0].hash];
+                    currentModule.previous = [...currentModule.previous, ipfsModule[0].hash];
                     if (f.ipfs) {
                         currentModule.ipfs = f.ipfs;
                     }
@@ -271,7 +271,7 @@ Error loading file ${filePath}
                         metadata: ipfsFileMetadata[0].hash,
                         message: ipfsMessage[0].hash
                     }),
-                    this.previwsService.insert({
+                    this.previousService.insert({
                         name: namespace,
                         hash: ipfsModule[0].hash,
                         date: new Date()
@@ -287,11 +287,11 @@ Error loading file ${filePath}
                     if (!ipfsModule) {
                         this.fileNotAddedToIpfs(ipfsModule);
                     }
-                    console.log('' + this.tableService.previewsVersions(currentModule.previews));
-                    console.log('' + this.tableService.previewsNext(currentModule.previews));
+                    console.log('' + this.tableService.previewsVersions(currentModule.previous));
+                    console.log('' + this.tableService.previewsNext(currentModule.previous));
                     console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
                     console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-                    this.showError(currentModule.previews[currentModule.previews.length - 2]);
+                    this.showError(currentModule.previous[currentModule.previous.length - 2]);
                 })
             );
     }

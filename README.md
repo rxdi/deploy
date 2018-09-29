@@ -107,7 +107,7 @@ rxdi-deploy `main-file` `namespace` `message` `...arguments`
 
 > `(--verbose)`: Better logging or you can use -v argument for simplicity
 
-> `(--default-ipfs-node)`: ` ipfs node is JS but if you want you can use GO --default-ipfs-node go you need to spawn your own daemon
+> `(--default-ipfs-node)`: ` ipfs node is GO but if you want you can use JS '--default-ipfs-node js'
 
 > `(--ipfs-api-gateway)`: This is the address of the IPFS Gatway default: /ip4/127.0.0.1/tcp/8080
 
@@ -137,7 +137,7 @@ rxdi-deploy `main-file` `namespace` `message` `...arguments`
 
 > `(--graphiql-endpoint)`: Endpoint for Graphiql development tools
 
-> `(--graphql-api-port)`: Development server api port is random, if set --random-port false will default to: 9353 if --graphql-api-port 8*** is not set
+> `(--graphql-api-port)`: Development server api port is random, if set --random-port false will default to: 9300 if --graphql-api-port 8*** is not set
 
 > `(--random-port)`: This parameter will set random port to Graphql Server if for example you dont have the port avalable
 
@@ -181,7 +181,7 @@ docker build -t rxdi/deployer .
 docker-compose up -d
 ```
 
-Open browser to http://localhost:9353
+Open browser to http://localhost:9300
 To change the port open `docker-compose.yml`
 
 ```yml
@@ -195,12 +195,12 @@ services:
     cpu_shares: 73
     container_name: rxdi-ipfs-deployer
     environment:
-      - API_PORT=9353
+      - API_PORT=9300
       - RANDOM_PORT=false
       - IPFS_API_GATEWAY=/ip4/127.0.0.1/tcp/8080
       - IPFS_API_PORT=/ip4/127.0.0.1/tcp/5001
     ports:
-      - "9353:9353"
+      - "9300:9300"
       - "5001:5001"
       - "8080:8080"
       - "8957:8957"

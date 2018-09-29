@@ -29,7 +29,7 @@ exports.__CREATE_HTML_PAGE = new core_1.InjectionToken('rxdi-deployer-commit-mes
 class DagModel {
 }
 exports.DagModel = DagModel;
-class PreviewsModel {
+class PreviousModel {
 }
-exports.PreviewsModel = PreviewsModel;
+exports.PreviousModel = PreviousModel;
 //# sourceMappingURL=env.injection.tokens.js.map

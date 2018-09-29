@@ -9,7 +9,7 @@ import { TypescriptDefinitionGeneratorService } from '../../services/dts-generat
 import { TsConfigGenratorService } from '../../services/tsconfig-generator/tsconfig-generator.service';
 import { TableService } from '../../services/table-service/table-service';
 import { BuildHistoryService } from '../../services/build-history/build-history.service';
-import { PreviwsService } from '../../services/previews/previews.service';
+import { PreviousService } from '../../services/previous/previous.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
@@ -23,7 +23,7 @@ export declare class CompilePlugin implements PluginInterface {
     private tsConfigGenerator;
     private tableService;
     private buildHistoryService;
-    private previwsService;
+    private previousService;
     private errorReasonService;
     private statusService;
     private packageJsonService;
@@ -42,7 +42,7 @@ export declare class CompilePlugin implements PluginInterface {
         path: string;
         content: string;
     }[];
-    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previwsService: PreviwsService, errorReasonService: ErrorReasonService, statusService: StatusService, packageJsonService: PackageJsonService, rxdiFileService: RxdiFileService);
+    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previousService: PreviousService, errorReasonService: ErrorReasonService, statusService: StatusService, packageJsonService: PackageJsonService, rxdiFileService: RxdiFileService);
     register(): Promise<void | {}>;
     isJavascriptCompilation(): boolean;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;

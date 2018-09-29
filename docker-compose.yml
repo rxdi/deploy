@@ -8,12 +8,12 @@ services:
     cpu_shares: 73
     container_name: rxdi-ipfs-deployer
     environment:
-      - API_PORT=9353
+      - API_PORT=9300
       - RANDOM_PORT=false
       - IPFS_API_GATEWAY=/ip4/127.0.0.1/tcp/8080
       - IPFS_API_PORT=/ip4/127.0.0.1/tcp/5001
     ports:
-      - "9353:9353"
+      - "9300:9300"
       - "5001:5001"
       - "8080:8080"
       - "8957:8957"
