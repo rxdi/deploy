@@ -24,7 +24,8 @@ import {
     __PREVIWS_DATABASE,
     __COMMIT_MESSAGE,
     __CREATE_HTML_PAGE,
-    __ROOT_FOLDER
+    __ROOT_FOLDER,
+    __NAMESPACE_DB
 } from './env.injection.tokens';
 import { TsConfigGenratorService } from './app/services/tsconfig-generator/tsconfig-generator.service';
 import { FileService } from './app/services/file/file.service';
@@ -206,6 +207,20 @@ import { unlinkSync } from 'fs';
             lazy: true,
             useFactory: (homeDir) => new Promise((resolve) => {
                 const database = new Datastore({ filename: `${homeDir}/.rxdi/settings`, autoload: true });
+                database.loadDatabase((e) => {
+                    if (e) {
+                        throw new Error('Error loading database!');
+                    }
+                    resolve(database);
+                });
+            })
+        },
+        {
+            provide: __NAMESPACE_DB,
+            deps: [__HOME_DIR],
+            lazy: true,
+            useFactory: (homeDir) => new Promise((resolve) => {
+                const database = new Datastore({ filename: `${homeDir}/.rxdi/namespace`, autoload: true });
                 database.loadDatabase((e) => {
                     if (e) {
                         throw new Error('Error loading database!');

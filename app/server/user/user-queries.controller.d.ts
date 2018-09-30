@@ -1,17 +1,15 @@
 import { PubSubService } from '@gapi/core';
-import { CompileService } from '../services/compile.service';
 export declare class UserQueriesController {
     private pubsub;
-    private compileService;
-    constructor(pubsub: PubSubService, compileService: CompileService);
-    findUser(root: any, { id }: {
-        id: any;
-    }, context: any): Promise<{
-        id: any;
+    constructor(pubsub: PubSubService);
+    findUser(root: any, { message }: {
+        message: any;
+    }): Promise<{
+        message: any;
     }>;
-    subscribeToUserMessagesBasic({ id }: {
-        id: string;
+    subscribeToUserMessagesBasic({ message }: {
+        message: string;
     }): {
-        id: string;
+        message: string;
     };
 }

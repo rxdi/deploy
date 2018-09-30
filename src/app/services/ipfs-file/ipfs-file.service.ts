@@ -19,7 +19,7 @@ export class FileIpfsService {
         private ipfsDaemonNodeInfo: IpfsDaemonInfoService,
         private pingService: PingService,
         private logger: BootstrapLogger
-    ) { }
+    ) {}
 
     async addFile(file: string) {
         const content = new Readable();

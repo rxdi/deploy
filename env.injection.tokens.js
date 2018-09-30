@@ -22,6 +22,7 @@ exports.__PROCESSING_TIME_END = new core_1.InjectionToken('rxdi-deployer-process
 exports.__SETTINGS_DATABASE = new core_1.InjectionToken('rxdi-deployer-home-settings');
 exports.__BUILD_HISTORY_DATABASE = new core_1.InjectionToken('rxdi-deployer-build-history-database');
 exports.__PREVIWS_DATABASE = new core_1.InjectionToken('rxdi-deployer-previews-database');
+exports.__NAMESPACE_DB = new core_1.InjectionToken('rxdi-deployer-namespace-database');
 exports.__HOME_DIR = new core_1.InjectionToken('rxdi-deployer-home-directory');
 exports.__COMMIT_MESSAGE = new core_1.InjectionToken('rxdi-deployer-commit-message');
 exports.__CREATE_HTML_PAGE = new core_1.InjectionToken('rxdi-deployer-commit-message');

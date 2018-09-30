@@ -21,38 +21,30 @@ const core_1 = require("@rxdi/core");
 const core_2 = require("@gapi/core");
 const graphql_1 = require("graphql");
 const user_type_1 = require("./types/user.type");
-const compile_service_1 = require("../services/compile.service");
 let UserQueriesController = class UserQueriesController {
-    constructor(pubsub, compileService) {
+    constructor(pubsub) {
         this.pubsub = pubsub;
-        this.compileService = compileService;
-        let counter = 0;
-        setInterval(() => {
-            counter++;
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { id: String(counter) });
-        }, 3000);
     }
-    findUser(root, { id }, context) {
+    findUser(root, { message }) {
         return __awaiter(this, void 0, void 0, function* () {
-            setTimeout(() => __awaiter(this, void 0, void 0, function* () { return yield this.compileService.buildFile().toPromise(); }));
             return {
-                id
+                message
             };
         });
     }
-    subscribeToUserMessagesBasic({ id }) {
-        return { id };
+    subscribeToUserMessagesBasic({ message }) {
+        return { message };
     }
 };
 __decorate([
     core_2.Type(user_type_1.UserType),
     core_2.Query({
-        id: {
+        message: {
             type: graphql_1.GraphQLString
         }
     }),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], UserQueriesController.prototype, "findUser", null);
 __decorate([
@@ -65,8 +57,7 @@ __decorate([
 ], UserQueriesController.prototype, "subscribeToUserMessagesBasic", null);
 UserQueriesController = __decorate([
     core_1.Controller(),
-    __metadata("design:paramtypes", [core_2.PubSubService,
-        compile_service_1.CompileService])
+    __metadata("design:paramtypes", [core_2.PubSubService])
 ], UserQueriesController);
 exports.UserQueriesController = UserQueriesController;
 //# sourceMappingURL=user-queries.controller.js.map

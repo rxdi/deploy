@@ -8,7 +8,7 @@ export class CompileService {
         private compilePlugin: CompilePlugin
     ) {}
 
-    buildFile() {
-        return this.compilePlugin.completeBuildAndAddToIpfs('./packages/', 'index.ts', 'bla bla', '@pesho', 'reactive.json');
+    buildFile(folder: string = './packages/', file: string = 'index.ts', message: string = 'bla bla', namespace: string = '@pesho', buildFolder) {
+        return this.compilePlugin.completeBuildAndAddToIpfs(folder, file, message, namespace, 'reactive.json', buildFolder);
     }
 }

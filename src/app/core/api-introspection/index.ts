@@ -23,22 +23,15 @@
   */
   export interface IQuery {
     __typename?: "Query";
+    getBuildHistory: IHistoryListType | null;
     findUser: IUserType | null;
 }
 
   
-  export interface IUserType {
-    __typename?: "UserType";
-    id: string | null;
-}
-
-  /**
-    description: Subscription type for all rabbitmq subscriptions via pub sub
-  */
-  export interface ISubscription {
-    __typename?: "Subscription";
-    listenForNewBuilds: IHistoryType | null;
-    subscribeToUserMessagesBasic: IUserType | null;
+  export interface IHistoryListType {
+    __typename?: "HistoryListType";
+    count: number | null;
+    rows: Array<IHistoryType> | null;
 }
 
   
@@ -69,6 +62,28 @@
     __typename?: "HistoryIpfsType";
     provider: string | null;
     dependencies: Array<string> | null;
+}
+
+  
+  export interface IUserType {
+    __typename?: "UserType";
+    message: string | null;
+}
+
+  /**
+    description: Subscription type for all rabbitmq subscriptions via pub sub
+  */
+  export interface ISubscription {
+    __typename?: "Subscription";
+    listenForNewBuilds: IHistoryType | null;
+    buildStatus: IBuildStatusType | null;
+    subscribeToUserMessagesBasic: IUserType | null;
+}
+
+  
+  export interface IBuildStatusType {
+    __typename?: "BuildStatusType";
+    status: string | null;
 }
 
 

@@ -15,8 +15,8 @@ let CompileService = class CompileService {
     constructor(compilePlugin) {
         this.compilePlugin = compilePlugin;
     }
-    buildFile() {
-        return this.compilePlugin.completeBuildAndAddToIpfs('./packages/', 'index.ts', 'bla bla', '@pesho', 'reactive.json');
+    buildFile(folder = './packages/', file = 'index.ts', message = 'bla bla', namespace = '@pesho', buildFolder) {
+        return this.compilePlugin.completeBuildAndAddToIpfs(folder, file, message, namespace, 'reactive.json', buildFolder);
     }
 };
 CompileService = __decorate([

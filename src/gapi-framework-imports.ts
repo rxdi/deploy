@@ -45,7 +45,7 @@ export class GapiFrameworkImports {
                     graphiqlOptions: {
                         endpointURL: nextOrDefault('--graphql-endpoint', '/graphql'),
                         passHeader: `'Authorization':'${nextOrDefault('--graphiql-auth-token', '')}'`,
-                        subscriptionsEndpoint: nextOrDefault('--graphiql-subscription-endpoint', 'ws://localhost:9000/subscriptions'),
+                        subscriptionsEndpoint: nextOrDefault('--graphiql-subscription-endpoint', 'ws://localhost:9300/subscriptions'),
                         websocketConnectionParams: {
                             token: nextOrDefault('--graphiql-auth-token', '')
                         }
