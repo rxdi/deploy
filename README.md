@@ -14,10 +14,20 @@
 
 > Parcel Lazy Module import for Browser (currently not supported) files will not be downloaded so the resolver will not find them (TODO)
 
+> Web UI Included!
+
 #### Install globally
 ```bash
 npm i @rxdi/deploy -g
 ```
+
+###### Starting WebUI
+
+```bash
+rxdi-deploy --webui --open-browser
+```
+
+Or using command line
 
 #### Bundle and deploy your file!
 
@@ -36,6 +46,7 @@ echo "export const rxdi_deploy = 'rxdi-deploy-test';" > index.ts
 ```bash
 rxdi-deploy ./index.ts @nonamespace "init(): init commit" -v --tsconfig
 ```
+
 
 #### After deploy screen:
 
