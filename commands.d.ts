@@ -36,6 +36,7 @@ export declare const Commands: {
     "--ipfs-api-port": "--ipfs-api-port";
     "--ipfs-swarms": "--ipfs-swarms";
     "--graphql-server-only": "--graphql-server-only";
+    "--enable-full-folder-access": "--enable-full-folder-access";
 };
 export declare type Commands = keyof typeof Commands;
 export declare const ExcludedFromHelpers: {

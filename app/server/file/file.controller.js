@@ -23,6 +23,7 @@ const file_type_1 = require("./types/file.type");
 const file_service_1 = require("./services/file.service");
 const file_service_2 = require("../../services/file/file.service");
 const file_raw_type_1 = require("./types/file-raw.type");
+const services_1 = require("../../services");
 let FileController = class FileController {
     constructor(fileServiceInternal, fileService) {
         this.fileServiceInternal = fileServiceInternal;
@@ -37,9 +38,32 @@ let FileController = class FileController {
     }
     readFile(root, { folder }) {
         return __awaiter(this, void 0, void 0, function* () {
-            folder = folder.replace('.', '');
+            let filePath;
+            if (services_1.includes('--enable-full-folder-access')) {
+                filePath = folder;
+            }
+            else {
+                folder = folder.replace('.', '');
+                filePath = process.cwd() + folder;
+            }
             return {
-                file: yield this.fileService.readFile(process.cwd() + folder)
+                file: yield this.fileService.readFile(filePath)
+            };
+        });
+    }
+    saveFile(root, { folder, content }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let filePath;
+            if (services_1.includes('--enable-full-folder-access')) {
+                filePath = folder;
+            }
+            else {
+                folder = folder.replace('.', '');
+                filePath = process.cwd() + folder;
+            }
+            yield this.fileService.writeFile(filePath, content);
+            return {
+                file: yield this.fileService.readFile(filePath)
             };
         });
     }
@@ -66,6 +90,20 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], FileController.prototype, "readFile", null);
+__decorate([
+    core_2.Type(file_raw_type_1.FileRawType),
+    core_2.Query({
+        folder: {
+            type: new core_2.GraphQLNonNull(core_2.GraphQLString)
+        },
+        content: {
+            type: new core_2.GraphQLNonNull(core_2.GraphQLString)
+        }
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], FileController.prototype, "saveFile", null);
 FileController = __decorate([
     core_1.Controller(),
     __metadata("design:paramtypes", [file_service_1.FileService,

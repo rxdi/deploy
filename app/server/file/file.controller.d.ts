@@ -14,4 +14,10 @@ export declare class FileController {
     }): Promise<{
         file: string;
     }>;
+    saveFile(root: any, { folder, content }: {
+        folder: any;
+        content: any;
+    }): Promise<{
+        file: string;
+    }>;
 }

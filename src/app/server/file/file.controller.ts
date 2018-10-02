@@ -4,6 +4,7 @@ import { FileType } from './types/file.type';
 import { FileService as InternalFileService } from "./services/file.service";
 import { FileService } from "../../services/file/file.service";
 import { FileRawType } from './types/file-raw.type';
+import { includes } from "../../services";
 
 @Controller()
 export class FileController {
@@ -33,9 +34,39 @@ export class FileController {
         }
     })
     async readFile(root, {folder}) {
-        folder = folder.replace('.', '')
+        let filePath;
+        if (includes('--enable-full-folder-access')) {
+            filePath = folder;
+        } else {
+            folder = folder.replace('.', '')
+            filePath = process.cwd() + folder;
+        }
         return {
-            file: await this.fileService.readFile(process.cwd() + folder)
+            file: await this.fileService.readFile(filePath)
         }
     }
+
+    @Type(FileRawType)
+    @Query({
+        folder: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        content: {
+            type: new GraphQLNonNull(GraphQLString)
+        }
+    })
+    async saveFile(root, {folder, content}) {
+        let filePath;
+        if (includes('--enable-full-folder-access')) {
+            filePath = folder;
+        } else {
+            folder = folder.replace('.', '')
+            filePath = process.cwd() + folder;
+        }
+        await this.fileService.writeFile(filePath, content);
+        return {
+            file: await this.fileService.readFile(filePath)
+        }
+    }
+
 }

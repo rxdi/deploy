@@ -20,6 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
 const operators_1 = require("rxjs/operators");
 const fs_1 = require("fs");
+const services_1 = require("../../../services");
 let FileService = class FileService {
     constructor(fileService) {
         this.fileService = fileService;
@@ -53,6 +54,9 @@ let FileService = class FileService {
                 }
                 mapping.name = r.split("/").pop();
                 mapping.path = r.replace(process.cwd(), '.');
+                if (services_1.includes('--enable-full-folder-access')) {
+                    mapping.path = r;
+                }
                 mapping.status = status;
                 mapping.status.size = this.niceBytes(status.size);
                 return mapping;

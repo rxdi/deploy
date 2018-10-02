@@ -35,4 +35,5 @@ export declare const CommandDescription: {
     '--collect-packages': string;
     '--help': string;
     '--server-push-interval': string;
+    '--enable-full-folder-access': string;
 };

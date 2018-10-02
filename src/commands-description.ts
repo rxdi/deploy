@@ -35,4 +35,5 @@ export const CommandDescription = {
     '--collect-packages': 'Collect dependencies from package.json and transfer it to reactive.json',
     '--help': `This help suite :)`,
     '--server-push-interval': 'Interval for server push service this is how fast the data will update by default is 7 seconds',
+    '--enable-full-folder-access': 'Will give you reading and writing the whole file system so you can scan and build every folder and file (development only)'
 };
