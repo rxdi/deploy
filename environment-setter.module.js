@@ -203,6 +203,20 @@ EnvironemntSetterModule = __decorate([
                 })
             },
             {
+                provide: env_injection_tokens_1.__NAMESPACE_DB,
+                deps: [env_injection_tokens_1.__HOME_DIR],
+                lazy: true,
+                useFactory: (homeDir) => new Promise((resolve) => {
+                    const database = new Datastore({ filename: `${homeDir}/.rxdi/namespace`, autoload: true });
+                    database.loadDatabase((e) => {
+                        if (e) {
+                            throw new Error('Error loading database!');
+                        }
+                        resolve(database);
+                    });
+                })
+            },
+            {
                 provide: env_injection_tokens_1.__BUILD_HISTORY_DATABASE,
                 deps: [env_injection_tokens_1.__HOME_DIR],
                 lazy: true,

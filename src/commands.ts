@@ -44,7 +44,8 @@ export const Commands = strEnum([
     '--ipfs-api-gateway',
     '--ipfs-api-port',
     '--ipfs-swarms',
-    '--graphql-server-only'
+    '--graphql-server-only',
+    '--enable-full-folder-access'
 ]);
 export type Commands = keyof typeof Commands;
 

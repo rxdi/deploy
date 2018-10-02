@@ -25,6 +25,8 @@ import { ErrorReasonService } from '../../services/error-reason/error-reason.ser
 import { StatusService } from '../../status/status.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
 import { includes, nextOrDefault } from '../../services/helpers/helpers';
+import { PubSubService } from '@gapi/core';
+import { NamespaceService } from '../../server/namespace/services/namespace.service';
 
 @Plugin()
 export class CompilePlugin implements PluginInterface {
@@ -54,10 +56,12 @@ export class CompilePlugin implements PluginInterface {
         private tableService: TableService,
         private buildHistoryService: BuildHistoryService,
         private previousService: PreviousService,
+        private namespaceService: NamespaceService,
         private errorReasonService: ErrorReasonService,
         private statusService: StatusService,
         private packageJsonService: PackageJsonService,
-        private rxdiFileService: RxdiFileService
+        private rxdiFileService: RxdiFileService,
+        private pubsub: PubSubService
     ) { }
 
     async register() {
@@ -115,8 +119,8 @@ export class CompilePlugin implements PluginInterface {
             );
     }
 
-    async parcelBuild(path: string) {
-        return this.parcelBundler.prepareBundler(path)
+    async parcelBuild(path: string, outDir = null, fileName: string) {
+        return this.parcelBundler.prepareBundler(path, outDir, fileName)
     }
     async createCommitMessage(message: string = '') {
         if (includes('--html')) {
@@ -139,7 +143,15 @@ Error loading file ${filePath}
             }
         }
     }
-    completeBuildAndAddToIpfs(folder: string, file: string, message, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME) {
+
+    completeBuildAndAddToIpfs(
+        folder: string,
+        file: string,
+        message,
+        namespace: string,
+        outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME,
+        buildFolder = './build',
+    ) {
         let ipfsFile: IPFSFile[];
         let ipfsModule: IPFSFile[];
         let ipfsTypings: IPFSFile[] = this.initIpfsModule;
@@ -148,28 +160,34 @@ Error loading file ${filePath}
         let currentModule: DagModel;
         let dag: DagModel;
         this.logger.log('Bundling Started!\n');
-        return from(this.parcelBuild(folder + '/' + file))
+        return from(this.parcelBuild(folder + '/' + file, buildFolder, `${file.split('.')[0]}.js`))
             .pipe(
                 tap(() => {
                     this.logger.log('Bundling finished!\n');
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundling finished' });
                     this.logger.log(`Adding commit message ${message}...\n`);
                 }),
                 switchMap(async () => this.createCommitMessage(message)),
                 tap(res => {
                     ipfsMessage = res;
-                    this.logger.log(`Commit message added...\n`)
+                    this.logger.log(`Commit message added...\n`);
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Commit message added' });
                 }),
-                switchMap(() => this.fileService.readFile(`./build/${file.split('.')[0]}.js`)),
-                tap(() => this.logger.log(`Reading bundle ./build/${file.split('.')[0]}.js finished!\n`)),
+                switchMap(() => this.fileService.readFile(`${buildFolder}/${file.split('.')[0]}.js`)),
+                tap(() => {
+                    this.logger.log(`Reading bundle ${buildFolder}/${file.split('.')[0]}.js finished!\n`);
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Reading bundle finished' });
+                }),
                 switchMap((res: string) => this.ipfsFile.addFile(res)),
                 tap(res => {
                     ipfsFile = res;
-                    this.logger.log(`Bundle added to ipfs ./build/${file.split('.')[0]}.js\n`);
+                    this.logger.log(`Bundle added to ipfs ${buildFolder}/${file.split('.')[0]}.js\n`);
                     this.logger.log(`Typescript definitions merge started!\n`);
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Typescript definitions merge starte' });
                 }),
-                switchMap(() => from(this.typingsGenerator.mergeTypings(namespace, folder, './build/index.d.ts'))),
+                switchMap(() => from(this.typingsGenerator.mergeTypings(namespace, folder, `${buildFolder}/index.d.ts`))),
                 tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)),
-                switchMap(() => this.fileService.readFile(`./build/index.d.ts`)),
+                switchMap(() => this.fileService.readFile(`${buildFolder}/index.d.ts`)),
                 tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
                 switchMap((res: string) => {
                     if (!!res) {
@@ -214,15 +232,16 @@ Error loading file ${filePath}
                     if (ipfsFileMetadata[0].hash) {
                         currentModule.metadata = ipfsFileMetadata[0].hash;
                     }
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundldadada' });
 
                     currentModule.previous = [...(dag.previous || [])];
                     let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = { ipfs: [] };
-                    if (this.rxdiFileService.isPresent(`./${this.outputConfigName}`)) {
-                        this.logger.log(`Reactive file present ${this.outputConfigName} package dependencies will be taken from it`);
+                    if (this.rxdiFileService.isPresent(`./${outputConfigName}`)) {
+                        this.logger.log(`Reactive file present ${outputConfigName} package dependencies will be taken from it`);
                         try {
-                            f = JSON.parse(await this.fileService.readFile(`./${this.outputConfigName}`));
+                            f = JSON.parse(await this.fileService.readFile(`./${outputConfigName}`));
                         } catch (e) {
-                            throw new Error(`Cannot parce reactive file at ./${this.outputConfigName}`);
+                            throw new Error(`Cannot parce reactive file at ./${outputConfigName}`);
                         }
 
                         if (f.dependencies) {
@@ -242,6 +261,7 @@ Error loading file ${filePath}
                         currentModule.packages = packages;
                     }
                     ipfsModule = await this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module added to ipfs' });
 
                     if (currentModule.previous.length >= 20) {
                         currentModule.previous.shift();
@@ -252,11 +272,21 @@ Error loading file ${filePath}
                     }
                     delete currentModule.dependencies;
                     await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
                     this.integrityCheck(dag, ipfsFile, ipfsTypings);
                     return ipfsModule;
                 }),
                 tap(() => this.logger.log(`Module configuration added to ipfs!\n`)),
-                switchMap(() => combineLatest([
+                switchMap(async () => {
+                    let nmspc = await this.namespaceService.searchForDuplicates(namespace);
+                    if (!nmspc) {
+                        nmspc = await this.namespaceService.insert({
+                            name: namespace
+                        });
+                    }
+                    return nmspc;
+                }),
+                switchMap((nmspc) => combineLatest([
                     this.buildHistoryService.insert(<DagModel>{
                         status: {
                             file: this.statusService.getBuildStatus().file,
@@ -269,7 +299,8 @@ Error loading file ${filePath}
                         typings: ipfsTypings[0].hash,
                         module: ipfsFile[0].hash,
                         metadata: ipfsFileMetadata[0].hash,
-                        message: ipfsMessage[0].hash
+                        message: ipfsMessage[0].hash,
+                        namespaceId: nmspc['_id']
                     }),
                     this.previousService.insert({
                         name: namespace,
@@ -283,6 +314,8 @@ Error loading file ${filePath}
                     module: ipfsModule
                 })),
                 tap(() => {
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module saved to persisten history!' });
+
                     this.logger.log('Module saved to persistant history!');
                     if (!ipfsModule) {
                         this.fileNotAddedToIpfs(ipfsModule);
@@ -291,6 +324,9 @@ Error loading file ${filePath}
                     console.log('' + this.tableService.previewsNext(currentModule.previous));
                     console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
                     console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundle finished' });
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: `Ipfs file can be found at ${ipfsModule[0].hash}` });
+
                     this.showError(currentModule.previous[currentModule.previous.length - 2]);
                 })
             );
@@ -303,6 +339,7 @@ Error loading file ${filePath}
 
     integrityCheck(dag: DagModel, file: IPFSFile[], typings: IPFSFile[]) {
         const genericIntegrityError = 'Integrity is same like in the previews version!';
+        console.log(dag.module, file[0].hash)
         if (dag.module === file[0].hash) {
             this.logger.log(`
         !! Warning !!

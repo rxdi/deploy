@@ -12,12 +12,13 @@ export class ParcelBundlerService {
         @Inject(__PARCEL_SETTINGS) private settings: __PARCEL_SETTINGS
     ) {}
 
-    async prepareBundler(file) {
+    async prepareBundler(file, outDir = null, fileName?: string) {
         return new Promise((resolve, reject) => {
             const options = {
                 target: this.isBrowserBuild ? 'browser' : 'node',
                 minify: this.isBuildMinfied,
-                outDir: this.buildOutDir,
+                outFile: fileName,
+                outDir: outDir || this.buildOutDir,
                 ...this.settings
             };
             const bundler = new Bundler(file, options);

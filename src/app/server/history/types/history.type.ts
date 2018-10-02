@@ -1,10 +1,14 @@
-import { GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
-import { HistoryPackageType } from "./history-package.type";
-import { HistoryIpfsType } from "./history-ipfs.type";
+import { GraphQLObjectType, GraphQLString } from "graphql";
+import { BuildStatusType } from "../../build/types/built-status.type";
+// import { HistoryPackageType } from "./history-package.type";
+// import { HistoryIpfsType } from "./history-ipfs.type";
 
 export const HistoryType = new GraphQLObjectType({
     name: 'HistoryType',
     fields: {
+        _id: {
+            type: GraphQLString
+        },
         name: {
             type: GraphQLString
         },
@@ -26,17 +30,23 @@ export const HistoryType = new GraphQLObjectType({
         date: {
             type: GraphQLString
         },
-        previews: {
-            type: new GraphQLList(GraphQLString)
+        status: {
+            type: BuildStatusType
         },
-        dependencies: {
-            type: new GraphQLList(GraphQLString)
+        namespaceId: {
+            type: GraphQLString
         },
-        packages: {
-            type: new GraphQLList(HistoryPackageType)
-        },
-        ipfs: {
-            type: new GraphQLList(HistoryIpfsType)
-        },
+        // previews: {
+        //     type: new GraphQLList(GraphQLString)
+        // },
+        // dependencies: {
+        //     type: new GraphQLList(GraphQLString)
+        // },
+        // packages: {
+        //     type: new GraphQLList(HistoryPackageType)
+        // },
+        // ipfs: {
+        //     type: new GraphQLList(HistoryIpfsType)
+        // },
     }
 });

@@ -5,7 +5,4 @@ export declare class HistorySubscriptionController {
     listenForNewBuilds(payload: any): {
         payload: any;
     };
-    buildStatus(payload: any): {
-        payload: any;
-    };
 }

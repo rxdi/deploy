@@ -30,10 +30,10 @@ let ParcelBundlerService = class ParcelBundlerService {
         this.buildOutDir = buildOutDir;
         this.settings = settings;
     }
-    prepareBundler(file) {
+    prepareBundler(file, outDir = null, fileName) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                const options = Object.assign({ target: this.isBrowserBuild ? 'browser' : 'node', minify: this.isBuildMinfied, outDir: this.buildOutDir }, this.settings);
+                const options = Object.assign({ target: this.isBrowserBuild ? 'browser' : 'node', minify: this.isBuildMinfied, outFile: fileName, outDir: outDir || this.buildOutDir }, this.settings);
                 const bundler = new Bundler(file, options);
                 let bundle = null;
                 bundler.on('bundled', (compiledBundle) => {

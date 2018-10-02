@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_1 = require("graphql");
-const history_package_type_1 = require("./history-package.type");
-const history_ipfs_type_1 = require("./history-ipfs.type");
+const built_status_type_1 = require("../../build/types/built-status.type");
 exports.HistoryType = new graphql_1.GraphQLObjectType({
     name: 'HistoryType',
     fields: {
+        _id: {
+            type: graphql_1.GraphQLString
+        },
         name: {
             type: graphql_1.GraphQLString
         },
@@ -27,17 +29,11 @@ exports.HistoryType = new graphql_1.GraphQLObjectType({
         date: {
             type: graphql_1.GraphQLString
         },
-        previews: {
-            type: new graphql_1.GraphQLList(graphql_1.GraphQLString)
+        status: {
+            type: built_status_type_1.BuildStatusType
         },
-        dependencies: {
-            type: new graphql_1.GraphQLList(graphql_1.GraphQLString)
-        },
-        packages: {
-            type: new graphql_1.GraphQLList(history_package_type_1.HistoryPackageType)
-        },
-        ipfs: {
-            type: new graphql_1.GraphQLList(history_ipfs_type_1.HistoryIpfsType)
+        namespaceId: {
+            type: graphql_1.GraphQLString
         },
     }
 });

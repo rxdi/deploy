@@ -13,6 +13,8 @@ import { PreviousService } from '../../services/previous/previous.service';
 import { ErrorReasonService } from '../../services/error-reason/error-reason.service';
 import { StatusService } from '../../status/status.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
+import { PubSubService } from '@gapi/core';
+import { NamespaceService } from '../../server/namespace/services/namespace.service';
 export declare class CompilePlugin implements PluginInterface {
     private parcelBundler;
     private logger;
@@ -24,10 +26,12 @@ export declare class CompilePlugin implements PluginInterface {
     private tableService;
     private buildHistoryService;
     private previousService;
+    private namespaceService;
     private errorReasonService;
     private statusService;
     private packageJsonService;
     private rxdiFileService;
+    private pubsub;
     private fileName;
     private folder;
     private resolutionTime;
@@ -42,13 +46,13 @@ export declare class CompilePlugin implements PluginInterface {
         path: string;
         content: string;
     }[];
-    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previousService: PreviousService, errorReasonService: ErrorReasonService, statusService: StatusService, packageJsonService: PackageJsonService, rxdiFileService: RxdiFileService);
+    constructor(parcelBundler: ParcelBundlerService, logger: BootstrapLogger, ipfsFile: FileIpfsService, fileService: FileService, fileUserService: FileUserService, typingsGenerator: TypescriptDefinitionGeneratorService, tsConfigGenerator: TsConfigGenratorService, tableService: TableService, buildHistoryService: BuildHistoryService, previousService: PreviousService, namespaceService: NamespaceService, errorReasonService: ErrorReasonService, statusService: StatusService, packageJsonService: PackageJsonService, rxdiFileService: RxdiFileService, pubsub: PubSubService);
     register(): Promise<void | {}>;
     isJavascriptCompilation(): boolean;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;
-    parcelBuild(path: string): Promise<{}>;
+    parcelBuild(path: string, outDir: any, fileName: string): Promise<{}>;
     createCommitMessage(message?: string): Promise<IPFSFile[]>;
-    completeBuildAndAddToIpfs(folder: string, file: string, message: any, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME): import("rxjs/internal/Observable").Observable<{}>;
+    completeBuildAndAddToIpfs(folder: string, file: string, message: any, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME, buildFolder?: string): import("rxjs/internal/Observable").Observable<{}>;
     fileNotAddedToIpfs(file: IPFSFile[]): void;
     integrityCheck(dag: DagModel, file: IPFSFile[], typings: IPFSFile[]): void;
     showError(hash: string): void;
