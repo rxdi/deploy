@@ -41,7 +41,10 @@ let WebUiService = class WebUiService {
                 handler: {
                     directory: {
                         path: `${this.root_folder}/webui`,
-                        index: ['index.html', 'default.html']
+                        redirectToSlash: true,
+                        listing: false,
+                        lookupCompressed: true,
+                        index: ['index.html']
                     }
                 }
             });
