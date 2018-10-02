@@ -70,7 +70,7 @@ export class BuildController {
         }
     })
     async getBuildHistory(root, { skip, limit, where }): Promise<IHistoryListType> {
-        const items = await this.buildHistoryService.findAll(skip, limit, { name: 1 }, where);
+        const items = await this.buildHistoryService.findAll(skip, limit, null, where);
         return {
             count: items.length,
             rows: items

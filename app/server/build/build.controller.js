@@ -45,7 +45,7 @@ let BuildController = class BuildController {
     }
     getBuildHistory(root, { skip, limit, where }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const items = yield this.buildHistoryService.findAll(skip, limit, { name: 1 }, where);
+            const items = yield this.buildHistoryService.findAll(skip, limit, null, where);
             return {
                 count: items.length,
                 rows: items

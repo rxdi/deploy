@@ -241,7 +241,7 @@ export class TableService {
         t.push(['', 'Date', 'Hash']);
         console.log(history);
         history.forEach((v) => {
-            t.push(['', `${v.date}`, `rxdi-deploy --find ${v.hash}`]);
+            t.push(['', `${v.createdAt}`, `rxdi-deploy --find ${v.hash}`]);
         });
 
         t.attrRange({ row: [0, 1] }, {

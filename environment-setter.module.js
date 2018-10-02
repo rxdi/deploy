@@ -193,7 +193,7 @@ EnvironemntSetterModule = __decorate([
                 deps: [env_injection_tokens_1.__HOME_DIR],
                 lazy: true,
                 useFactory: (homeDir) => new Promise((resolve) => {
-                    const database = new Datastore({ filename: `${homeDir}/.rxdi/settings`, autoload: true });
+                    const database = new Datastore({ filename: `${homeDir}/.rxdi/settings`, autoload: true, timestampData: true });
                     database.loadDatabase((e) => {
                         if (e) {
                             throw new Error('Error loading database!');
@@ -207,7 +207,7 @@ EnvironemntSetterModule = __decorate([
                 deps: [env_injection_tokens_1.__HOME_DIR],
                 lazy: true,
                 useFactory: (homeDir) => new Promise((resolve) => {
-                    const database = new Datastore({ filename: `${homeDir}/.rxdi/namespace`, autoload: true });
+                    const database = new Datastore({ filename: `${homeDir}/.rxdi/namespace`, autoload: true, timestampData: true });
                     database.loadDatabase((e) => {
                         if (e) {
                             throw new Error('Error loading database!');
@@ -221,7 +221,7 @@ EnvironemntSetterModule = __decorate([
                 deps: [env_injection_tokens_1.__HOME_DIR],
                 lazy: true,
                 useFactory: (homeDir) => new Promise((resolve) => {
-                    const database = new Datastore({ filename: `${homeDir}/.rxdi/history`, autoload: true });
+                    const database = new Datastore({ filename: `${homeDir}/.rxdi/history`, autoload: true, timestampData: true });
                     database.loadDatabase((e) => {
                         if (e) {
                             throw new Error('Error loading database!');

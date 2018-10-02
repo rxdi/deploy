@@ -1,11 +1,40 @@
 {
-  "name": "dadada",
-  "module": "QmQQjg7qHNLQ2urzFMo2WQBGVc15TpEbEeG1fkK1qGQBbd",
-  "date": "2018-10-02T02:57:14.124Z",
-  "typings": "QmNqvR7Rd3enGiEzaLD4WynCcAJEUAv3CPPHTgL54JJiDS",
-  "message": "QmUARreMJyz2ftSNsFupizPf2469CWtsBkL5L4XaWq1iFV",
+  "name": "unikalenBuild",
+  "module": "QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA",
+  "createdAt": "2018-10-02T21:44:53.643Z",
+  "typings": "Qme1kLwgUQ8Nt79ZUbYdEqqExck7Nfuip6JG6s7xMkmotV",
+  "message": "QmYr776J63Wv6PfSSuY2Pai1gtvmP4bHaWVqFntqaR5Zzn",
   "previous": [
     "QmX77c2bphfoiwmbnobjDFzqM68jDoUdct3aE8KF5NxsXX",
-    "QmaKeTeQ6PmMkR44jFPdQbD11tTGfJTm2nwFCFJm74TjA9"
+    "QmaKeTeQ6PmMkR44jFPdQbD11tTGfJTm2nwFCFJm74TjA9",
+    "QmTZvEJf5kunoB2uQ1kt7bBcqZPWABjNsyztgo1cXEi7Kc",
+    "QmXkqGj29ZknfZhv7ShZcZNfzzZXKPmT8WX98n2mxDbt4G",
+    "QmSmjqybR7Nfjtnyx4HcSggvax76DcHQKxQ8UiTCcqKKaC",
+    "QmQqp8vb7Am6p8t6xTEYzW9gK63iDxYXK4x3TeP39j5vmD",
+    "QmQGEvMhc3nefFDrDxxC34bcBp811ALDqs8xqS19hKwGSK",
+    "QmeubCyPG7AaEgqFRcBVd9yNzgGGBPdGY5UU9KsRpNdHU3",
+    "QmWqp72rZbXWUVP4t2vYxMEsRkMkwmjp8nuNmSZm2HaM6n",
+    "QmZJnKktAPUR2X2hyLuXJoSMCkMXoPrQyYwZTjuT2HDEPr",
+    "QmZzH6jrPJ3qzhubGZZoyBeksCRL7X56F5GXMPisAqQzHy",
+    "QmehwVsAvkeMwUbEpXwr3PEEEu4fR1jccoedFBhLyc1e8g",
+    "QmdViQ5eUT3NhRvesiw2wACDd71zVb6iVG9N2hee3Urx7a",
+    "QmdCAdn1McqKFWR2aZmgLpXKaV4pHGfPaEXUFcAvtF2UPb",
+    "QmSfryJFNtrcqc4SAWteNBiehzuYTMMXQfgxr2TgUP11LK",
+    "QmZSrRF4jh3AGZ8HuwNJoYDwt2SgvWmc9NNFEYqiNgVddk",
+    "QmaB9SwSUtpWAohkRyycxuf2JE4d1DSk2WSXwQhnZ3EUU9",
+    "QmSc6nHv5DkLRFZmVU99vxSJkEvXgeVN4iyUX47howU3A2",
+    "QmTvJfSnz4QUYLF58tiuzXV6aXQfTgTJnpgeyhRfTQr1ex",
+    "QmPb6wFT7vaawocUJh8AyBtxkBqHNRCRtCj2uEVuc9s5au"
+  ],
+  "dependencies": [
+    "QmP9n7m1UWkFn2hqt7mnfQYnBtxmFyyvKZHN7hgngQb1gM"
+  ],
+  "ipfs": [
+    {
+      "provider": "https://cloudflare-ipfs.com/ipfs/",
+      "dependencies": [
+        "QmP9n7m1UWkFn2hqt7mnfQYnBtxmFyyvKZHN7hgngQb1gM"
+      ]
+    }
   ]
 }

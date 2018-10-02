@@ -27,15 +27,18 @@ export const HistoryType = new GraphQLObjectType({
         hash: {
             type: GraphQLString
         },
-        date: {
-            type: GraphQLString
-        },
         status: {
             type: BuildStatusType
         },
         namespaceId: {
             type: GraphQLString
         },
+        createdAt: {
+            type: GraphQLString
+        },
+        updatedAt: {
+            type: GraphQLString
+        }
         // previews: {
         //     type: new GraphQLList(GraphQLString)
         // },

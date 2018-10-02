@@ -53,14 +53,15 @@ export class NamespaceService {
             });
         });
     }
-    listNamespaces(skip: number = 0, limit: number = 100, query = {}): Promise<INamespacetype[]> {
+
+    listNamespaces(skip: number = 0, limit: number = 100, sort = {createdAt: -1}): Promise<INamespacetype[]> {
         return new Promise((resolve, reject) => {
             this.namespace
-                .find(query)
-                .sort(query)
+                .find({})
+                .sort(sort)
                 .skip(skip)
                 .limit(limit)
-                .exec((e, d: INamespacetype[]) => {
+                .exec((e, d: any) => {
                     if (e) {
                         reject(e);
                     }

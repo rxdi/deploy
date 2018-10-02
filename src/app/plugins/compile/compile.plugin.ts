@@ -218,7 +218,7 @@ Error loading file ${filePath}
                     currentModule = {
                         name: namespace,
                         module: ipfsFile[0].hash,
-                        date: new Date(),
+                        createdAt: new Date(),
                     };
 
                     if (ipfsTypings[0].hash) {
@@ -236,14 +236,13 @@ Error loading file ${filePath}
 
                     currentModule.previous = [...(dag.previous || [])];
                     let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = { ipfs: [] };
-                    if (this.rxdiFileService.isPresent(`./${outputConfigName}`)) {
+                    if (this.rxdiFileService.isPresent(`${folder}/${outputConfigName}`)) {
                         this.logger.log(`Reactive file present ${outputConfigName} package dependencies will be taken from it`);
                         try {
-                            f = JSON.parse(await this.fileService.readFile(`./${outputConfigName}`));
+                            f = JSON.parse(await this.fileService.readFile(`${folder}/${outputConfigName}`));
                         } catch (e) {
-                            throw new Error(`Cannot parce reactive file at ./${outputConfigName}`);
+                            throw new Error(`Cannot parce reactive file at ${folder}/${outputConfigName}`);
                         }
-
                         if (f.dependencies) {
                             currentModule.dependencies = f.dependencies;
                         }
@@ -270,7 +269,6 @@ Error loading file ${filePath}
                     if (f.ipfs) {
                         currentModule.ipfs = f.ipfs;
                     }
-                    delete currentModule.dependencies;
                     await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
                     this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
                     this.integrityCheck(dag, ipfsFile, ipfsTypings);
@@ -295,7 +293,6 @@ Error loading file ${filePath}
                         },
                         hash: ipfsModule[0].hash,
                         name: namespace,
-                        date: new Date(),
                         typings: ipfsTypings[0].hash,
                         module: ipfsFile[0].hash,
                         metadata: ipfsFileMetadata[0].hash,
@@ -304,8 +301,7 @@ Error loading file ${filePath}
                     }),
                     this.previousService.insert({
                         name: namespace,
-                        hash: ipfsModule[0].hash,
-                        date: new Date()
+                        hash: ipfsModule[0].hash
                     })
                 ])),
                 map(() => ({

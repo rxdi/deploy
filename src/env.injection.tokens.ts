@@ -77,7 +77,7 @@ export class DagModel {
     metadata?: {};
     message?: string;
     hash?: string;
-    date?: Date;
+    createdAt?: Date;
     previous?: string[];
     dependencies?: string[];
     packages?: { name: string; version: string }[];
@@ -88,6 +88,5 @@ export class PreviousModel {
     id?: string;
     name: string;
     hash: string;
-    date: Date;
 }
 

@@ -64,11 +64,11 @@ let NamespaceService = class NamespaceService {
             });
         });
     }
-    listNamespaces(skip = 0, limit = 100, query = {}) {
+    listNamespaces(skip = 0, limit = 100, sort = { createdAt: -1 }) {
         return new Promise((resolve, reject) => {
             this.namespace
-                .find(query)
-                .sort(query)
+                .find({})
+                .sort(sort)
                 .skip(skip)
                 .limit(limit)
                 .exec((e, d) => {

@@ -26,15 +26,18 @@ exports.HistoryType = new graphql_1.GraphQLObjectType({
         hash: {
             type: graphql_1.GraphQLString
         },
-        date: {
-            type: graphql_1.GraphQLString
-        },
         status: {
             type: built_status_type_1.BuildStatusType
         },
         namespaceId: {
             type: graphql_1.GraphQLString
         },
+        createdAt: {
+            type: graphql_1.GraphQLString
+        },
+        updatedAt: {
+            type: graphql_1.GraphQLString
+        }
     }
 });
 //# sourceMappingURL=history.type.js.map

@@ -33,17 +33,24 @@ let BuildHistoryService = class BuildHistoryService {
             });
         });
     }
-    findAll(skip = 0, limit = 100, sort = { name: 1 }, where = {}) {
+    findAll(skip = 0, limit = 100, sort = { createdAt: -1 }, where = {}) {
         return new Promise((resolve, reject) => {
-            this.buildHistoryDatabase.find(where)
-                .skip(skip)
+            this.buildHistoryDatabase
+                .find(where)
                 .sort(sort)
+                .skip(skip)
                 .limit(limit)
                 .exec((e, d) => {
                 if (e) {
                     reject(e);
                 }
-                resolve(d);
+                resolve(d.map((doc) => {
+                    doc.createdAt = new Date(doc.createdAt).valueOf();
+                    return doc;
+                }).sort((a, b) => b.createdAt - a.createdAt).map(doc => {
+                    doc.createdAt = new Date(doc.createdAt);
+                    return doc;
+                }));
             });
         });
     }

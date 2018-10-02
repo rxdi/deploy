@@ -76,7 +76,7 @@ export declare class DagModel {
     metadata?: {};
     message?: string;
     hash?: string;
-    date?: Date;
+    createdAt?: Date;
     previous?: string[];
     dependencies?: string[];
     packages?: {
@@ -92,5 +92,4 @@ export declare class PreviousModel {
     id?: string;
     name: string;
     hash: string;
-    date: Date;
 }

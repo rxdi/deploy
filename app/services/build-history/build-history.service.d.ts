@@ -6,6 +6,6 @@ export declare class BuildHistoryService {
     insert(doc: DagModel): Observable<DagModel>;
     find(doc: DagModel | {}): Observable<DagModel>;
     findAll(skip?: number, limit?: number, sort?: {
-        name: number;
+        createdAt: number;
     }, where?: {}): Promise<IHistoryType[]>;
 }

@@ -7,5 +7,7 @@ export declare class NamespaceService {
     insert(doc: {
         name: string;
     }): Promise<{}>;
-    listNamespaces(skip?: number, limit?: number, query?: {}): Promise<INamespacetype[]>;
+    listNamespaces(skip?: number, limit?: number, sort?: {
+        createdAt: number;
+    }): Promise<INamespacetype[]>;
 }
