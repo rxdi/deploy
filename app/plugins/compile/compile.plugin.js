@@ -102,9 +102,9 @@ let CompilePlugin = class CompilePlugin {
             });
         });
     }
-    parcelBuild(path, outDir = null) {
+    parcelBuild(path, outDir = null, fileName) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.parcelBundler.prepareBundler(path, outDir);
+            return this.parcelBundler.prepareBundler(path, outDir, fileName);
         });
     }
     createCommitMessage(message = '') {
@@ -142,7 +142,7 @@ Error loading file ${filePath}
         let currentModule;
         let dag;
         this.logger.log('Bundling Started!\n');
-        return rxjs_1.from(this.parcelBuild(folder + '/' + file, buildFolder))
+        return rxjs_1.from(this.parcelBuild(folder + '/' + file, buildFolder, `${file.split('.')[0]}.js`))
             .pipe(operators_1.tap(() => {
             this.logger.log('Bundling finished!\n');
             this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundling finished' });

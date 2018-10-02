@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
-import { BuildStatusType } from "./built-status.type";
+import { BuildStatusType } from "../../build/types/built-status.type";
 // import { HistoryPackageType } from "./history-package.type";
 // import { HistoryIpfsType } from "./history-ipfs.type";
 

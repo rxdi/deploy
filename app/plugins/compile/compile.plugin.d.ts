@@ -50,7 +50,7 @@ export declare class CompilePlugin implements PluginInterface {
     register(): Promise<void | {}>;
     isJavascriptCompilation(): boolean;
     compile(): Promise<import("rxjs/internal/Subscription").Subscription>;
-    parcelBuild(path: string, outDir?: any): Promise<{}>;
+    parcelBuild(path: string, outDir: any, fileName: string): Promise<{}>;
     createCommitMessage(message?: string): Promise<IPFSFile[]>;
     completeBuildAndAddToIpfs(folder: string, file: string, message: any, namespace: string, outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME, buildFolder?: string): import("rxjs/internal/Observable").Observable<{}>;
     fileNotAddedToIpfs(file: IPFSFile[]): void;

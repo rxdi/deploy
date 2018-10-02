@@ -22,8 +22,8 @@ const _IMPORTS = [
         type: nextOrDefault('--default-ipfs-node', 'go'),
         config: {
             Addresses: {
-                API: process.env.IPFS_API_PORT ? process.env.IPFS_API_PORT : nextOrDefault('--ipfs-api-port', '/ip4/127.0.0.1/tcp/5001', (a) => `/ip4/127.0.0.1/tcp/${a}`),
-                Gateway: process.env.IPFS_API_GATEWAY ? process.env.IPFS_API_GATEWAY : nextOrDefault('--ipfs-api-gateway', '/ip4/127.0.0.1/tcp/8080', (a) => `/ip4/127.0.0.1/tcp/${a}`),
+                API: process.env.IPFS_API_PORT ? process.env.IPFS_API_PORT : nextOrDefault('--ipfs-api-port', '/ip4/127.0.0.1/tcp/5002', (a) => `/ip4/127.0.0.1/tcp/${a}`),
+                Gateway: process.env.IPFS_API_GATEWAY ? process.env.IPFS_API_GATEWAY : nextOrDefault('--ipfs-api-gateway', '/ip4/127.0.0.1/tcp/8081', (a) => `/ip4/127.0.0.1/tcp/${a}`),
                 Swarm: nextOrDefault('--ipfs-swarms', [ '/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001' ], (a) => a.split(',')),
             }
         }

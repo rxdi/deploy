@@ -20,6 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@gapi/core");
 const namespace_type_1 = require("./types/namespace.type");
 const namespace_service_1 = require("./services/namespace.service");
+const namespace_list_type_1 = require("./types/namespace-list.type");
 let NamespaceController = class NamespaceController {
     constructor(namespaceService) {
         this.namespaceService = namespaceService;
@@ -37,7 +38,13 @@ let NamespaceController = class NamespaceController {
         });
     }
     listNamespaces(root, { skip, limit }) {
-        return this.namespaceService.listNamespaces(skip, limit);
+        return __awaiter(this, void 0, void 0, function* () {
+            const namespaces = yield this.namespaceService.listNamespaces(skip, limit);
+            return {
+                count: namespaces.length,
+                rows: namespaces
+            };
+        });
     }
 };
 __decorate([
@@ -63,7 +70,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], NamespaceController.prototype, "insertNamespace", null);
 __decorate([
-    core_1.Type(namespace_type_1.NamespaceType),
+    core_1.Type(namespace_list_type_1.NamespaceListType),
     core_1.Query({
         skip: {
             type: core_1.GraphQLInt
@@ -74,7 +81,7 @@ __decorate([
     }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], NamespaceController.prototype, "listNamespaces", null);
 NamespaceController = __decorate([
     core_1.Controller(),

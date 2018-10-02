@@ -1,4 +1,5 @@
 import { NamespaceService } from "./services/namespace.service";
+import { INamespaceListType } from "../../core/api-introspection";
 export declare class NamespaceController {
     private namespaceService;
     constructor(namespaceService: NamespaceService);
@@ -11,5 +12,5 @@ export declare class NamespaceController {
     listNamespaces(root: any, { skip, limit }: {
         skip: any;
         limit: any;
-    }): Promise<{}>;
+    }): Promise<INamespaceListType>;
 }

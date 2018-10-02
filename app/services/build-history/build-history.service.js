@@ -25,7 +25,6 @@ let BuildHistoryService = class BuildHistoryService {
     }
     find(doc) {
         return new rxjs_1.Observable(o => {
-            console.log(this.buildHistoryDatabase);
             this.buildHistoryDatabase.find(doc, (e, d) => {
                 if (e) {
                     o.error(e);
@@ -34,11 +33,11 @@ let BuildHistoryService = class BuildHistoryService {
             });
         });
     }
-    findAll(skip = 0, limit = 100, sort = { name: 1 }) {
+    findAll(skip = 0, limit = 100, sort = { name: 1 }, where = {}) {
         return new Promise((resolve, reject) => {
-            this.buildHistoryDatabase.find({})
-                .sort(sort)
+            this.buildHistoryDatabase.find(where)
                 .skip(skip)
+                .sort(sort)
                 .limit(limit)
                 .exec((e, d) => {
                 if (e) {

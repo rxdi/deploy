@@ -21,22 +21,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
-const ipfs_1 = require("@gapi/ipfs");
 const stream_1 = require("stream");
 const ipfs_daemon_node_info_1 = require("@gapi/ipfs-daemon/ipfs-daemon-node-info");
 const ipfs_daemon_1 = require("@gapi/ipfs-daemon");
+const rxjs_1 = require("rxjs");
+const http_1 = require("http");
+const https_1 = require("https");
+const operators_1 = require("rxjs/operators");
 let FileIpfsService = class FileIpfsService {
-    constructor(ipfs, ipfsDaemonNodeInfo, pingService, logger) {
-        this.ipfs = ipfs;
+    constructor(ipfsDaemon, ipfsDaemonNodeInfo, logger) {
+        this.ipfsDaemon = ipfsDaemon;
         this.ipfsDaemonNodeInfo = ipfsDaemonNodeInfo;
-        this.pingService = pingService;
         this.logger = logger;
         this.nodeInfo = this.ipfsDaemonNodeInfo.info;
         this.providers = {
             infura: 'https://ipfs.infura.io/ipfs/',
             cloudflare: 'https://cloudflare-ipfs.com/ipfs/',
             ipfsOriginal: 'https://ipfs.io/ipfs/',
-            thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`
+            thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`,
+            mainDesktopApp: `http://localhost:8080/ipfs/`
         };
     }
     addFile(file) {
@@ -44,10 +47,32 @@ let FileIpfsService = class FileIpfsService {
             const content = new stream_1.Readable();
             content.push(file);
             content.push(null);
-            const ipfsFile = yield this.ipfs.files.add([{ content }]);
-            this.pingService.ping(ipfsFile[0].hash).subscribe();
+            const ipfsFile = yield this.ipfsDaemon.api.add([{ content }]);
+            this.ping(ipfsFile[0].hash)
+                .subscribe();
             this.logger.log(`\Cloudflare: ${this.providers.cloudflare}${ipfsFile[0].hash}`);
             return ipfsFile;
+        });
+    }
+    ping(hash) {
+        this.httpObservable(`${this.providers.mainDesktopApp}${hash}`).subscribe();
+        return this.httpObservable(`${this.providers.thisNode}${hash}`)
+            .pipe(operators_1.switchMap(() => rxjs_1.combineLatest(this.httpObservable(`${this.providers.infura}${hash}`), this.httpObservable(`${this.providers.cloudflare}${hash}`), this.httpObservable(`${this.providers.ipfsOriginal}${hash}`))));
+    }
+    httpObservable(link) {
+        return rxjs_1.Observable.create(o => {
+            if (link.includes('https')) {
+                https_1.get(link, (r) => o.next(r));
+            }
+            else {
+                http_1.get(link, (r) => o.next(r));
+            }
+        });
+    }
+    wait(ipfsFile) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield new Promise((resolve, reject) => this.ping(ipfsFile[0].hash)
+                .subscribe(stream => resolve(stream), e => reject(e)));
         });
     }
     addPackage(p) {
@@ -57,27 +82,26 @@ let FileIpfsService = class FileIpfsService {
     }
     catIpfsFile(hash) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.ipfs.files.cat(hash);
+            return yield this.ipfsDaemon.api.cat(hash);
         });
     }
     getIpfsFile(hash) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.ipfs.files.get(hash);
+            return yield this.ipfsDaemon.api.get(hash);
         });
     }
     addRawFile(content) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ipfsFile = yield this.ipfs.files.add([{ content }]);
-            this.pingService.ping(ipfsFile[0].hash).subscribe();
+            const ipfsFile = yield this.ipfsDaemon.api.add([{ content }]);
+            this.ping(ipfsFile[0].hash).subscribe();
             return ipfsFile;
         });
     }
 };
 FileIpfsService = __decorate([
     core_1.Service(),
-    __param(0, core_1.Inject(ipfs_1.IPFS)),
+    __param(0, core_1.Inject(ipfs_daemon_1.IPFS_DAEMON)),
     __metadata("design:paramtypes", [Object, ipfs_daemon_node_info_1.IpfsDaemonInfoService,
-        ipfs_daemon_1.PingService,
         core_1.BootstrapLogger])
 ], FileIpfsService);
 exports.FileIpfsService = FileIpfsService;

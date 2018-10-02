@@ -19,7 +19,6 @@ export class BuildHistoryService {
 
     find(doc: DagModel | {}): Observable<DagModel> {
         return new Observable(o => {
-            console.log(this.buildHistoryDatabase);
             this.buildHistoryDatabase.find(doc, (e, d) => {
                 if (e) {
                     o.error(e);
@@ -29,11 +28,11 @@ export class BuildHistoryService {
         })
     }
 
-    findAll(skip: number = 0, limit: number = 100, sort = { name: 1 }): Promise<IHistoryType[]> {
+    findAll(skip: number = 0, limit: number = 100, sort = { name: 1 }, where = {}): Promise<IHistoryType[]> {
         return new Promise((resolve, reject) => {
-            this.buildHistoryDatabase.find({})
-                .sort(sort)
+            this.buildHistoryDatabase.find(where)
                 .skip(skip)
+                .sort(sort)
                 .limit(limit)
                 .exec((e, d: any) => {
                     if (e) {

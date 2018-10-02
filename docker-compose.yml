@@ -18,6 +18,6 @@ services:
       - "8080:8080"
       - "8957:8957"
     volumes:
-      - ./packages:/usr/src/app/packages
+      - ./builds:/usr/src/app/builds
       - ./.rxdi:/root/.rxdi
       - ./.jsipfs:/root/.jsipfs

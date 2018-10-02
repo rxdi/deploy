@@ -1,6 +1,8 @@
 import { Query, Controller, Type, GraphQLString, GraphQLInt, Mutation } from "@gapi/core";
 import { NamespaceType } from './types/namespace.type';
 import { NamespaceService } from "./services/namespace.service";
+import { NamespaceListType } from './types/namespace-list.type';
+import { INamespaceListType } from "../../core/api-introspection";
 
 @Controller()
 export class NamespaceController {
@@ -33,7 +35,7 @@ export class NamespaceController {
         return await this.namespaceService.insert({ name });
     }
 
-    @Type(NamespaceType)
+    @Type(NamespaceListType)
     @Query({
         skip: {
             type: GraphQLInt
@@ -42,8 +44,12 @@ export class NamespaceController {
             type: GraphQLInt
         },
     })
-    listNamespaces(root, { skip, limit }) {
-        return this.namespaceService.listNamespaces(skip, limit);
+    async listNamespaces(root, { skip, limit }): Promise<INamespaceListType> {
+        const namespaces = await this.namespaceService.listNamespaces(skip, limit);
+        return {
+            count: namespaces.length,
+            rows: namespaces
+        }
     }
 
 }

@@ -31,13 +31,13 @@ let NamespaceService = class NamespaceService {
             });
         });
     }
-    getNamespaceById(id) {
+    getNamespaceById(_id) {
         return new Promise((resolve, reject) => {
-            this.namespace.find({ id })
-                .exec((e, d) => {
+            this.namespace.findOne({ _id }, (e, d) => {
                 if (e) {
                     reject(e);
                 }
+                console.log(d);
                 resolve(d);
             });
         });

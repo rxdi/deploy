@@ -1,5 +1,6 @@
 import { Service, Inject } from "@rxdi/core";
 import { __NAMESPACE_DB } from "../../../../env.injection.tokens";
+import { INamespacetype } from '../../../core/api-introspection/index';
 
 @Service()
 export class NamespaceService {
@@ -19,15 +20,15 @@ export class NamespaceService {
     }
 
 
-    getNamespaceById(id: string) {
+    getNamespaceById(_id: string) {
         return new Promise((resolve, reject) => {
-            this.namespace.find({ id })
-                .exec((e, d) => {
-                    if (e) {
-                        reject(e);
-                    }
-                    resolve(d);
-                });
+            this.namespace.findOne({ _id }, (e, d) => {
+                if (e) {
+                    reject(e);
+                }
+                console.log(d);
+                resolve(d);
+            })
         });
     }
 
@@ -52,14 +53,14 @@ export class NamespaceService {
             });
         });
     }
-    listNamespaces(skip: number = 0, limit: number = 100, query = {}) {
+    listNamespaces(skip: number = 0, limit: number = 100, query = {}): Promise<INamespacetype[]> {
         return new Promise((resolve, reject) => {
             this.namespace
                 .find(query)
                 .sort(query)
                 .skip(skip)
                 .limit(limit)
-                .exec((e, d) => {
+                .exec((e, d: INamespacetype[]) => {
                     if (e) {
                         reject(e);
                     }

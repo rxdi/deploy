@@ -119,8 +119,8 @@ export class CompilePlugin implements PluginInterface {
             );
     }
 
-    async parcelBuild(path: string, outDir = null) {
-        return this.parcelBundler.prepareBundler(path, outDir)
+    async parcelBuild(path: string, outDir = null, fileName: string) {
+        return this.parcelBundler.prepareBundler(path, outDir, fileName)
     }
     async createCommitMessage(message: string = '') {
         if (includes('--html')) {
@@ -150,7 +150,7 @@ Error loading file ${filePath}
         message,
         namespace: string,
         outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME,
-        buildFolder = './build'
+        buildFolder = './build',
     ) {
         let ipfsFile: IPFSFile[];
         let ipfsModule: IPFSFile[];
@@ -160,7 +160,7 @@ Error loading file ${filePath}
         let currentModule: DagModel;
         let dag: DagModel;
         this.logger.log('Bundling Started!\n');
-        return from(this.parcelBuild(folder + '/' + file, buildFolder))
+        return from(this.parcelBuild(folder + '/' + file, buildFolder, `${file.split('.')[0]}.js`))
             .pipe(
                 tap(() => {
                     this.logger.log('Bundling finished!\n');

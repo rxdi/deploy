@@ -1,12 +1,13 @@
 /// <reference types="node" />
 import { BootstrapLogger } from '@rxdi/core';
-import { IPFS } from '@gapi/ipfs';
+import { IPFSFile, FilesAPI } from '@gapi/ipfs';
 import { IpfsDaemonInfoService } from '@gapi/ipfs-daemon/ipfs-daemon-node-info';
-import { PingService, DaemonNodeInfo } from '@gapi/ipfs-daemon';
+import { DaemonNodeInfo } from '@gapi/ipfs-daemon';
+import { Observable } from 'rxjs';
+import { IncomingMessage } from 'http';
 export declare class FileIpfsService {
-    private ipfs;
+    private ipfsDaemon;
     private ipfsDaemonNodeInfo;
-    private pingService;
     private logger;
     nodeInfo: DaemonNodeInfo;
     providers: {
@@ -14,11 +15,17 @@ export declare class FileIpfsService {
         cloudflare: string;
         ipfsOriginal: string;
         thisNode: string;
+        mainDesktopApp: string;
     };
-    constructor(ipfs: IPFS, ipfsDaemonNodeInfo: IpfsDaemonInfoService, pingService: PingService, logger: BootstrapLogger);
-    addFile(file: string): Promise<import("@gapi/ipfs/ipfs-injection").IPFSFile[]>;
-    addPackage(p: any): Promise<import("@gapi/ipfs/ipfs-injection").IPFSFile[]>;
+    constructor(ipfsDaemon: {
+        api: FilesAPI;
+    }, ipfsDaemonNodeInfo: IpfsDaemonInfoService, logger: BootstrapLogger);
+    addFile(file: string): Promise<IPFSFile[]>;
+    ping(hash: string): Observable<[IncomingMessage, IncomingMessage, IncomingMessage]>;
+    httpObservable(link: string): Observable<IncomingMessage>;
+    wait(ipfsFile: IPFSFile[]): Promise<{}>;
+    addPackage(p: any): Promise<IPFSFile[]>;
     catIpfsFile(hash: string): Promise<import("@gapi/ipfs/ipfs-injection").FileContent>;
-    getIpfsFile(hash: string): Promise<import("@gapi/ipfs/ipfs-injection").IPFSFile>;
-    addRawFile(content: Buffer): Promise<import("@gapi/ipfs/ipfs-injection").IPFSFile[]>;
+    getIpfsFile(hash: string): Promise<IPFSFile>;
+    addRawFile(content: Buffer): Promise<IPFSFile[]>;
 }

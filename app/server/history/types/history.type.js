@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_1 = require("graphql");
-const built_status_type_1 = require("./built-status.type");
+const built_status_type_1 = require("../../build/types/built-status.type");
 exports.HistoryType = new graphql_1.GraphQLObjectType({
     name: 'HistoryType',
     fields: {

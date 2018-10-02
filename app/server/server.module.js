@@ -14,6 +14,7 @@ const history_module_1 = require("./history/history.module");
 const compile_service_1 = require("./services/compile.service");
 const namespace_module_1 = require("./namespace/namespace.module");
 const build_module_1 = require("./build/build.module");
+const file_module_1 = require("./file/file.module");
 let ServerModule = class ServerModule {
 };
 ServerModule = __decorate([
@@ -21,7 +22,8 @@ ServerModule = __decorate([
         imports: [
             history_module_1.HistoryModule,
             namespace_module_1.NamespaceModule,
-            build_module_1.BuildModule
+            build_module_1.BuildModule,
+            file_module_1.FileModule
         ],
         services: [webui_service_1.WebUiService, server_push_service_1.ServerPushService, compile_service_1.CompileService],
         controllers: [user_queries_controller_1.UserQueriesController]
