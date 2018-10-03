@@ -1,3 +1,3 @@
 export declare class ErrorReasonService {
-    moduleIntegrityError(hash: any): void;
+    moduleIntegrityError(oldHash: any, newHash: any): void;
 }

@@ -2,7 +2,14 @@
 import { checkArguments } from './check-arguments';
 import { CommandDescription } from './commands-description';
 import { includes } from './app/services/helpers/helpers';
+import { LoggerService } from './app/services/logger/logger.service';
 const Table = require('terminal-table');
+const originalLog = console.log;
+
+console.log = function (...a) {
+    Container.get(LoggerService).stdout.next(a.toString());
+    return originalLog(...a);
+};
 
 includes('--silent') ? console.log = () => null : null;
 
@@ -32,11 +39,12 @@ import { EnvironemntSetterModule } from './environment-setter.module';
 import { AppModule } from './app/app.module';
 import { GapiFrameworkImports } from './gapi-framework-imports';
 
+
 Container.get(ConfigService).setConfig({
     ...(process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) ? ({
         logger: {
             logging: true,
-            hashes: true,
+            hashes: false,
             date: true,
             exitHandler: true,
             fileService: true

@@ -38,8 +38,7 @@ let FileIpfsService = class FileIpfsService {
             infura: 'https://ipfs.infura.io/ipfs/',
             cloudflare: 'https://cloudflare-ipfs.com/ipfs/',
             ipfsOriginal: 'https://ipfs.io/ipfs/',
-            thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`,
-            mainDesktopApp: `http://localhost:8080/ipfs/`
+            thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`
         };
     }
     addFile(file) {
@@ -48,14 +47,17 @@ let FileIpfsService = class FileIpfsService {
             content.push(file);
             content.push(null);
             const ipfsFile = yield this.ipfsDaemon.api.add([{ content }]);
-            this.ping(ipfsFile[0].hash)
-                .subscribe();
+            try {
+                this.ping(ipfsFile[0].hash)
+                    .subscribe();
+            }
+            catch (e) {
+            }
             this.logger.log(`\Cloudflare: ${this.providers.cloudflare}${ipfsFile[0].hash}`);
             return ipfsFile;
         });
     }
     ping(hash) {
-        this.httpObservable(`${this.providers.mainDesktopApp}${hash}`).subscribe();
         return this.httpObservable(`${this.providers.thisNode}${hash}`)
             .pipe(operators_1.switchMap(() => rxjs_1.combineLatest(this.httpObservable(`${this.providers.infura}${hash}`), this.httpObservable(`${this.providers.cloudflare}${hash}`), this.httpObservable(`${this.providers.ipfsOriginal}${hash}`))));
     }

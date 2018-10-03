@@ -2,10 +2,13 @@ import { Type, Controller, Mutation, GraphQLString, GraphQLNonNull, Query, Graph
 import { BuildType } from './types/build.type';
 import { CompileService } from "../services/compile.service";
 import { IHistoryListType } from "../../core/api-introspection";
-import { BuildHistoryService, FileService, TsConfigGenratorService } from "../../services";
+import { BuildHistoryService, FileService, TsConfigGenratorService, LoggerService } from "../../services";
 import { HistoryListType } from '../history/types/history-list.type';
 import { BuildStatusType } from './types/built-status.type';
 import { ProcessStdOutType } from './types/process.type';
+import { createWriteStream } from "fs";
+import { format } from "util";
+import { Subscription as rxjsSubscription } from "rxjs";
 
 @Controller()
 export class BuildController {
@@ -15,7 +18,8 @@ export class BuildController {
         private buildHistoryService: BuildHistoryService,
         private pubsub: PubSubService,
         private fileService: FileService,
-        private tsGenerator: TsConfigGenratorService
+        private tsGenerator: TsConfigGenratorService,
+        private loggerService: LoggerService
     ) { }
 
     @Type(BuildType)
@@ -37,15 +41,34 @@ export class BuildController {
         }
     })
     async triggerBuild(root, { folder, file, message, namespace, buildFolder }) {
-        await this.fileService.writeFile(folder + '/tsconfig.json', this.tsGenerator.getTsConfig(file.replace('.ts', '')));
-        setTimeout(async () => await this.compileService.buildFile(
-            folder, file, message, namespace, buildFolder
-        ).toPromise());
-        return {
-            status: 'Triggered'
-        }
-    }
+        return new Promise(async (resolve, reject) => {
+            await this.fileService.writeFile(folder + '/tsconfig.json', this.tsGenerator.getTsConfig(file.replace('.ts', '')));
+            const log_file = createWriteStream(`${folder}/${file}.log`, { flags: 'w' });
+            const subscription = this.loggerService.stdout.subscribe(log => {
+                log_file.write(format(log) + '\n');
+                this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: format(log) });
+            });
+            let sub: rxjsSubscription;
+            const cancelSubscription = () => {
+                subscription.unsubscribe();
+                log_file.close();
+                sub.unsubscribe();
+                reject('Build failed');
+            };
+            sub = this.compileService.buildFile(
+                folder, file, message, namespace, buildFolder
+            ).subscribe(
+                () => {
+                    resolve({
+                        status: 'Finish'
+                    });
+                    cancelSubscription();
+                },
+                () => cancelSubscription()
+            );
+        });
 
+    }
 
     @Type(HistoryListType)
     @Query({

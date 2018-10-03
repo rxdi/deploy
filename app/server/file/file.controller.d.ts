@@ -1,5 +1,5 @@
-import { FileService as InternalFileService } from "./services/file.service";
-import { FileService } from "../../services/file/file.service";
+import { FileService as InternalFileService } from './services/file.service';
+import { FileService } from '../../services/file/file.service';
 export declare class FileController {
     private fileServiceInternal;
     private fileService;
@@ -10,8 +10,9 @@ export declare class FileController {
         paths: {};
     }>;
     readFile(root: any, { folder }: {
-        folder: any;
+        folder: string;
     }): Promise<{
+        package: any;
         file: string;
     }>;
     saveFile(root: any, { folder, content }: {

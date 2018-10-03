@@ -1,0 +1,189 @@
+[object Object]
+1538523609914,Bootstrap -> @Module('e'): loading...
+1538523609915,Bootstrap -> @Module('e'): finished!
+1538523609915,Bootstrap -> @Module('GraphQLModule'): loading...
+1538523609915,Bootstrap -> @Module('GraphQLModule'): finished!
+1538523609915,Bootstrap -> @Module('e'): loading...
+1538523609915,Bootstrap -> @Module('e'): finished!
+1538523609916,Bootstrap -> @Module('EnvironemntSetterModule'): loading...
+1538523609932,Bootstrap -> @Module('EnvironemntSetterModule'): finished!
+1538523609932,Bootstrap -> @Module('AppModule'): loading...
+1538523609932,Bootstrap -> @Module('IpfsDaemonModule'): loading...
+1538523609932,Bootstrap -> @Module('IpfsDaemonModule'): finished!
+1538523609932,Bootstrap -> @Module('IpfsModule'): loading...
+1538523609933,Bootstrap -> @Module('IpfsModule'): finished!
+1538523609933,Bootstrap -> @Module('StatusModule'): loading...
+1538523609933,Bootstrap -> @Module('StatusModule'): finished!
+1538523609933,Bootstrap -> @Module('ServerModule'): loading...
+1538523609933,Bootstrap -> @Module('HistoryModule'): loading...
+1538523609933,Bootstrap -> @Module('HistoryModule'): finished!
+1538523609934,Bootstrap -> @Module('NamespaceModule'): loading...
+1538523609934,Bootstrap -> @Module('NamespaceModule'): finished!
+1538523609934,Bootstrap -> @Module('BuildModule'): loading...
+1538523609934,Bootstrap -> @Module('BuildModule'): finished!
+1538523609934,Bootstrap -> @Module('FileModule'): loading...
+1538523609934,Bootstrap -> @Module('FileModule'): finished!
+1538523609934,Bootstrap -> @Module('ServerModule'): finished!
+1538523609935,Bootstrap -> @Module('AppModule'): finished!
+1538523609935,Bootstrap -> @Service('gapi-ipfs-daemon-injection'): loading...
+1538523609936,Bootstrap -> @Service('gapi-ipfs-node-injection'): loading...
+1538523609936,Bootstrap -> @Service('isLockExists'): loading...
+1538523609936,Bootstrap -> @Service('init-ts-config-file'): loading...
+1538523609936,Bootstrap -> @Service('rxdi-deployer-home-settings'): loading...
+1538523609936,Bootstrap -> @Service('rxdi-deployer-namespace-database'): loading...
+1538523609936,Bootstrap -> @Service('rxdi-deployer-build-history-database'): loading...
+1538523609936,Bootstrap -> @Service('rxdi-deployer-previews-database'): loading...
+Swarm listening on,/ip4/127.0.0.1/tcp/4003/ws/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/127.0.0.1/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/192.168.1.140/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/192.168.186.1/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/172.16.111.1/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/172.10.0.1/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/13.10.0.1/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/12.10.0.1/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+Swarm listening on,/ip4/182.10.0.1/tcp/4002/ipfs/QmNPeR8zZEbS2ps6HNScMaBCjixDjwRVQ4sLc527MzXdoT
+1538523614210,[object Object]
+1538523614210,Ipfs daemon api running at: 127.0.0.1:5002
+1538523614211,Ipfs daemon gateway running at: 127.0.0.1:8081
+1538523614234,
+            Server running at: http://0.0.0.0:9300,
+            Environment: development
+            
+Subscription
+1538523614253,Bootstrap -> press start!
+Bootstrap success!
+1538523618785,Bundling Started!
+
+✨  [32m[1mBuilt in 975ms.[22m[39m
+
+[2mbuilds/build/[22m[36m[1mindex.js[22m[39m                     [1m[35m2.74 KB[39m[22m    [32m[1m882ms[22m[39m
+├── [2mbuilds/services/[22m[0mexample.service.ts[0m    [2m[35m1.59 KB[39m[22m    [2m[32m115ms[39m[22m
+├── [2mbuilds/[22m[0mindex.ts[0m                         [2m[35m831 B[39m[22m    [2m[32m754ms[39m[22m
+└── [2mbuilds/services/[22m[0mindex.ts[0m                [2m[35m286 B[39m[22m    [2m[32m121ms[39m[22m
+
+[2mbuilds/build/[22m[36m[1mindex.map[22m[39m                    [1m[35m2.02 KB[39m[22m      [32m[1m4ms[22m[39m
+1538523620789,Bundling finished!
+
+1538523620789,Adding commit message d...
+
+1538523621018,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmSCMtko2SLHTEWJw6yBamETEkB25sWCRx6uXVMaat2hF1
+1538523621018,Commit message added...
+
+1538523621020,Reading bundle ./builds/build/index.js finished!
+
+1538523621274,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA
+1538523621274,Bundle added to ipfs ./builds/build/index.js
+
+1538523621274,Typescript definitions merge started!
+
+1538523621275,Typescript merging definitions started in child process...
+
+1538523625131,Child process exited with code 0
+
+1538523625131,Typescript definitions merge finished! Reading file...
+
+1538523625132,Typescript definitions read finished! Adding to IPFS...
+
+1538523625505,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmefAnXofmo6ui4yrfJVNmJdUXGWGtsTpBEa6YVLtk3wmH
+1538523625506,Typescript definitions added to IPFS! Adding module configuration...
+
+1538523625508,Reactive file present reactive.json package dependencies will be taken from it
+1538523625514,Current module before deploy {"name":"123456","module":"QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA","createdAt":"2018-10-02T23:40:25.508Z","typings":"QmefAnXofmo6ui4yrfJVNmJdUXGWGtsTpBEa6YVLtk3wmH","message":"QmSCMtko2SLHTEWJw6yBamETEkB25sWCRx6uXVMaat2hF1","previous":["QmQGEvMhc3nefFDrDxxC34bcBp811ALDqs8xqS19hKwGSK","QmeubCyPG7AaEgqFRcBVd9yNzgGGBPdGY5UU9KsRpNdHU3","QmWqp72rZbXWUVP4t2vYxMEsRkMkwmjp8nuNmSZm2HaM6n","QmZJnKktAPUR2X2hyLuXJoSMCkMXoPrQyYwZTjuT2HDEPr","QmZzH6jrPJ3qzhubGZZoyBeksCRL7X56F5GXMPisAqQzHy","QmehwVsAvkeMwUbEpXwr3PEEEu4fR1jccoedFBhLyc1e8g","QmdViQ5eUT3NhRvesiw2wACDd71zVb6iVG9N2hee3Urx7a","QmdCAdn1McqKFWR2aZmgLpXKaV4pHGfPaEXUFcAvtF2UPb","QmSfryJFNtrcqc4SAWteNBiehzuYTMMXQfgxr2TgUP11LK","QmZSrRF4jh3AGZ8HuwNJoYDwt2SgvWmc9NNFEYqiNgVddk","QmaB9SwSUtpWAohkRyycxuf2JE4d1DSk2WSXwQhnZ3EUU9","QmSc6nHv5DkLRFZmVU99vxSJkEvXgeVN4iyUX47howU3A2","QmTvJfSnz4QUYLF58tiuzXV6aXQfTgTJnpgeyhRfTQr1ex","QmPb6wFT7vaawocUJh8AyBtxkBqHNRCRtCj2uEVuc9s5au","QmeDScz8Meh9nLrBmXSqowC53S1b3zewNwKCWK5dTcXA6K","QmXtkAvVAVE28uoxyeCT2GKYvrtcZ8WuTx7pd9SmvfLrPK","QmZiXqNduzmvtvJcUbV5n7RVPrdgmGMcgCoXpL3n1iMvrD","QmRWVWJmHg73MTy6caAVS58EnRXoiEpb6wdjmKwqWZmGaU","QmepVpztuZ3DWTBMq8FaWHySXebxfnsk934LZULZsBfbvD","QmQXbqoh6U71DkByAiGRzrgQ7CvJY9Xk46FVKxUSzXLARC"],"dependencies":["QmP9n7m1UWkFn2hqt7mnfQYnBtxmFyyvKZHN7hgngQb1gM"]}
+1538523625733,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmV3k81XoV7yBHDzqZYZ138Pb9KuJokKfS3KAJuxL7S1fD
+QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA,QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA
+1538523625735,
+        !! Warning !!
+        Module is with the same integrity and will not be uploaded again!
+        You need to make change to the module so it will be with different integrity!
+            
+1538523625735,
+        !! Warning !!
+        Typings are with the same integrity and will not be uploaded again!
+        You need to make change to the module so it will be with different integrity!
+            
+1538523625736,Module configuration added to ipfs!
+
+1538523625748,Module saved to persistant history!
+┌───────────────────────────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────┐
+│[40m                                    [32mPreviews versions[39m                                  [49m│[40m                                         [32mGateway[39m                                        [49m│
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmeubCyPG7AaEgqFRcBVd9yNzgGGBPdGY5UU9KsRpNdHU3                                        │     https://cloudflare-ipfs.com/ipfs/QmeubCyPG7AaEgqFRcBVd9yNzgGGBPdGY5UU9KsRpNdHU3    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmWqp72rZbXWUVP4t2vYxMEsRkMkwmjp8nuNmSZm2HaM6n                                        │     https://cloudflare-ipfs.com/ipfs/QmWqp72rZbXWUVP4t2vYxMEsRkMkwmjp8nuNmSZm2HaM6n    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmZJnKktAPUR2X2hyLuXJoSMCkMXoPrQyYwZTjuT2HDEPr                                        │     https://cloudflare-ipfs.com/ipfs/QmZJnKktAPUR2X2hyLuXJoSMCkMXoPrQyYwZTjuT2HDEPr    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmZzH6jrPJ3qzhubGZZoyBeksCRL7X56F5GXMPisAqQzHy                                        │     https://cloudflare-ipfs.com/ipfs/QmZzH6jrPJ3qzhubGZZoyBeksCRL7X56F5GXMPisAqQzHy    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmehwVsAvkeMwUbEpXwr3PEEEu4fR1jccoedFBhLyc1e8g                                        │     https://cloudflare-ipfs.com/ipfs/QmehwVsAvkeMwUbEpXwr3PEEEu4fR1jccoedFBhLyc1e8g    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmdViQ5eUT3NhRvesiw2wACDd71zVb6iVG9N2hee3Urx7a                                        │     https://cloudflare-ipfs.com/ipfs/QmdViQ5eUT3NhRvesiw2wACDd71zVb6iVG9N2hee3Urx7a    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmdCAdn1McqKFWR2aZmgLpXKaV4pHGfPaEXUFcAvtF2UPb                                        │     https://cloudflare-ipfs.com/ipfs/QmdCAdn1McqKFWR2aZmgLpXKaV4pHGfPaEXUFcAvtF2UPb    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmSfryJFNtrcqc4SAWteNBiehzuYTMMXQfgxr2TgUP11LK                                        │     https://cloudflare-ipfs.com/ipfs/QmSfryJFNtrcqc4SAWteNBiehzuYTMMXQfgxr2TgUP11LK    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmZSrRF4jh3AGZ8HuwNJoYDwt2SgvWmc9NNFEYqiNgVddk                                        │     https://cloudflare-ipfs.com/ipfs/QmZSrRF4jh3AGZ8HuwNJoYDwt2SgvWmc9NNFEYqiNgVddk    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmaB9SwSUtpWAohkRyycxuf2JE4d1DSk2WSXwQhnZ3EUU9                                        │     https://cloudflare-ipfs.com/ipfs/QmaB9SwSUtpWAohkRyycxuf2JE4d1DSk2WSXwQhnZ3EUU9    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmSc6nHv5DkLRFZmVU99vxSJkEvXgeVN4iyUX47howU3A2                                        │     https://cloudflare-ipfs.com/ipfs/QmSc6nHv5DkLRFZmVU99vxSJkEvXgeVN4iyUX47howU3A2    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmTvJfSnz4QUYLF58tiuzXV6aXQfTgTJnpgeyhRfTQr1ex                                        │     https://cloudflare-ipfs.com/ipfs/QmTvJfSnz4QUYLF58tiuzXV6aXQfTgTJnpgeyhRfTQr1ex    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmPb6wFT7vaawocUJh8AyBtxkBqHNRCRtCj2uEVuc9s5au                                        │     https://cloudflare-ipfs.com/ipfs/QmPb6wFT7vaawocUJh8AyBtxkBqHNRCRtCj2uEVuc9s5au    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmeDScz8Meh9nLrBmXSqowC53S1b3zewNwKCWK5dTcXA6K                                        │     https://cloudflare-ipfs.com/ipfs/QmeDScz8Meh9nLrBmXSqowC53S1b3zewNwKCWK5dTcXA6K    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmXtkAvVAVE28uoxyeCT2GKYvrtcZ8WuTx7pd9SmvfLrPK                                        │     https://cloudflare-ipfs.com/ipfs/QmXtkAvVAVE28uoxyeCT2GKYvrtcZ8WuTx7pd9SmvfLrPK    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmZiXqNduzmvtvJcUbV5n7RVPrdgmGMcgCoXpL3n1iMvrD                                        │     https://cloudflare-ipfs.com/ipfs/QmZiXqNduzmvtvJcUbV5n7RVPrdgmGMcgCoXpL3n1iMvrD    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmRWVWJmHg73MTy6caAVS58EnRXoiEpb6wdjmKwqWZmGaU                                        │     https://cloudflare-ipfs.com/ipfs/QmRWVWJmHg73MTy6caAVS58EnRXoiEpb6wdjmKwqWZmGaU    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmepVpztuZ3DWTBMq8FaWHySXebxfnsk934LZULZsBfbvD                                        │     https://cloudflare-ipfs.com/ipfs/QmepVpztuZ3DWTBMq8FaWHySXebxfnsk934LZULZsBfbvD    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmQXbqoh6U71DkByAiGRzrgQ7CvJY9Xk46FVKxUSzXLARC                                        │     https://cloudflare-ipfs.com/ipfs/QmQXbqoh6U71DkByAiGRzrgQ7CvJY9Xk46FVKxUSzXLARC    │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmV3k81XoV7yBHDzqZYZ138Pb9KuJokKfS3KAJuxL7S1fD                                        │     https://cloudflare-ipfs.com/ipfs/QmV3k81XoV7yBHDzqZYZ138Pb9KuJokKfS3KAJuxL7S1fD    │
+└───────────────────────────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────┐
+│[40m                                    [32mPreviews version[39m                                   [49m│[40m                                       [32mNext version[39m                                     [49m│
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmeubCyPG7AaEgqFRcBVd9yNzgGGBPdGY5UU9KsRpNdHU3                                        │     QmWqp72rZbXWUVP4t2vYxMEsRkMkwmjp8nuNmSZm2HaM6n                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmZJnKktAPUR2X2hyLuXJoSMCkMXoPrQyYwZTjuT2HDEPr                                        │     QmZzH6jrPJ3qzhubGZZoyBeksCRL7X56F5GXMPisAqQzHy                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmehwVsAvkeMwUbEpXwr3PEEEu4fR1jccoedFBhLyc1e8g                                        │     QmdViQ5eUT3NhRvesiw2wACDd71zVb6iVG9N2hee3Urx7a                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmdCAdn1McqKFWR2aZmgLpXKaV4pHGfPaEXUFcAvtF2UPb                                        │     QmSfryJFNtrcqc4SAWteNBiehzuYTMMXQfgxr2TgUP11LK                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmZSrRF4jh3AGZ8HuwNJoYDwt2SgvWmc9NNFEYqiNgVddk                                        │     QmaB9SwSUtpWAohkRyycxuf2JE4d1DSk2WSXwQhnZ3EUU9                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmSc6nHv5DkLRFZmVU99vxSJkEvXgeVN4iyUX47howU3A2                                        │     QmTvJfSnz4QUYLF58tiuzXV6aXQfTgTJnpgeyhRfTQr1ex                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmPb6wFT7vaawocUJh8AyBtxkBqHNRCRtCj2uEVuc9s5au                                        │     QmeDScz8Meh9nLrBmXSqowC53S1b3zewNwKCWK5dTcXA6K                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmXtkAvVAVE28uoxyeCT2GKYvrtcZ8WuTx7pd9SmvfLrPK                                        │     QmZiXqNduzmvtvJcUbV5n7RVPrdgmGMcgCoXpL3n1iMvrD                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmRWVWJmHg73MTy6caAVS58EnRXoiEpb6wdjmKwqWZmGaU                                        │     QmepVpztuZ3DWTBMq8FaWHySXebxfnsk934LZULZsBfbvD                                     │
+├───────────────────────────────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│ QmQXbqoh6U71DkByAiGRzrgQ7CvJY9Xk46FVKxUSzXLARC                                        │     QmV3k81XoV7yBHDzqZYZ138Pb9KuJokKfS3KAJuxL7S1fD                                     │
+└───────────────────────────────────────────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│[40m                                      [32mInstall command[39m                                    [49m│
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│ rxdi i QmV3k81XoV7yBHDzqZYZ138Pb9KuJokKfS3KAJuxL7S1fD                                   │
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+┌────┬───────┬─────────┬─────────────┬─────────────────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────────────┐
+│[40m    [49m│[40m [33mStatus[39m[49m│[40m[32mFile Type[39m[49m│[40m [32mSize[39m        [49m│[40m [32mGateway[39m                                                             [49m│[40m [31mErrors[39m                                                          [49m│
+├────┼───────┼─────────┼─────────────┼─────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+│[40m [33m⚠[39m  [49m│[40m[33mWARNING[39m[49m│ Bundle  │ 2813 bytes  │https://cloudflare-ipfs.com/ipfs/QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uY│ [31mIntegrity is same like in the previews version![39m                 │
+├────┼───────┼─────────┼─────────────┼─────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+│[40m [33m⚠[39m  [49m│[40m[33mWARNING[39m[49m│ Typings │ 410 bytes   │https://cloudflare-ipfs.com/ipfs/QmefAnXofmo6ui4yrfJVNmJdUXGWGtsTpBEa│ [31mIntegrity is same like in the previews version![39m                 │
+├────┼───────┼─────────┼─────────────┼─────────────────────────────────────────────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+│[40m [33m⚠[39m  [49m│[40m[33mWARNING[39m[49m│ Module  │ 1442 bytes  │https://cloudflare-ipfs.com/ipfs/QmV3k81XoV7yBHDzqZYZ138Pb9KuJokKfS3K│ [31mIntegrity is same like in the previews version![39m                 │
+└────┴───────┴─────────┴─────────────┴─────────────────────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────────────┘
+Module is with the same integrity like in the previws version QmQXbqoh6U71DkByAiGRzrgQ7CvJY9Xk46FVKxUSzXLARC
+To check this version write down following command rxdi-deploy --find QmQXbqoh6U71DkByAiGRzrgQ7CvJY9Xk46FVKxUSzXLARC
+1538523888916,Unhandled error rejection

@@ -16,8 +16,7 @@ export class FileIpfsService {
         infura: 'https://ipfs.infura.io/ipfs/',
         cloudflare: 'https://cloudflare-ipfs.com/ipfs/',
         ipfsOriginal: 'https://ipfs.io/ipfs/',
-        thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`,
-        mainDesktopApp: `http://localhost:8080/ipfs/`
+        thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`
     };
     constructor(
         @Inject(IPFS_DAEMON) private ipfsDaemon: { api: FilesAPI },
@@ -30,8 +29,13 @@ export class FileIpfsService {
         content.push(file);
         content.push(null);
         const ipfsFile = await this.ipfsDaemon.api.add([{ content }]);
-        this.ping(ipfsFile[0].hash)
+        try {
+            this.ping(ipfsFile[0].hash)
             .subscribe()
+        } catch (e) {
+
+        }
+
         // this.logger.log(`\nLocal: http://${this.nodeInfo.gatewayHost}:${this.nodeInfo.gatewayPort}/ipfs/${ipfsFile[0].hash}`);
         // this.logger.log(`\nInfura: ${providers.infura}${ipfsFile[0].hash}`);
         this.logger.log(`\Cloudflare: ${this.providers.cloudflare}${ipfsFile[0].hash}`);
@@ -40,7 +44,6 @@ export class FileIpfsService {
         return ipfsFile;
     }
     ping(hash: string) {
-        this.httpObservable(`${this.providers.mainDesktopApp}${hash}`).subscribe();
         return this.httpObservable(`${this.providers.thisNode}${hash}`)
             .pipe(
                 switchMap(() => combineLatest(

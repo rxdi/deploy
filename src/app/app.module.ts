@@ -14,7 +14,7 @@ import { BuildHistoryService } from './services/build-history/build-history.serv
 import { ErrorReasonService } from './services/error-reason/error-reason.service';
 import { CompilePlugin } from './plugins/compile/compile.plugin';
 import { TimeService } from './services/time/time.service';
-import { HtmlTemplateBuilder, PackageJsonService, nextOrDefault, includes, PreviousService } from './services';
+import { HtmlTemplateBuilder, PackageJsonService, nextOrDefault, includes, PreviousService, LoggerService } from './services';
 import { ServerModule } from './server/server.module';
 
 const _IMPORTS = [
@@ -49,7 +49,8 @@ includes('--webui') ? _IMPORTS.push(ServerModule) : null;
         TimeService,
         HtmlTemplateBuilder,
         PackageJsonService,
-        PreviousService
+        PreviousService,
+        LoggerService
     ],
     plugins: [CompilePlugin]
 })

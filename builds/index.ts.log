@@ -1,0 +1,48 @@
+To check this version write down following command rxdi-deploy --find QmbNnKTv1H7PYvoa3J8E66BRWidRhCL7tGLWRBRidpSPsi
+1538536273299,Bundling Started!
+
+✨  [32m[1mBuilt in 385ms.[22m[39m
+
+[2mbuilds/build/[22m[36m[1mindex.js[22m[39m                     [1m[35m2.74 KB[39m[22m    [32m[1m311ms[22m[39m
+├── [2mbuilds/services/[22m[0mexample.service.ts[0m    [2m[35m1.59 KB[39m[22m    [2m[32m164ms[39m[22m
+├── [2mbuilds/[22m[0mindex.ts[0m                         [2m[35m831 B[39m[22m    [2m[32m138ms[39m[22m
+└── [2mbuilds/services/[22m[0mindex.ts[0m                [2m[35m286 B[39m[22m    [2m[32m169ms[39m[22m
+
+[2mbuilds/build/[22m[36m[1mindex.map[22m[39m                    [1m[35m2.02 KB[39m[22m      [32m[1m2ms[22m[39m
+1538536274702,Bundling finished!
+
+1538536274702,Adding commit message gggg4...
+
+1538536274942,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmTsT9x64nbsgPPnekM9HmCfirb8XYNZvAZZnr95ZTr7tQ
+1538536274942,Commit message added...
+
+1538536274943,Reading bundle ./builds/build/index.js finished!
+
+1538536274949,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA
+1538536274949,Bundle added to ipfs ./builds/build/index.js
+
+1538536274949,Typescript definitions merge started!
+
+1538536274950,Typescript merging definitions started in child process...
+
+1538536278693,Child process exited with code 0
+
+1538536278693,Typescript definitions merge finished! Reading file...
+
+1538536278694,Typescript definitions read finished! Adding to IPFS...
+
+1538536278922,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmaJVx47867kV2xiG8eYFaTa6uqHUfuA3xZTqVwDUqCUcE
+1538536278923,Typescript definitions added to IPFS! Adding module configuration...
+
+1538536278925,Reactive file present reactive.json package dependencies will be taken from it
+1538536278929,Current module before deploy {"name":"dadad3","module":"QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA","createdAt":"2018-10-03T03:11:18.924Z","typings":"QmaJVx47867kV2xiG8eYFaTa6uqHUfuA3xZTqVwDUqCUcE","message":"QmTsT9x64nbsgPPnekM9HmCfirb8XYNZvAZZnr95ZTr7tQ","previous":["QmX6yExDmDYwRqidw3GeEcaowKuJYzdWvtJWpPJn9jyi1w","QmXpMKcmcAAYxUDJbBLRX74LxzSPYFVZoFa5LepBMD1MUZ","Qmdgytxxy8Vg4otmcF8qjR1hH8wxRA7ZPKqvgf9RuqxeqZ","QmXVZ4T97qBMgX35z71JD1c8gf36Dnv45X5YUGzCJbTvi6","QmNipnxLUF65WaYLxbVvCcUh59CAPcjb3RAwrq3U3powcJ","QmSSJkTK1KYGjdL3oS9pDz3Soy4awXAJDJcRJP1c1T7ksu","QmTqEU1aCQEh6WFtNC21UdnuNdrcCc4dD4sx8oNr8N61kp","QmbcqHV5VnD1VFbS8NnhjuED8GwX9mSgGDCmdNJoLqwzuJ","QmZkiQ6h59RC8XWJUijpJTP1yfRvqW7ZXsZe6nBF6udNAH","QmNgiwPdnsGHbM7Kpr8ExWTMgDexSt6h4D84UdEPHF83yx","QmcceK9pMZ7mQZhibbVnuwahTT2sNCvxFZsTCw9vyXNeqP","QmacsJ9Bi1ifFtqTx2vUBqJDvKkY7XaUjp7vJ69nMugQDm","QmRMr6QuVCZVkXk2QMV5LhoKJ39C3wMhQqzKkxd6tsSyCh","QmVv6RNgYwmexXPH1KGzSBP1QqiDR3Rp7ybLDLhHpTJVA9","QmNvvscEXxYUN5UXuNj82dbeqhjcAauYSgw3LiScjJqTFA","QmVuzgmYx2fbrMn5f3kgugxfXAbHxpVUSnf5kDAVH1RAsP","QmYEvgF4DfB49jPe84fz1SYeMoV7wH4SUPoip6mfpaBFtG","QmWRH1r1Q8PBo79NM1sQ3hcoPXnpDRWvNJqwoYeqgFvqst","QmR4SdSE5No3B63dvvoSu9qf7Cr1zeBV46PLCenehN4SBw","QmbNnKTv1H7PYvoa3J8E66BRWidRhCL7tGLWRBRidpSPsi"],"dependencies":["QmP9n7m1UWkFn2hqt7mnfQYnBtxmFyyvKZHN7hgngQb1gM"]}
+1538536279145,Cloudflare: https://cloudflare-ipfs.com/ipfs/QmUkx9FVDQUsnvJa9FvHi35oaFs84aU6fphVV7r8c4Xmh4
+QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA,QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA
+1538536279146,
+        !! Warning !!
+        Module is with the same integrity and will not be uploaded again!
+        You need to make change to the module so it will be with different integrity!
+            
+1538536279146,Module configuration added to ipfs!
+
+1538536279152,Module saved to persistant history!

@@ -1,23 +1,22 @@
 import { PubSubService } from "@gapi/core";
 import { CompileService } from "../services/compile.service";
 import { IHistoryListType } from "../../core/api-introspection";
-import { BuildHistoryService, FileService, TsConfigGenratorService } from "../../services";
+import { BuildHistoryService, FileService, TsConfigGenratorService, LoggerService } from "../../services";
 export declare class BuildController {
     private compileService;
     private buildHistoryService;
     private pubsub;
     private fileService;
     private tsGenerator;
-    constructor(compileService: CompileService, buildHistoryService: BuildHistoryService, pubsub: PubSubService, fileService: FileService, tsGenerator: TsConfigGenratorService);
+    private loggerService;
+    constructor(compileService: CompileService, buildHistoryService: BuildHistoryService, pubsub: PubSubService, fileService: FileService, tsGenerator: TsConfigGenratorService, loggerService: LoggerService);
     triggerBuild(root: any, { folder, file, message, namespace, buildFolder }: {
         folder: any;
         file: any;
         message: any;
         namespace: any;
         buildFolder: any;
-    }): Promise<{
-        status: string;
-    }>;
+    }): Promise<{}>;
     getBuildHistory(root: any, { skip, limit, where }: {
         skip: any;
         limit: any;

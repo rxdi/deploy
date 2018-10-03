@@ -18,4 +18,4 @@ import { FileModule } from './file/file.module';
     services: [WebUiService, ServerPushService, CompileService],
     controllers: [UserQueriesController]
 })
-export class ServerModule {}
+export class ServerModule { }

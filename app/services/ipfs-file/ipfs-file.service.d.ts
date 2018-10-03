@@ -15,7 +15,6 @@ export declare class FileIpfsService {
         cloudflare: string;
         ipfsOriginal: string;
         thisNode: string;
-        mainDesktopApp: string;
     };
     constructor(ipfsDaemon: {
         api: FilesAPI;

@@ -34,10 +34,9 @@ const error_reason_service_1 = require("../../services/error-reason/error-reason
 const status_service_1 = require("../../status/status.service");
 const package_json_service_1 = require("../../services/package-json/package-json.service");
 const helpers_1 = require("../../services/helpers/helpers");
-const core_2 = require("@gapi/core");
 const namespace_service_1 = require("../../server/namespace/services/namespace.service");
 let CompilePlugin = class CompilePlugin {
-    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previousService, namespaceService, errorReasonService, statusService, packageJsonService, rxdiFileService, pubsub) {
+    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previousService, namespaceService, errorReasonService, statusService, packageJsonService, rxdiFileService) {
         this.parcelBundler = parcelBundler;
         this.logger = logger;
         this.ipfsFile = ipfsFile;
@@ -53,7 +52,6 @@ let CompilePlugin = class CompilePlugin {
         this.statusService = statusService;
         this.packageJsonService = packageJsonService;
         this.rxdiFileService = rxdiFileService;
-        this.pubsub = pubsub;
         this.fileNotDeployed = '';
         this.initIpfsModule = [{
                 size: 0,
@@ -103,9 +101,7 @@ let CompilePlugin = class CompilePlugin {
         });
     }
     parcelBuild(path, outDir = null, fileName) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return this.parcelBundler.prepareBundler(path, outDir, fileName);
-        });
+        return this.parcelBundler.prepareBundler(path, outDir, fileName);
     }
     createCommitMessage(message = '') {
         return __awaiter(this, void 0, void 0, function* () {
@@ -145,20 +141,16 @@ Error loading file ${filePath}
         return rxjs_1.from(this.parcelBuild(folder + '/' + file, buildFolder, `${file.split('.')[0]}.js`))
             .pipe(operators_1.tap(() => {
             this.logger.log('Bundling finished!\n');
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundling finished' });
             this.logger.log(`Adding commit message ${message}...\n`);
         }), operators_1.switchMap(() => __awaiter(this, void 0, void 0, function* () { return this.createCommitMessage(message); })), operators_1.tap(res => {
             ipfsMessage = res;
             this.logger.log(`Commit message added...\n`);
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Commit message added' });
         }), operators_1.switchMap(() => this.fileService.readFile(`${buildFolder}/${file.split('.')[0]}.js`)), operators_1.tap(() => {
             this.logger.log(`Reading bundle ${buildFolder}/${file.split('.')[0]}.js finished!\n`);
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Reading bundle finished' });
         }), operators_1.switchMap((res) => this.ipfsFile.addFile(res)), operators_1.tap(res => {
             ipfsFile = res;
             this.logger.log(`Bundle added to ipfs ${buildFolder}/${file.split('.')[0]}.js\n`);
             this.logger.log(`Typescript definitions merge started!\n`);
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Typescript definitions merge starte' });
         }), operators_1.switchMap(() => rxjs_1.from(this.typingsGenerator.mergeTypings(namespace, folder, `${buildFolder}/index.d.ts`))), operators_1.tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)), operators_1.switchMap(() => this.fileService.readFile(`${buildFolder}/index.d.ts`)), operators_1.tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)), operators_1.switchMap((res) => {
             if (!!res) {
                 return this.ipfsFile.addFile(res);
@@ -198,7 +190,6 @@ Error loading file ${filePath}
             if (ipfsFileMetadata[0].hash) {
                 currentModule.metadata = ipfsFileMetadata[0].hash;
             }
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundldadada' });
             currentModule.previous = [...(dag.previous || [])];
             let f = { ipfs: [] };
             if (this.rxdiFileService.isPresent(`${folder}/${outputConfigName}`)) {
@@ -226,7 +217,6 @@ Error loading file ${filePath}
                 currentModule.packages = packages;
             }
             ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module added to ipfs' });
             if (currentModule.previous.length >= 20) {
                 currentModule.previous.shift();
             }
@@ -235,7 +225,6 @@ Error loading file ${filePath}
                 currentModule.ipfs = f.ipfs;
             }
             yield this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
             this.integrityCheck(dag, ipfsFile, ipfsTypings);
             return ipfsModule;
         })), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.switchMap(() => __awaiter(this, void 0, void 0, function* () {
@@ -269,8 +258,7 @@ Error loading file ${filePath}
             file: ipfsFile,
             typings: ipfsTypings,
             module: ipfsModule
-        })), operators_1.tap(() => {
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module saved to persisten history!' });
+        })), operators_1.tap(() => __awaiter(this, void 0, void 0, function* () {
             this.logger.log('Module saved to persistant history!');
             if (!ipfsModule) {
                 this.fileNotAddedToIpfs(ipfsModule);
@@ -279,10 +267,9 @@ Error loading file ${filePath}
             console.log('' + this.tableService.previewsNext(currentModule.previous));
             console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
             console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundle finished' });
-            this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: `Ipfs file can be found at ${ipfsModule[0].hash}` });
-            this.showError(currentModule.previous[currentModule.previous.length - 2]);
-        }));
+            const returnItemByIndex = (i) => currentModule.previous[currentModule.previous.length - i];
+            yield this.showError(returnItemByIndex(2), returnItemByIndex(1));
+        })));
     }
     fileNotAddedToIpfs(file) {
         console.log(`File not added to ipfs for ${JSON.stringify(file)}`);
@@ -322,11 +309,18 @@ Error loading file ${filePath}
             });
         }
     }
-    showError(hash) {
-        if (Object.keys(this.statusService.getBuildStatus())
-            .filter(k => this.statusService.getBuildStatus()[k].status !== 'SUCCESS').length) {
-            this.errorReasonService.moduleIntegrityError(hash);
-        }
+    showError(oldHash, newHash) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield new Promise((resolve) => {
+                if (Object.keys(this.statusService.getBuildStatus())
+                    .filter(k => this.statusService.getBuildStatus()[k].status !== 'SUCCESS').length) {
+                    this.errorReasonService.moduleIntegrityError(oldHash, newHash);
+                }
+                setTimeout(() => {
+                    resolve();
+                }, 1000);
+            });
+        });
     }
     writeOtherFile(file) {
         return rxjs_1.from(this.fileService.readFileRaw(file))
@@ -398,8 +392,7 @@ CompilePlugin = __decorate([
         error_reason_service_1.ErrorReasonService,
         status_service_1.StatusService,
         package_json_service_1.PackageJsonService,
-        core_1.FileService,
-        core_2.PubSubService])
+        core_1.FileService])
 ], CompilePlugin);
 exports.CompilePlugin = CompilePlugin;
 //# sourceMappingURL=compile.plugin.js.map

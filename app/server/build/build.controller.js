@@ -24,23 +24,40 @@ const services_1 = require("../../services");
 const history_list_type_1 = require("../history/types/history-list.type");
 const built_status_type_1 = require("./types/built-status.type");
 const process_type_1 = require("./types/process.type");
+const fs_1 = require("fs");
+const util_1 = require("util");
 let BuildController = class BuildController {
-    constructor(compileService, buildHistoryService, pubsub, fileService, tsGenerator) {
+    constructor(compileService, buildHistoryService, pubsub, fileService, tsGenerator, loggerService) {
         this.compileService = compileService;
         this.buildHistoryService = buildHistoryService;
         this.pubsub = pubsub;
         this.fileService = fileService;
         this.tsGenerator = tsGenerator;
+        this.loggerService = loggerService;
     }
     triggerBuild(root, { folder, file, message, namespace, buildFolder }) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.fileService.writeFile(folder + '/tsconfig.json', this.tsGenerator.getTsConfig(file.replace('.ts', '')));
-            setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                return yield this.compileService.buildFile(folder, file, message, namespace, buildFolder).toPromise();
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                yield this.fileService.writeFile(folder + '/tsconfig.json', this.tsGenerator.getTsConfig(file.replace('.ts', '')));
+                const log_file = fs_1.createWriteStream(`${folder}/${file}.log`, { flags: 'w' });
+                const subscription = this.loggerService.stdout.subscribe(log => {
+                    log_file.write(util_1.format(log) + '\n');
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: util_1.format(log) });
+                });
+                let sub;
+                const cancelSubscription = () => {
+                    subscription.unsubscribe();
+                    log_file.close();
+                    sub.unsubscribe();
+                    reject('Build failed');
+                };
+                sub = this.compileService.buildFile(folder, file, message, namespace, buildFolder).subscribe(() => {
+                    resolve({
+                        status: 'Finish'
+                    });
+                    cancelSubscription();
+                }, () => cancelSubscription());
             }));
-            return {
-                status: 'Triggered'
-            };
         });
     }
     getBuildHistory(root, { skip, limit, where }) {
@@ -131,7 +148,8 @@ BuildController = __decorate([
         services_1.BuildHistoryService,
         core_1.PubSubService,
         services_1.FileService,
-        services_1.TsConfigGenratorService])
+        services_1.TsConfigGenratorService,
+        services_1.LoggerService])
 ], BuildController);
 exports.BuildController = BuildController;
 //# sourceMappingURL=build.controller.js.map

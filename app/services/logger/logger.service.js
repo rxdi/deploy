@@ -7,14 +7,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@rxdi/core");
-let ErrorReasonService = class ErrorReasonService {
-    moduleIntegrityError(oldHash, newHash) {
-        console.log(`Module is with the same integrity like in the previws version ${oldHash}`);
-        console.log(`To check this version write down following command rxdi-deploy --find ${newHash}`);
+const rxjs_1 = require("rxjs");
+let LoggerService = class LoggerService {
+    constructor() {
+        this.stdout = new rxjs_1.BehaviorSubject('');
     }
 };
-ErrorReasonService = __decorate([
+LoggerService = __decorate([
     core_1.Service()
-], ErrorReasonService);
-exports.ErrorReasonService = ErrorReasonService;
-//# sourceMappingURL=error-reason.service.js.map
+], LoggerService);
+exports.LoggerService = LoggerService;
+//# sourceMappingURL=logger.service.js.map

@@ -7,7 +7,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const check_arguments_1 = require("./check-arguments");
 const commands_description_1 = require("./commands-description");
 const helpers_1 = require("./app/services/helpers/helpers");
+const logger_service_1 = require("./app/services/logger/logger.service");
 const Table = require('terminal-table');
+const originalLog = console.log;
+console.log = function (...a) {
+    core_1.Container.get(logger_service_1.LoggerService).stdout.next(a.toString());
+    return originalLog(...a);
+};
 helpers_1.includes('--silent') ? console.log = () => null : null;
 if (helpers_1.includes('--help')) {
     const t = new Table({
@@ -35,7 +41,7 @@ const gapi_framework_imports_1 = require("./gapi-framework-imports");
 core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')) ? ({
     logger: {
         logging: true,
-        hashes: true,
+        hashes: false,
         date: true,
         exitHandler: true,
         fileService: true

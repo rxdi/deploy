@@ -36,6 +36,7 @@ export class ParcelBundlerService {
                 bundle = null;
                 setTimeout(() => resolve(), 1000);
             });
+            bundler.on('buildError', e => reject(e));
             bundler.bundle();
         });
     }

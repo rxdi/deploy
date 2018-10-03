@@ -25,7 +25,6 @@ import { ErrorReasonService } from '../../services/error-reason/error-reason.ser
 import { StatusService } from '../../status/status.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
 import { includes, nextOrDefault } from '../../services/helpers/helpers';
-import { PubSubService } from '@gapi/core';
 import { NamespaceService } from '../../server/namespace/services/namespace.service';
 
 @Plugin()
@@ -60,9 +59,10 @@ export class CompilePlugin implements PluginInterface {
         private errorReasonService: ErrorReasonService,
         private statusService: StatusService,
         private packageJsonService: PackageJsonService,
-        private rxdiFileService: RxdiFileService,
-        private pubsub: PubSubService
-    ) { }
+        private rxdiFileService: RxdiFileService
+    ) {
+
+    }
 
     async register() {
         if (includes('--webui') || includes('--node-only')) {
@@ -119,9 +119,10 @@ export class CompilePlugin implements PluginInterface {
             );
     }
 
-    async parcelBuild(path: string, outDir = null, fileName: string) {
+    parcelBuild(path: string, outDir = null, fileName: string) {
         return this.parcelBundler.prepareBundler(path, outDir, fileName)
     }
+
     async createCommitMessage(message: string = '') {
         if (includes('--html')) {
             let file;
@@ -150,7 +151,7 @@ Error loading file ${filePath}
         message,
         namespace: string,
         outputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME,
-        buildFolder = './build',
+        buildFolder = './build'
     ) {
         let ipfsFile: IPFSFile[];
         let ipfsModule: IPFSFile[];
@@ -164,26 +165,26 @@ Error loading file ${filePath}
             .pipe(
                 tap(() => {
                     this.logger.log('Bundling finished!\n');
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundling finished' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundling finished' });
                     this.logger.log(`Adding commit message ${message}...\n`);
                 }),
                 switchMap(async () => this.createCommitMessage(message)),
                 tap(res => {
                     ipfsMessage = res;
                     this.logger.log(`Commit message added...\n`);
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Commit message added' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Commit message added' });
                 }),
                 switchMap(() => this.fileService.readFile(`${buildFolder}/${file.split('.')[0]}.js`)),
                 tap(() => {
                     this.logger.log(`Reading bundle ${buildFolder}/${file.split('.')[0]}.js finished!\n`);
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Reading bundle finished' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Reading bundle finished' });
                 }),
                 switchMap((res: string) => this.ipfsFile.addFile(res)),
                 tap(res => {
                     ipfsFile = res;
                     this.logger.log(`Bundle added to ipfs ${buildFolder}/${file.split('.')[0]}.js\n`);
                     this.logger.log(`Typescript definitions merge started!\n`);
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Typescript definitions merge starte' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Typescript definitions merge starte' });
                 }),
                 switchMap(() => from(this.typingsGenerator.mergeTypings(namespace, folder, `${buildFolder}/index.d.ts`))),
                 tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)),
@@ -232,7 +233,7 @@ Error loading file ${filePath}
                     if (ipfsFileMetadata[0].hash) {
                         currentModule.metadata = ipfsFileMetadata[0].hash;
                     }
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundldadada' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundldadada' });
 
                     currentModule.previous = [...(dag.previous || [])];
                     let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = { ipfs: [] };
@@ -260,7 +261,7 @@ Error loading file ${filePath}
                         currentModule.packages = packages;
                     }
                     ipfsModule = await this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module added to ipfs' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module added to ipfs' });
 
                     if (currentModule.previous.length >= 20) {
                         currentModule.previous.shift();
@@ -270,7 +271,7 @@ Error loading file ${filePath}
                         currentModule.ipfs = f.ipfs;
                     }
                     await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
                     this.integrityCheck(dag, ipfsFile, ipfsTypings);
                     return ipfsModule;
                 }),
@@ -309,8 +310,8 @@ Error loading file ${filePath}
                     typings: ipfsTypings,
                     module: ipfsModule
                 })),
-                tap(() => {
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module saved to persisten history!' });
+                tap(async () => {
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module saved to persisten history!' });
 
                     this.logger.log('Module saved to persistant history!');
                     if (!ipfsModule) {
@@ -320,10 +321,10 @@ Error loading file ${filePath}
                     console.log('' + this.tableService.previewsNext(currentModule.previous));
                     console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
                     console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundle finished' });
-                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: `Ipfs file can be found at ${ipfsModule[0].hash}` });
-
-                    this.showError(currentModule.previous[currentModule.previous.length - 2]);
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundle finished' });
+                    // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: `Ipfs file can be found at ${ipfsModule[0].hash}` });
+                    const returnItemByIndex = (i: number) => currentModule.previous[currentModule.previous.length - i];
+                    await this.showError(returnItemByIndex(2), returnItemByIndex(1));
                 })
             );
     }
@@ -370,12 +371,18 @@ Error loading file ${filePath}
 
     }
 
-    showError(hash: string) {
-        if (Object.keys(this.statusService.getBuildStatus())
-            .filter(k => this.statusService.getBuildStatus()[k].status !== 'SUCCESS').length
-        ) {
-            this.errorReasonService.moduleIntegrityError(hash);
-        }
+    async showError(oldHash, newHash: string) {
+        return await new Promise((resolve) => {
+            if (Object.keys(this.statusService.getBuildStatus())
+                .filter(k => this.statusService.getBuildStatus()[k].status !== 'SUCCESS').length
+            ) {
+                this.errorReasonService.moduleIntegrityError(oldHash, newHash);
+            }
+            setTimeout(() => {
+                resolve();
+            }, 1000)
+        })
+
     }
 
     writeOtherFile(file) {

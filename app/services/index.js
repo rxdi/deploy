@@ -18,4 +18,5 @@ __export(require("./time/time.service"));
 __export(require("./package-json/package-json.service"));
 __export(require("./html-template-builder/html-template-builder.service"));
 __export(require("./helpers/helpers"));
+__export(require("./logger/logger.service"));
 //# sourceMappingURL=index.js.map

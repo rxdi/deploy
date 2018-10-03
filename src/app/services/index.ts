@@ -13,3 +13,4 @@ export * from './time/time.service';
 export * from './package-json/package-json.service';
 export * from './html-template-builder/html-template-builder.service';
 export * from './helpers/helpers';
+export * from './logger/logger.service';

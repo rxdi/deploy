@@ -23,9 +23,7 @@ export class WebUiService implements OnInit {
             handler: {
                 directory: {
                     path: `${this.root_folder}/webui`,
-                    redirectToSlash: true,
-                    listing: false,
-                    lookupCompressed: true,
+                    listing: true,
                     index: ['index.html']
                 }
             }

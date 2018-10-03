@@ -38,15 +38,21 @@ let FileController = class FileController {
     }
     readFile(root, { folder }) {
         return __awaiter(this, void 0, void 0, function* () {
-            let filePath;
+            let filePath = process.cwd();
             if (services_1.includes('--enable-full-folder-access')) {
                 filePath = folder;
             }
             else {
                 folder = folder.replace('.', '');
-                filePath = process.cwd() + folder;
+                filePath = filePath + folder;
             }
+            let reactivePackage = null;
+            try {
+                reactivePackage = yield this.fileService.readFile(filePath.substring(0, filePath.lastIndexOf('/')) + '/reactive.json');
+            }
+            catch (e) { }
             return {
+                package: reactivePackage,
                 file: yield this.fileService.readFile(filePath)
             };
         });
