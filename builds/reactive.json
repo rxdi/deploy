@@ -1,12 +1,10 @@
 {
   "name": "dadad3",
   "module": "QmVUoWjTQ5pvgnQvHukPgooLjiKDnf2rS4uYq1heSB4dfA",
-  "createdAt": "2018-10-03T03:11:18.924Z",
+  "createdAt": "2018-10-03T03:42:22.898Z",
   "typings": "QmaJVx47867kV2xiG8eYFaTa6uqHUfuA3xZTqVwDUqCUcE",
-  "message": "QmTsT9x64nbsgPPnekM9HmCfirb8XYNZvAZZnr95ZTr7tQ",
+  "message": "Qmd4C5eW2qdQc3rxCPrRJ816ZVvfj99i8uaUomytCdFD2E",
   "previous": [
-    "QmXpMKcmcAAYxUDJbBLRX74LxzSPYFVZoFa5LepBMD1MUZ",
-    "Qmdgytxxy8Vg4otmcF8qjR1hH8wxRA7ZPKqvgf9RuqxeqZ",
     "QmXVZ4T97qBMgX35z71JD1c8gf36Dnv45X5YUGzCJbTvi6",
     "QmNipnxLUF65WaYLxbVvCcUh59CAPcjb3RAwrq3U3powcJ",
     "QmSSJkTK1KYGjdL3oS9pDz3Soy4awXAJDJcRJP1c1T7ksu",
@@ -24,7 +22,9 @@
     "QmWRH1r1Q8PBo79NM1sQ3hcoPXnpDRWvNJqwoYeqgFvqst",
     "QmR4SdSE5No3B63dvvoSu9qf7Cr1zeBV46PLCenehN4SBw",
     "QmbNnKTv1H7PYvoa3J8E66BRWidRhCL7tGLWRBRidpSPsi",
-    "QmUkx9FVDQUsnvJa9FvHi35oaFs84aU6fphVV7r8c4Xmh4"
+    "QmUkx9FVDQUsnvJa9FvHi35oaFs84aU6fphVV7r8c4Xmh4",
+    "QmdugxhwwCSaCQvBthYdwEtVfScXKu6WNe69Qv9GNkvg5G",
+    "QmSvddaQmHYbAyvK23SFZdh3HtqYrvYHARYnJeXLpjepQv"
   ],
   "dependencies": [
     "QmP9n7m1UWkFn2hqt7mnfQYnBtxmFyyvKZHN7hgngQb1gM"

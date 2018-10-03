@@ -4,6 +4,6 @@ import { ExampleService } from './services/example.service';
 @Module({
     services: [ExampleService]
 })
-export class TestModule {}
+export class TestModule {} 
 
 export * from './services/index';
