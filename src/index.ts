@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { checkArguments } from './check-arguments';
+import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { CommandDescription } from './commands-description';
 import { includes } from './app/services/helpers/helpers';
 import { LoggerService } from './app/services/logger/logger.service';
@@ -34,7 +35,6 @@ if (includes('--help')) {
 
 checkArguments();
 
-import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { EnvironemntSetterModule } from './environment-setter.module';
 import { AppModule } from './app/app.module';
 import { GapiFrameworkImports } from './gapi-framework-imports';

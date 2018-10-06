@@ -41,13 +41,21 @@ export class FileController {
             folder = folder.replace('.', '')
             filePath = filePath + folder;
         }
+        const extension = filePath.split('.').pop();
+        const isImage = extension === 'jpg' || extension === 'jpeg' || extension === 'png';
+        let file = await this.fileService.readFile(filePath);;
+        if (isImage) {
+            file = (await this.fileService.readFileRaw(filePath)).toString('base64');
+            file = `data:image/${extension};base64, ${file}`;
+        }
+
         let reactivePackage = null;
         try {
             reactivePackage = await this.fileService.readFile(filePath.substring(0, filePath.lastIndexOf('/')) + '/reactive.json');
         } catch (e) {}
         return {
             package: reactivePackage,
-            file: await this.fileService.readFile(filePath)
+            file 
         }
     }
 

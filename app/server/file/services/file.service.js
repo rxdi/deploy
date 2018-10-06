@@ -98,7 +98,7 @@ let FileService = class FileService {
                     status: null
                 };
                 const status = yield this.statAsync(r);
-                if (status && status['prototype'] === String) {
+                if (!status.isDirectory || status && status['prototype'] === String) {
                     return null;
                 }
                 if (status.isDirectory()) {

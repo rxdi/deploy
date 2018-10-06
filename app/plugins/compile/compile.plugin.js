@@ -228,7 +228,6 @@ Error loading file ${filePath}
                 currentModule.ipfs = f.ipfs;
             }
             yield this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
-            this.integrityCheck(dag, ipfsFile, ipfsTypings);
             return ipfsModule;
         })), operators_1.tap(() => this.logger.log(`Module configuration added to ipfs!\n`)), operators_1.switchMap(() => __awaiter(this, void 0, void 0, function* () {
             let nmspc = yield this.namespaceService.searchForDuplicates(namespace);

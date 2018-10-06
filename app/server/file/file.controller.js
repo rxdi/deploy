@@ -46,6 +46,14 @@ let FileController = class FileController {
                 folder = folder.replace('.', '');
                 filePath = filePath + folder;
             }
+            const extension = filePath.split('.').pop();
+            const isImage = extension === 'jpg' || extension === 'jpeg' || extension === 'png';
+            let file = yield this.fileService.readFile(filePath);
+            ;
+            if (isImage) {
+                file = (yield this.fileService.readFileRaw(filePath)).toString('base64');
+                file = `data:image/${extension};base64, ${file}`;
+            }
             let reactivePackage = null;
             try {
                 reactivePackage = yield this.fileService.readFile(filePath.substring(0, filePath.lastIndexOf('/')) + '/reactive.json');
@@ -53,7 +61,7 @@ let FileController = class FileController {
             catch (e) { }
             return {
                 package: reactivePackage,
-                file: yield this.fileService.readFile(filePath)
+                file
             };
         });
     }

@@ -79,7 +79,7 @@ export class FileService {
             };
             const status: Stats = await this.statAsync(r);
 
-            if (status && status['prototype'] === String) {
+            if (!status.isDirectory || status && status['prototype'] === String) {
                 return null;
             }
             if (status.isDirectory()) {

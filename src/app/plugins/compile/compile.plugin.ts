@@ -276,7 +276,7 @@ Error loading file ${filePath}
                     }
                     await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
                     // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
-                    this.integrityCheck(dag, ipfsFile, ipfsTypings);
+                    // this.integrityCheck(dag, ipfsFile, ipfsTypings);
                     return ipfsModule;
                 }),
                 tap(() => this.logger.log(`Module configuration added to ipfs!\n`)),
