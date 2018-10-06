@@ -1,10 +1,11 @@
-import { FileService as RxdiFileService } from "@rxdi/core";
 export declare class FileService {
-    private fileService;
     units: string[];
-    constructor(fileService: RxdiFileService);
+    results: string[];
+    wholeReadDirRecursive(path?: string): Promise<any[]>;
+    readCurrentDirFlat(path?: string): Promise<string[]>;
     listFolder(folder: string): Promise<{}>;
-    map(res: any): Promise<[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]>;
+    readDir(folder: string, limit?: number): Promise<string[]>;
+    map(res: any): Promise<{}[]>;
     private niceBytes;
     statAsync(path: string): Promise<any>;
 }

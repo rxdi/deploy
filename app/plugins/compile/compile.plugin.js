@@ -35,8 +35,9 @@ const status_service_1 = require("../../status/status.service");
 const package_json_service_1 = require("../../services/package-json/package-json.service");
 const helpers_1 = require("../../services/helpers/helpers");
 const namespace_service_1 = require("../../server/namespace/services/namespace.service");
+const file_service_2 = require("../../server/file/services/file.service");
 let CompilePlugin = class CompilePlugin {
-    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previousService, namespaceService, errorReasonService, statusService, packageJsonService, rxdiFileService) {
+    constructor(parcelBundler, logger, ipfsFile, fileService, fileUserService, typingsGenerator, tsConfigGenerator, tableService, buildHistoryService, previousService, namespaceService, errorReasonService, statusService, packageJsonService, internalFileService) {
         this.parcelBundler = parcelBundler;
         this.logger = logger;
         this.ipfsFile = ipfsFile;
@@ -51,7 +52,7 @@ let CompilePlugin = class CompilePlugin {
         this.errorReasonService = errorReasonService;
         this.statusService = statusService;
         this.packageJsonService = packageJsonService;
-        this.rxdiFileService = rxdiFileService;
+        this.internalFileService = internalFileService;
         this.fileNotDeployed = '';
         this.initIpfsModule = [{
                 size: 0,
@@ -192,7 +193,7 @@ Error loading file ${filePath}
             }
             currentModule.previous = [...(dag.previous || [])];
             let f = { ipfs: [] };
-            if (this.rxdiFileService.isPresent(`${folder}/${outputConfigName}`)) {
+            if (yield this.internalFileService.statAsync(`${folder}/${outputConfigName}`)) {
                 this.logger.log(`Reactive file present ${outputConfigName} package dependencies will be taken from it`);
                 try {
                     f = JSON.parse(yield this.fileService.readFile(`${folder}/${outputConfigName}`));
@@ -212,9 +213,11 @@ Error loading file ${filePath}
                 }
             }
             this.logger.log(`Current module before deploy ${JSON.stringify(currentModule)}`);
-            const packages = yield this.packageJsonService.prepareDependencies();
-            if (packages.length && !helpers_1.includes('--disable-package-collection')) {
-                currentModule.packages = packages;
+            if (helpers_1.includes('--collect-packages')) {
+                const packages = yield this.packageJsonService.prepareDependencies(`${folder}/package.json`);
+                if (packages.length) {
+                    currentModule.packages = packages;
+                }
             }
             ipfsModule = yield this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
             if (currentModule.previous.length >= 20) {
@@ -392,7 +395,7 @@ CompilePlugin = __decorate([
         error_reason_service_1.ErrorReasonService,
         status_service_1.StatusService,
         package_json_service_1.PackageJsonService,
-        core_1.FileService])
+        file_service_2.FileService])
 ], CompilePlugin);
 exports.CompilePlugin = CompilePlugin;
 //# sourceMappingURL=compile.plugin.js.map

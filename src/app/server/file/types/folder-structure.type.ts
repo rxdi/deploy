@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLObjectType, GraphQLString, GraphQLBoolean } from "graphql";
 import { FileStatusType } from './file-status.type';
 
 export const FolderStructureType = new GraphQLObjectType({
@@ -8,10 +8,10 @@ export const FolderStructureType = new GraphQLObjectType({
             type: GraphQLString
         },
         directory: {
-            type: GraphQLString
+            type: GraphQLBoolean
         },
         file: {
-            type: GraphQLString
+            type: GraphQLBoolean
         },
         name: {
             type: GraphQLString

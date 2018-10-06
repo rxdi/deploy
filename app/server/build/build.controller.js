@@ -45,18 +45,20 @@ let BuildController = class BuildController {
                     this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: util_1.format(log) });
                 });
                 let sub;
-                const cancelSubscription = () => {
+                const cancelSubscription = (e) => {
                     subscription.unsubscribe();
                     log_file.close();
                     sub.unsubscribe();
-                    reject('Build failed');
+                    reject(e || 'Build failed');
                 };
                 sub = this.compileService.buildFile(folder, file, message, namespace, buildFolder).subscribe(() => {
                     resolve({
                         status: 'Finish'
                     });
                     cancelSubscription();
-                }, () => cancelSubscription());
+                }, (e) => {
+                    cancelSubscription(e);
+                });
             }));
         });
     }

@@ -5,9 +5,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -21,23 +18,78 @@ const core_1 = require("@rxdi/core");
 const operators_1 = require("rxjs/operators");
 const fs_1 = require("fs");
 const services_1 = require("../../../services");
+const path_1 = require("path");
+const rxjs_1 = require("rxjs");
 let FileService = class FileService {
-    constructor(fileService) {
-        this.fileService = fileService;
+    constructor() {
         this.units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        this.results = [];
+    }
+    wholeReadDirRecursive(path = '.') {
+        return __awaiter(this, void 0, void 0, function* () {
+            const directory = yield this.readDir(path);
+            const pathinternal = path;
+            const self = this;
+            return (yield Promise.all(directory.map((file) => __awaiter(this, void 0, void 0, function* () {
+                const path = path_1.resolve(pathinternal, file);
+                const stat = yield this.statAsync(path);
+                if (stat && stat.isDirectory()) {
+                    if (!file.includes('node_modules')) {
+                        yield self.wholeReadDirRecursive.bind(this)(path);
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                else {
+                    this.results = [...this.results, path];
+                }
+            })))).filter(a => !!a);
+        });
+    }
+    readCurrentDirFlat(path = '.') {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.readDir(path)).map(file => path_1.resolve(path, file)).filter(a => !!a);
+        });
     }
     listFolder(folder) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield new Promise((resolve, reject) => {
-                this.fileService.fileWalker(folder)
+                rxjs_1.from(this.readCurrentDirFlat(folder))
                     .pipe(operators_1.switchMap((res) => this.map(res)))
-                    .subscribe(structure => resolve(structure), e => reject(e));
+                    .subscribe(res => resolve(res), e => reject(e));
+            });
+        });
+    }
+    readDir(folder, limit = 200) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield new Promise((resolve, reject) => {
+                fs_1.readdir(folder, (err, list) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        let count = 0;
+                        resolve(list.map(f => {
+                            count++;
+                            if (limit > count) {
+                                return f;
+                            }
+                            else {
+                                return null;
+                            }
+                        }).filter(res => !!res));
+                    }
+                });
             });
         });
     }
     map(res) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Promise.all(res.map((r) => __awaiter(this, void 0, void 0, function* () {
+            let foldersCount = 100;
+            let counter = 0;
+            return (yield Promise.all(res.map((r) => __awaiter(this, void 0, void 0, function* () {
+                counter++;
                 const mapping = {
                     path: r,
                     directory: null,
@@ -46,6 +98,9 @@ let FileService = class FileService {
                     status: null
                 };
                 const status = yield this.statAsync(r);
+                if (status && status['prototype'] === String) {
+                    return null;
+                }
                 if (status.isDirectory()) {
                     mapping.directory = true;
                 }
@@ -59,8 +114,11 @@ let FileService = class FileService {
                 }
                 mapping.status = status;
                 mapping.status.size = this.niceBytes(status.size);
+                if (counter === foldersCount) {
+                    return null;
+                }
                 return mapping;
-            })));
+            })))).filter(res => !!res);
         });
     }
     niceBytes(x) {
@@ -74,7 +132,7 @@ let FileService = class FileService {
             return yield new Promise((resolve, reject) => {
                 fs_1.stat(path, (e, stats) => {
                     if (e) {
-                        reject(e);
+                        resolve(e);
                     }
                     resolve(stats);
                 });
@@ -83,8 +141,7 @@ let FileService = class FileService {
     }
 };
 FileService = __decorate([
-    core_1.Service(),
-    __metadata("design:paramtypes", [core_1.FileService])
+    core_1.Service()
 ], FileService);
 exports.FileService = FileService;
 //# sourceMappingURL=file.service.js.map

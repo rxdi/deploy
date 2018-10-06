@@ -37,9 +37,9 @@ let PackageJsonService = class PackageJsonService {
             this.defaultOutputConfig = this.deployerOutputConfigName;
         }
     }
-    prepareDependencies() {
+    prepareDependencies(path) {
         return __awaiter(this, void 0, void 0, function* () {
-            const file = yield this.read();
+            const file = yield this.read(path);
             if (file.dependencies) {
                 return Object.keys(file.dependencies).map(name => ({
                     name,
@@ -49,21 +49,21 @@ let PackageJsonService = class PackageJsonService {
             return [];
         });
     }
-    readModifyWrite(modifier = {}) {
+    readModifyWrite(modifier = {}, path) {
         return __awaiter(this, void 0, void 0, function* () {
-            let file = yield this.read();
+            let file = yield this.read(path);
             file = Object.assign({}, modifier, file);
-            return yield this.write(file);
+            return yield this.write(file, path);
         });
     }
-    read() {
+    read(path) {
         return __awaiter(this, void 0, void 0, function* () {
-            return JSON.parse(yield this.fileService.readFile(`${process.cwd()}/${this.defaultOutputConfig}`));
+            return JSON.parse(yield this.fileService.readFile(path || `${process.cwd()}/${this.defaultOutputConfig}`));
         });
     }
-    write(data) {
+    write(data, path) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.fileService.writeFile(`${process.cwd()}/${this.defaultOutputConfig}`, JSON.stringify(data));
+            return yield this.fileService.writeFile(path || `${process.cwd()}/${this.defaultOutputConfig}`, JSON.stringify(data));
         });
     }
 };

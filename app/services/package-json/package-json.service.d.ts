@@ -6,11 +6,11 @@ export declare class PackageJsonService {
     defaultOutputConfig: __DEPLOYER_OUTPUT_CONFIG_NAME;
     constructor(fileService: FileService, deployerOutputConfigName: __DEPLOYER_OUTPUT_CONFIG_NAME);
     OnInit(): void;
-    prepareDependencies(): Promise<{
+    prepareDependencies(path?: string): Promise<{
         name: string;
         version: any;
     }[]>;
-    readModifyWrite(modifier?: any): Promise<boolean>;
-    read(): Promise<any>;
-    write(data: any): Promise<boolean>;
+    readModifyWrite(modifier?: any, path?: string): Promise<boolean>;
+    read(path?: string): Promise<any>;
+    write(data: any, path?: string): Promise<boolean>;
 }

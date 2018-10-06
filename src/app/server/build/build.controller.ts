@@ -49,11 +49,11 @@ export class BuildController {
                 this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: format(log) });
             });
             let sub: rxjsSubscription;
-            const cancelSubscription = () => {
+            const cancelSubscription = (e?) => {
                 subscription.unsubscribe();
                 log_file.close();
                 sub.unsubscribe();
-                reject('Build failed');
+                reject(e || 'Build failed');
             };
             sub = this.compileService.buildFile(
                 folder, file, message, namespace, buildFolder
@@ -64,7 +64,9 @@ export class BuildController {
                     });
                     cancelSubscription();
                 },
-                () => cancelSubscription()
+                (e) => {
+                    cancelSubscription(e);
+                }
             );
         });
 

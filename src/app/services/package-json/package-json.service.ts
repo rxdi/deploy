@@ -21,8 +21,8 @@ export class PackageJsonService {
         }
     }
 
-    async prepareDependencies() {
-        const file = await this.read();
+    async prepareDependencies(path?: string) {
+        const file = await this.read(path);
         if (file.dependencies) {
             return Object.keys(file.dependencies).map(name => ({
                 name,
@@ -32,18 +32,18 @@ export class PackageJsonService {
         return [];
     }
 
-    async readModifyWrite(modifier: any = {}) {
-        let file = await this.read();
+    async readModifyWrite(modifier: any = {}, path?: string) {
+        let file = await this.read(path);
         file = { ...modifier, ...file };
-        return await this.write(file);
+        return await this.write(file, path);
     }
 
-    async read() {
-        return JSON.parse(await this.fileService.readFile(`${process.cwd()}/${this.defaultOutputConfig}`))
+    async read(path?: string) {
+        return JSON.parse(await this.fileService.readFile(path || `${process.cwd()}/${this.defaultOutputConfig}`))
     }
 
-    async write(data) {
-        return await this.fileService.writeFile(`${process.cwd()}/${this.defaultOutputConfig}`, JSON.stringify(data));
+    async write(data, path?: string) {
+        return await this.fileService.writeFile(path || `${process.cwd()}/${this.defaultOutputConfig}`, JSON.stringify(data));
     }
 
 }

@@ -9,10 +9,10 @@ exports.FolderStructureType = new graphql_1.GraphQLObjectType({
             type: graphql_1.GraphQLString
         },
         directory: {
-            type: graphql_1.GraphQLString
+            type: graphql_1.GraphQLBoolean
         },
         file: {
-            type: graphql_1.GraphQLString
+            type: graphql_1.GraphQLBoolean
         },
         name: {
             type: graphql_1.GraphQLString

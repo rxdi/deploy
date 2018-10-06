@@ -8,14 +8,14 @@ import {
     __COMMIT_MESSAGE,
     __FILE_EXTENSION
 } from '../../../env.injection.tokens';
-import { Inject, BootstrapLogger, PluginInterface, Plugin, FileService as RxdiFileService } from '@rxdi/core';
+import { Inject, BootstrapLogger, PluginInterface, Plugin } from '@rxdi/core';
 import { tap, switchMapTo, take, map, switchMap } from 'rxjs/operators';
 import { interval, from, of, combineLatest } from 'rxjs';
 import { FileUserService } from '../../services/file/file-user.service';
 import { IPFSFile } from '@gapi/ipfs';
 import { ParcelBundlerService } from '../../services/parcel-bundler/parcel-bundler.service';
 import { FileIpfsService } from '../../services/ipfs-file/ipfs-file.service';
-import { FileService } from '../../services/file/file.service';
+import { FileService as CoreFileService } from '../../services/file/file.service';
 import { TypescriptDefinitionGeneratorService } from '../../services/dts-generator/dts-generator.service';
 import { TsConfigGenratorService } from '../../services/tsconfig-generator/tsconfig-generator.service';
 import { TableService } from '../../services/table-service/table-service';
@@ -26,6 +26,7 @@ import { StatusService } from '../../status/status.service';
 import { PackageJsonService } from '../../services/package-json/package-json.service';
 import { includes, nextOrDefault } from '../../services/helpers/helpers';
 import { NamespaceService } from '../../server/namespace/services/namespace.service';
+import { FileService } from '../../server/file/services/file.service';
 
 @Plugin()
 export class CompilePlugin implements PluginInterface {
@@ -48,7 +49,7 @@ export class CompilePlugin implements PluginInterface {
         private parcelBundler: ParcelBundlerService,
         private logger: BootstrapLogger,
         private ipfsFile: FileIpfsService,
-        private fileService: FileService,
+        private fileService: CoreFileService,
         private fileUserService: FileUserService,
         private typingsGenerator: TypescriptDefinitionGeneratorService,
         private tsConfigGenerator: TsConfigGenratorService,
@@ -59,7 +60,7 @@ export class CompilePlugin implements PluginInterface {
         private errorReasonService: ErrorReasonService,
         private statusService: StatusService,
         private packageJsonService: PackageJsonService,
-        private rxdiFileService: RxdiFileService
+        private internalFileService: FileService
     ) {
 
     }
@@ -237,7 +238,7 @@ Error loading file ${filePath}
 
                     currentModule.previous = [...(dag.previous || [])];
                     let f: { dependencies?: string[]; ipfs?: { provider: string; dependencies: string[] }[] } = { ipfs: [] };
-                    if (this.rxdiFileService.isPresent(`${folder}/${outputConfigName}`)) {
+                    if (await this.internalFileService.statAsync(`${folder}/${outputConfigName}`)) {
                         this.logger.log(`Reactive file present ${outputConfigName} package dependencies will be taken from it`);
                         try {
                             f = JSON.parse(await this.fileService.readFile(`${folder}/${outputConfigName}`));
@@ -256,10 +257,13 @@ Error loading file ${filePath}
                         }
                     }
                     this.logger.log(`Current module before deploy ${JSON.stringify(currentModule)}`);
-                    const packages = await this.packageJsonService.prepareDependencies();
-                    if (packages.length && !includes('--disable-package-collection')) {
-                        currentModule.packages = packages;
+                    if (includes('--collect-packages')) {
+                        const packages = await this.packageJsonService.prepareDependencies(`${folder}/package.json`);
+                        if (packages.length) {
+                            currentModule.packages = packages;
+                        }
                     }
+   
                     ipfsModule = await this.ipfsFile.addFile(JSON.stringify(currentModule, null, 2));
                     // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module added to ipfs' });
 

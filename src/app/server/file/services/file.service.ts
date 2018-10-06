@@ -1,30 +1,75 @@
-import { Service, FileService as RxdiFileService } from "@rxdi/core";
+import { Service } from "@rxdi/core";
 import { switchMap } from "rxjs/operators";
-import { stat, Stats } from "fs";
+import { stat, Stats, readdir } from "fs";
 import { includes } from "../../../services";
+import { resolve } from "path";
+import { from } from "rxjs";
 
 @Service()
 export class FileService {
     units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    results: string[] = [];
 
-    constructor(
-        private fileService: RxdiFileService
-    ) {
+    async wholeReadDirRecursive(path: string = '.') {
+        const directory = await this.readDir(path);
+        const pathinternal = path;
+        const self = this;
+        return (await Promise.all(directory.map(async file => {
+            const path = resolve(pathinternal, file);
+            const stat = await this.statAsync(path);
+            if (stat && stat.isDirectory()) {
+                if (!file.includes('node_modules')) {
+                    await self.wholeReadDirRecursive.bind(this)(path);
+                } else {
+                    return null;
+                }
+            } else {
+                this.results = [...this.results, path];
+            }
+        }))).filter(a => !!a);
+    }
 
+    async readCurrentDirFlat(path: string = '.') {
+        return (await this.readDir(path)).map(file => resolve(path, file)).filter(a => !!a);
     }
 
     async listFolder(folder: string) {
         return await new Promise((resolve, reject) => {
-            this.fileService.fileWalker(folder)
+            from(this.readCurrentDirFlat(folder))
                 .pipe(
                     switchMap((res) => this.map(res))
                 )
-                .subscribe(structure => resolve(structure), e => reject(e));
+                .subscribe(res => resolve(res), e => reject(e));
+        });
+    }
+
+    async readDir(folder: string, limit: number = 200) {
+        return await new Promise<string[]>((resolve, reject) => {
+            readdir(folder, (err, list: string[]) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    let count = 0;
+                    resolve(list.map(f => {
+                        count++;
+                        if (limit > count) {
+                            return f;
+                        } else {
+                            return null;
+                        }
+              
+                    }).filter(res => !!res));
+
+                }
+            });
         });
     }
 
     async map(res) {
-        return await Promise.all(res.map(async (r) => {
+        let foldersCount = 100;
+        let counter = 0;
+        return (await Promise.all(res.map(async (r) => {
+            counter++;
             const mapping = {
                 path: r,
                 directory: null,
@@ -33,6 +78,10 @@ export class FileService {
                 status: null
             };
             const status: Stats = await this.statAsync(r);
+
+            if (status && status['prototype'] === String) {
+                return null;
+            }
             if (status.isDirectory()) {
                 mapping.directory = true;
             } else {
@@ -47,8 +96,11 @@ export class FileService {
 
             mapping.status = status;
             mapping.status.size = this.niceBytes(status.size);
+            if (counter === foldersCount) {
+                return null;
+            }
             return mapping;
-        }));
+        }))).filter(res => !!res);
     }
 
     private niceBytes(x) {
@@ -62,7 +114,7 @@ export class FileService {
         return await new Promise((resolve, reject) => {
             stat(path, (e, stats) => {
                 if (e) {
-                    reject(e);
+                    resolve(e);
                 }
                 resolve(stats);
             })
