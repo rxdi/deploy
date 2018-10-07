@@ -22,8 +22,15 @@ export class FileController {
         }
     })
     async listFiles(root, { folder }) {
+        let filePath;
+        if (includes('--enable-full-folder-access')) {
+            filePath = folder;
+        } else {
+            folder = folder.replace('.', '')
+            filePath = process.cwd() + folder;
+        }
         return {
-            paths: await this.fileServiceInternal.listFolder(folder)
+            paths: await this.fileServiceInternal.listFolder(filePath)
         };
     }
 
@@ -34,12 +41,12 @@ export class FileController {
         }
     })
     async readFile(root, { folder }: { folder: string }) {
-        let filePath = process.cwd();
+        let filePath;
         if (includes('--enable-full-folder-access')) {
             filePath = folder;
         } else {
             folder = folder.replace('.', '')
-            filePath = filePath + folder;
+            filePath = process.cwd() + folder;
         }
         const extension = filePath.split('.').pop();
         const isImage = extension === 'jpg' || extension === 'jpeg' || extension === 'png';

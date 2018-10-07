@@ -47,7 +47,7 @@ export class FileService {
         return await new Promise<string[]>((resolve, reject) => {
             readdir(folder, (err, list: string[]) => {
                 if (err) {
-                    reject(err);
+                    resolve([]);
                 } else {
                     let count = 0;
                     resolve(list.map(f => {
@@ -78,6 +78,7 @@ export class FileService {
                 status: null
             };
             const status: Stats = await this.statAsync(r);
+            const pathMapping = (v) => r.replace(process.cwd(), v);
 
             if (!status.isDirectory || status && status['prototype'] === String) {
                 return null;
@@ -88,7 +89,7 @@ export class FileService {
                 mapping.file = true;
             }
             mapping.name = r.split("/").pop();
-            mapping.path = r.replace(process.cwd(), '.');
+            mapping.path = pathMapping('.');
 
             if (includes('--enable-full-folder-access')) {
                 mapping.path = r;

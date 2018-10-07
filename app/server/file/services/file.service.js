@@ -66,7 +66,7 @@ let FileService = class FileService {
             return yield new Promise((resolve, reject) => {
                 fs_1.readdir(folder, (err, list) => {
                     if (err) {
-                        reject(err);
+                        resolve([]);
                     }
                     else {
                         let count = 0;
@@ -98,6 +98,7 @@ let FileService = class FileService {
                     status: null
                 };
                 const status = yield this.statAsync(r);
+                const pathMapping = (v) => r.replace(process.cwd(), v);
                 if (!status.isDirectory || status && status['prototype'] === String) {
                     return null;
                 }
@@ -108,7 +109,7 @@ let FileService = class FileService {
                     mapping.file = true;
                 }
                 mapping.name = r.split("/").pop();
-                mapping.path = r.replace(process.cwd(), '.');
+                mapping.path = pathMapping('.');
                 if (services_1.includes('--enable-full-folder-access')) {
                     mapping.path = r;
                 }

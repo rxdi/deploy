@@ -31,20 +31,28 @@ let FileController = class FileController {
     }
     listFiles(root, { folder }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return {
-                paths: yield this.fileServiceInternal.listFolder(folder)
-            };
-        });
-    }
-    readFile(root, { folder }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let filePath = process.cwd();
+            let filePath;
             if (services_1.includes('--enable-full-folder-access')) {
                 filePath = folder;
             }
             else {
                 folder = folder.replace('.', '');
-                filePath = filePath + folder;
+                filePath = process.cwd() + folder;
+            }
+            return {
+                paths: yield this.fileServiceInternal.listFolder(filePath)
+            };
+        });
+    }
+    readFile(root, { folder }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let filePath;
+            if (services_1.includes('--enable-full-folder-access')) {
+                filePath = folder;
+            }
+            else {
+                folder = folder.replace('.', '');
+                filePath = process.cwd() + folder;
             }
             const extension = filePath.split('.').pop();
             const isImage = extension === 'jpg' || extension === 'jpeg' || extension === 'png';
