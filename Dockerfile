@@ -18,4 +18,4 @@ RUN tsc
 
 VOLUME [ "/packages" ]
 
-ENTRYPOINT ["node", "./index.js", "--webui", "--verbose", "--graphiql"]
+ENTRYPOINT ["node", "./index.js", "--webui", "--verbose", "--ipfs-api-gateway", "8080",  "--ipfs-api-port", "5001"]
