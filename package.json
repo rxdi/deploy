@@ -31,7 +31,7 @@
     "@rxdi/core": "^0.0.340",
     "@rxdi/dts-merge": "^0.0.340",
     "flatten": "^1.0.2",
-    "go-ipfs": "^0.4.17",
+    "go-ipfs": "git://github.com/ipfs/npm-go-ipfs#32acf52",
     "graphql-request": "^1.8.2",
     "nedb": "^1.8.0",
     "parcel-bundler": "1.9.7",
