@@ -120,9 +120,9 @@ rxdi-deploy `main-file` `namespace` `message` `...arguments`
 
 > `(--default-ipfs-node)`: ` ipfs node is GO but if you want you can use JS '--default-ipfs-node js'
 
-> `(--ipfs-api-gateway)`: This is the address of the IPFS Gatway default: /ip4/127.0.0.1/tcp/8080
+> `(--ipfs-api-gateway)`: This is the address of the IPFS Gatway default: /ip4/127.0.0.1/tcp/8081
 
-> `(--ipfs-api-port)`: This is the port of the IPFS Api default: /ip4/127.0.0.1/tcp/5001
+> `(--ipfs-api-port)`: This is the port of the IPFS Api default: /ip4/127.0.0.1/tcp/5002
 
 > `(--ipfs-swarms)`: These are the swarms for the Ipfs daemon passing them with comma separated example: --ipfs-swarms /ip4/0.0.0.0/tcp/4001,/ip6/::/tcp/4001, etc...
 
