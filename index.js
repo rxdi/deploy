@@ -54,7 +54,7 @@ core_1.Container.get(core_1.ConfigService).setConfig(Object.assign({}, (process.
 const _FRAMEWORK_IMPORTS = [environment_setter_module_1.EnvironemntSetterModule, gapi_framework_imports_1.GapiFrameworkImports.forRoot(helpers_1.includes('--webui') || helpers_1.includes('--graphql-server-only'))];
 core_1.BootstrapFramework(app_module_1.AppModule, _FRAMEWORK_IMPORTS)
     .subscribe(() => {
-    console.log('Bootstrap success!');
+    console.log('@rxdi/deploy started! Use --open-browser argument! Enjoy! :)');
 }, (error) => {
     throw new Error(error);
 });

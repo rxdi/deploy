@@ -64,7 +64,7 @@ const _FRAMEWORK_IMPORTS = [EnvironemntSetterModule, GapiFrameworkImports.forRoo
 BootstrapFramework(AppModule, _FRAMEWORK_IMPORTS)
     .subscribe(
         () => {
-            console.log('Bootstrap success!');
+            console.log('Started! Use --open-browser argument! Enjoy! :)');
         },
         (error) => {
             throw new Error(error);
