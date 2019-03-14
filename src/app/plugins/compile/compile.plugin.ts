@@ -96,7 +96,7 @@ export class CompilePlugin implements PluginInterface {
     }
 
     isJavascriptCompilation() {
-        return !!['.ts', '.js'].filter(e => e === this.extension).length;
+        return !!['.ts', '.js', '.tsx'].filter(e => e === this.extension).length;
     }
 
     async compile() {

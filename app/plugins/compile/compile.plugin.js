@@ -85,7 +85,7 @@ let CompilePlugin = class CompilePlugin {
         });
     }
     isJavascriptCompilation() {
-        return !!['.ts', '.js'].filter(e => e === this.extension).length;
+        return !!['.ts', '.js', '.tsx'].filter(e => e === this.extension).length;
     }
     compile() {
         return __awaiter(this, void 0, void 0, function* () {
