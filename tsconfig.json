@@ -20,7 +20,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": false,
         "moduleResolution": "node",
-        "outDir": ".",
+        "outDir": "dist",
         "lib": [
             "es2017",
             "es2016",
