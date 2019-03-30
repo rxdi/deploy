@@ -16,7 +16,7 @@
     "pretest": "npm run lint"
   },
   "bin": {
-    "rxdi-deploy": "./dist/index.js"
+    "rxdi-deploy": "./dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -42,7 +42,7 @@
     "@types/nedb": "^1.8.6",
     "@types/node": "10.10.2"
   },
-  "types": "./dist/index.d.ts",
-  "module": "./dist/index.js",
-  "typings": "./dist/index.d.ts"
+  "types": "./dist/main.d.ts",
+  "module": "./dist/main.js",
+  "typings": "./dist/main.d.ts"
 }

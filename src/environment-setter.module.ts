@@ -30,7 +30,7 @@ import {
 import { TsConfigGenratorService } from './app/services/tsconfig-generator/tsconfig-generator.service';
 import { FileService } from './app/services/file/file.service';
 import { homedir } from 'os';
-import * as Datastore from 'nedb';
+const Datastore = require('nedb');
 import { includes, nextOrDefault } from './app/services/helpers/helpers';
 import { unlinkSync } from 'fs';
 
