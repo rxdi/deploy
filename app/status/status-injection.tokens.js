@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Token_1 = require("@rxdi/core/container/Token");
+const core_1 = require("@rxdi/core");
 class BuildStatus {
     constructor() {
         this.status = 'SUCCESS';
@@ -15,6 +15,6 @@ class FILE_DEPLOYMENT_STATUS_INTERFACE {
     }
 }
 exports.FILE_DEPLOYMENT_STATUS_INTERFACE = FILE_DEPLOYMENT_STATUS_INTERFACE;
-exports.START = new Token_1.InjectionToken('compilation-started');
-exports.FILE_DEPLOYMENT_STATUS = new Token_1.InjectionToken('files-deploy-ment');
+exports.START = new core_1.InjectionToken('compilation-started');
+exports.FILE_DEPLOYMENT_STATUS = new core_1.InjectionToken('files-deploy-ment');
 //# sourceMappingURL=status-injection.tokens.js.map

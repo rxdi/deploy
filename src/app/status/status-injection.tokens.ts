@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { InjectionToken } from '@rxdi/core/container/Token';
+import { InjectionToken } from '@rxdi/core';
 
 export type STATUS_TYPE = BehaviorSubject<boolean>;
 export type BUILD_STATUS = 'SUCCESS' | 'FAILED' | 'WARNING';

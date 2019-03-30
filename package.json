@@ -25,18 +25,17 @@
   "author": "Kristiyan Tachev",
   "license": "MIT",
   "dependencies": {
-    "@gapi/core": "^1.4.23",
-    "@gapi/ipfs": "https://github.com/Stradivario/gapi-ipfs.git",
-    "@gapi/ipfs-daemon": "https://github.com/Stradivario/gapi-ipfs-daemon.git",
-    "@rxdi/core": "^0.1.0",
+    "@gapi/core": "^1.5.7",
+    "@gapi/ipfs": "^1.5.7",
+    "@gapi/ipfs-daemon": "^1.5.7",
     "@rxdi/dts-merge": "^0.1.0",
     "flatten": "^1.0.2",
     "go-ipfs": "0.4.18-hacky2",
     "graphql-request": "^1.8.2",
     "nedb": "^1.8.0",
-    "parcel-bundler": "1.10.3",
+    "parcel-bundler": "1.12.3",
     "terminal-table": "0.0.12",
-    "typescript": "3.2.1"
+    "typescript": "3.4.1"
   },
   "devDependencies": {
     "@types/hapi": "^17.0.19",
