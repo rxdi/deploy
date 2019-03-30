@@ -8,6 +8,7 @@
     "start": "node ./index.js",
     "build:docker": "docker build -t rxdi/deployer .",
     "start:docker": "docker-compose up -d",
+    "build": "gapi build",
     "deploy": "docker run -v /proba/:/usr/src/app/proba --name rxdi-deployer rxdi/deployer ./proba/index.ts || true && npm run stop",
     "stop": "docker rm -f rxdi-deployer",
     "tsc": "./node_modules/.bin/tsc",

@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 RUN npm i -g npm
 
-RUN npm i -g typescript
+RUN npm i -g typescript @gapi/cli
 
 COPY package.json package.json
 
@@ -14,8 +14,8 @@ RUN npm install
 
 COPY . .
 
-RUN tsc
+RUN npm run build
 
 VOLUME [ "/packages" ]
 
-ENTRYPOINT ["node", "./index.js", "--webui", "--verbose", "--ipfs-api-gateway", "8080",  "--ipfs-api-port", "5001"]
+ENTRYPOINT ["node", "./dist/main.js", "--webui", "--verbose", "--ipfs-api-gateway", "8080",  "--ipfs-api-port", "5001"]

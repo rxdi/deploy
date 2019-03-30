@@ -200,7 +200,7 @@ version: '2'
 services:
 
   rxdi-ipfs-deployer:
-    image: rxdi/deployer:latest
+    image: rxdi/deploy:latest
     restart: always
     mem_limit: 1000000000
     cpu_shares: 73

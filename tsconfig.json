@@ -38,6 +38,6 @@
         "./src/**/*",
     ],
     "files": [
-        "./src/index.ts"
+        "./src/main.ts"
     ]
 }

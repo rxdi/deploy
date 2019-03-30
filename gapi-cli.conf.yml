@@ -158,7 +158,9 @@ commands:
     stop: docker rm -f questups-api-rabbitmq
     restart: docker restart questups-api-rabbitmq
     enable-dashboard: docker exec questups-api-rabbitmq rabbitmq-plugins enable rabbitmq_management
-
+  docker:
+    tag: docker tag rxdi/deploy rxdi/deploy
+    push: docker push rxdi/deploy
 # You can define your custom commands for example 
 # commands:
 #   your-cli:
