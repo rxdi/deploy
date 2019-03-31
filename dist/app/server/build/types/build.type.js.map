@@ -1,1 +1,0 @@
-{"version":3,"file":"build.type.js","sourceRoot":"","sources":["../../../../../src/app/server/build/types/build.type.ts"],"names":[],"mappings":";;AAAA,qCAA2D;AAE9C,QAAA,SAAS,GAAG,IAAI,2BAAiB,CAAC;IAC3C,IAAI,EAAE,WAAW;IACjB,MAAM,EAAE;QACJ,MAAM,EAAE;YACJ,IAAI,EAAE,uBAAa;SACtB;KACJ;CACJ,CAAC,CAAC"}

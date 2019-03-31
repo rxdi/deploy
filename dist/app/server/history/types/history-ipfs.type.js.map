@@ -1,1 +1,0 @@
-{"version":3,"file":"history-ipfs.type.js","sourceRoot":"","sources":["../../../../../src/app/server/history/types/history-ipfs.type.ts"],"names":[],"mappings":";;AAAA,qCAAwE;AAE3D,QAAA,eAAe,GAAG,IAAI,2BAAiB,CAAC;IACjD,IAAI,EAAE,iBAAiB;IACvB,MAAM,EAAE;QACJ,QAAQ,EAAE;YACN,IAAI,EAAE,uBAAa;SACtB;QACD,YAAY,EAAE;YACV,IAAI,EAAE,IAAI,qBAAW,CAAC,uBAAa,CAAC;SACvC;KACJ;CACJ,CAAC,CAAA"}

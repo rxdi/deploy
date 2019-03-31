@@ -1,1 +1,0 @@
-{"version":3,"file":"namespace.module.js","sourceRoot":"","sources":["../../../../src/app/server/namespace/namespace.module.ts"],"names":[],"mappings":";;;;;;;;AAAA,qCAAoC;AACpC,iEAA6D;AAC7D,oEAAgE;AAMhE,IAAa,eAAe,GAA5B,MAAa,eAAe;CAAG,CAAA;AAAlB,eAAe;IAJ3B,aAAM,CAAC;QACJ,WAAW,EAAE,CAAC,0CAAmB,CAAC;QAClC,QAAQ,EAAE,CAAC,oCAAgB,CAAC;KAC/B,CAAC;GACW,eAAe,CAAG;AAAlB,0CAAe"}
