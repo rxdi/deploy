@@ -29,7 +29,7 @@
     "@gapi/core": "^1.5.7",
     "@gapi/ipfs": "^1.5.7",
     "@gapi/ipfs-daemon": "^1.5.7",
-    "@rxdi/dts-merge": "^0.1.0",
+    "@rxdi/dts-merge": "^0.2.0",
     "flatten": "^1.0.2",
     "go-ipfs": "git+https://github.com/Stradivario/npm-go-ipfs.git",
     "graphql-request": "^1.8.2",
