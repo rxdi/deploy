@@ -21,6 +21,8 @@ export type __SETTINGS_DATABASE = Datastore;
 export type __NAMESPACE_DB = Datastore;
 export type __BUILD_HISTORY_DATABASE = Datastore;
 export type __PREVIWS_DATABASE = Datastore;
+export type __TRANSACTIONS_DATABASE = Datastore;
+
 export type __COMMIT_MESSAGE = string;
 export type __CREATE_HTML_PAGE = string;
 export type __NODE_MODULES = string;
@@ -47,6 +49,7 @@ export const __PROCESSING_TIME_END = new InjectionToken<boolean>('rxdi-deployer-
 export const __SETTINGS_DATABASE = new InjectionToken<boolean>('rxdi-deployer-home-settings');
 export const __BUILD_HISTORY_DATABASE = new InjectionToken<boolean>('rxdi-deployer-build-history-database');
 export const __PREVIWS_DATABASE = new InjectionToken<boolean>('rxdi-deployer-previews-database');
+export const __TRANSACTIONS_DATABASE = new InjectionToken<boolean>('rxdi-deployer-transactions-database');
 export const __NAMESPACE_DB = new InjectionToken<boolean>('rxdi-deployer-namespace-database');
 export const __HOME_DIR = new InjectionToken<boolean>('rxdi-deployer-home-directory');
 export const __COMMIT_MESSAGE = new InjectionToken<boolean>('rxdi-deployer-commit-message');

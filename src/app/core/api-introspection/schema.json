@@ -17,6 +17,18 @@
           "description": "Query type for all get requests which will not change persistent data",
           "fields": [
             {
+              "name": "status",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "StatusQueryType",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "getNamespace",
               "description": null,
               "args": [
@@ -207,6 +219,43 @@
               "deprecationReason": null
             },
             {
+              "name": "listTransactions",
+              "description": null,
+              "args": [
+                {
+                  "name": "status",
+                  "description": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "TransactionsTypeEnum",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "repoFolder",
+                  "description": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "TransactionsTypeEnum",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TransactionType",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "findUser",
               "description": null,
               "args": [
@@ -224,6 +273,29 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UserType",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "StatusQueryType",
+          "description": null,
+          "fields": [
+            {
+              "name": "status",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -690,7 +762,7 @@
               "args": [],
               "type": {
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "Boolean",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -702,7 +774,7 @@
               "args": [],
               "type": {
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "Boolean",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -735,6 +807,16 @@
           ],
           "inputFields": null,
           "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Boolean",
+          "description": "The `Boolean` scalar type represents `true` or `false`.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
           "enumValues": null,
           "possibleTypes": null
         },
@@ -971,7 +1053,125 @@
           "description": null,
           "fields": [
             {
+              "name": "package",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "file",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "TransactionsTypeEnum",
+          "description": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "DEPLOYED",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "COMMITED",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "UNKNOWN",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "BUILD",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "TransactionType",
+          "description": null,
+          "fields": [
+            {
+              "name": "_id",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "status",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "ENUM",
+                "name": "TransactionsTypeEnum",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "birthtime",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "path",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "repoFolder",
               "description": null,
               "args": [],
               "type": {
@@ -1117,6 +1317,88 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "addTransaction",
+              "description": null,
+              "args": [
+                {
+                  "name": "path",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "birthtime",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "repoFolder",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "TransactionType",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "checkoutTransaction",
+              "description": null,
+              "args": [
+                {
+                  "name": "path",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "TransactionType",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "inputFields": null,
@@ -1150,7 +1432,7 @@
         {
           "kind": "OBJECT",
           "name": "Subscription",
-          "description": "Subscription type for all rabbitmq subscriptions via pub sub",
+          "description": "Subscription type for all subscriptions via pub sub",
           "fields": [
             {
               "name": "listenForNewBuilds",
@@ -1573,16 +1855,6 @@
           "possibleTypes": null
         },
         {
-          "kind": "SCALAR",
-          "name": "Boolean",
-          "description": "The `Boolean` scalar type represents `true` or `false`.",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
           "kind": "OBJECT",
           "name": "__Field",
           "description": "Object and Interface types are described by a list of Fields, each of which has a name, potentially a list of arguments, and a return type.",
@@ -1903,54 +2175,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "onOperation",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Use `locations`."
-            },
-            {
-              "name": "onFragment",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Use `locations`."
-            },
-            {
-              "name": "onField",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": true,
-              "deprecationReason": "Use `locations`."
             }
           ],
           "inputFields": null,
@@ -2005,6 +2229,12 @@
             {
               "name": "INLINE_FRAGMENT",
               "description": "Location adjacent to an inline fragment.",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "VARIABLE_DEFINITION",
+              "description": "Location adjacent to a variable definition.",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -2078,78 +2308,7 @@
           "possibleTypes": null
         }
       ],
-      "directives": [
-        {
-          "name": "include",
-          "description": "Directs the executor to include this field or fragment only when the `if` argument is true.",
-          "locations": [
-            "FIELD",
-            "FRAGMENT_SPREAD",
-            "INLINE_FRAGMENT"
-          ],
-          "args": [
-            {
-              "name": "if",
-              "description": "Included when true.",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ]
-        },
-        {
-          "name": "skip",
-          "description": "Directs the executor to skip this field or fragment when the `if` argument is true.",
-          "locations": [
-            "FIELD",
-            "FRAGMENT_SPREAD",
-            "INLINE_FRAGMENT"
-          ],
-          "args": [
-            {
-              "name": "if",
-              "description": "Skipped when true.",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ]
-        },
-        {
-          "name": "deprecated",
-          "description": "Marks an element of a GraphQL schema as no longer supported.",
-          "locations": [
-            "FIELD_DEFINITION",
-            "ENUM_VALUE"
-          ],
-          "args": [
-            {
-              "name": "reason",
-              "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted in [Markdown](https://daringfireball.net/projects/markdown/).",
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": "\"No longer supported\""
-            }
-          ]
-        }
-      ]
+      "directives": []
     }
   }
 }

@@ -25,7 +25,8 @@ import {
   __COMMIT_MESSAGE,
   __CREATE_HTML_PAGE,
   __ROOT_FOLDER,
-  __NAMESPACE_DB
+  __NAMESPACE_DB,
+  __TRANSACTIONS_DATABASE
 } from './env.injection.tokens';
 import { TsConfigGenratorService } from './app/services/tsconfig-generator/tsconfig-generator.service';
 import { FileService } from './app/services/file/file.service';
@@ -277,6 +278,24 @@ import { unlinkSync } from 'fs';
         new Promise(resolve => {
           const database = new Datastore({
             filename: `${homeDir}/.rxdi/previews`,
+            autoload: true
+          });
+          database.loadDatabase(e => {
+            if (e) {
+              throw new Error('Error loading database!');
+            }
+            resolve(database);
+          });
+        })
+    },
+    {
+      provide: __TRANSACTIONS_DATABASE,
+      deps: [__HOME_DIR],
+      lazy: true,
+      useFactory: homeDir =>
+        new Promise(resolve => {
+          const database = new Datastore({
+            filename: `${homeDir}/.rxdi/transactions`,
             autoload: true
           });
           database.loadDatabase(e => {

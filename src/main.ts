@@ -1,4 +1,9 @@
-
+process.argv.push(<Commands>'--webui');
+process.argv.push(<Commands>'--verbose');
+process.argv.push(<Commands>'--write-effects');
+process.argv.push(<Commands>'--graphiql-playground');
+process.argv.push(<Commands>'--server-push-interval');
+process.argv.push(<Commands>'--graphiql');
 import { checkArguments } from './check-arguments';
 import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { CommandDescription } from './commands-description';
@@ -38,6 +43,7 @@ checkArguments();
 import { EnvironemntSetterModule } from './environment-setter.module';
 import { AppModule } from './app/app.module';
 import { GapiFrameworkImports } from './gapi-framework-imports';
+import { Commands } from 'commands';
 
 
 Container.get(ConfigService).setConfig({

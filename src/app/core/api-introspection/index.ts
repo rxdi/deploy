@@ -23,13 +23,21 @@
   */
   export interface IQuery {
     __typename?: "Query";
+    status: IStatusQueryType | null;
     getNamespace: INamespacetype | null;
     listNamespaces: INamespaceListType | null;
     getBuildHistory: IHistoryListType | null;
     listFiles: IFileType | null;
     readFile: IFileRawType | null;
     saveFile: IFileRawType | null;
+    listTransactions: Array<ITransactionType> | null;
     findUser: IUserType | null;
+}
+
+  
+  export interface IStatusQueryType {
+    __typename?: "StatusQueryType";
+    status: string | null;
 }
 
   
@@ -101,8 +109,8 @@
   export interface IFolderStructureType {
     __typename?: "FolderStructureType";
     path: string | null;
-    directory: string | null;
-    file: string | null;
+    directory: boolean | null;
+    file: boolean | null;
     name: string | null;
     status: IFileStatusType | null;
 }
@@ -133,7 +141,21 @@
   
   export interface IFileRawType {
     __typename?: "FileRawType";
+    package: string | null;
     file: string | null;
+}
+
+export   
+  type ITransactionsTypeEnumEnum = 'DEPLOYED' | 'COMMITED' | 'UNKNOWN' | 'BUILD';
+
+  
+  export interface ITransactionType {
+    __typename?: "TransactionType";
+    _id: string | null;
+    status: ITransactionsTypeEnumEnum | null;
+    birthtime: string | null;
+    path: string | null;
+    repoFolder: string | null;
 }
 
   
@@ -149,6 +171,8 @@
     __typename?: "Mutation";
     insertNamespace: INamespacetype | null;
     triggerBuild: IBuildType | null;
+    addTransaction: ITransactionType | null;
+    checkoutTransaction: ITransactionType | null;
 }
 
   
@@ -158,7 +182,7 @@
 }
 
   /**
-    description: Subscription type for all rabbitmq subscriptions via pub sub
+    description: Subscription type for all subscriptions via pub sub
   */
   export interface ISubscription {
     __typename?: "Subscription";

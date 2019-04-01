@@ -26,9 +26,9 @@
   "author": "Kristiyan Tachev",
   "license": "MIT",
   "dependencies": {
-    "@gapi/core": "^1.5.7",
+    "@gapi/core": "^1.5.9",
     "@gapi/ipfs": "^1.5.7",
-    "@gapi/ipfs-daemon": "^1.5.7",
+    "@gapi/ipfs-daemon": "^1.5.9",
     "@rxdi/dts-merge": "^0.2.6",
     "flatten": "^1.0.2",
     "go-ipfs": "git+https://github.com/Stradivario/npm-go-ipfs.git",
