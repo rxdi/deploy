@@ -18,6 +18,15 @@ export const TransactionType = new GraphQLObjectType({
         },
         repoFolder: {
             type: GraphQLString
+        },
+        hash: {
+            type: GraphQLString
+        },
+        namespace: {
+            type: GraphQLString
+        },
+        message: {
+            type: GraphQLString
         }
     }
 });

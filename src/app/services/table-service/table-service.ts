@@ -35,7 +35,7 @@ export class TableService {
 
     createTable(file: IPFSFile[], typings: IPFSFile[], m: IPFSFile[]) {
 
-        const provider = 'https://cloudflare-ipfs.com/ipfs/'
+        const provider = this.fileIpfsService.providers.ipfsOriginal;
         let FileStatus = this.$deploymentStatus.getValue().file;
         let TypingsStatus = this.$deploymentStatus.getValue().typings;
         let ModuleStatus = this.$deploymentStatus.getValue().module;
@@ -138,7 +138,7 @@ export class TableService {
 
         t.push(['Previews versions', 'Gateway']);
         previewsVersions.forEach(v => {
-            t.push([v, `https://cloudflare-ipfs.com/ipfs/${v}`]);
+            t.push([v, `${this.fileIpfsService.providers.ipfsOriginal}${v}`]);
         });
 
         t.attrRange({ row: [0, 1] }, {
@@ -272,7 +272,7 @@ export class TableService {
 
         t.push(['File upload status']);
         t.push([`\File size: ${file[0].size} bytes`]);
-        t.push([`\IPFS address: ${this.fileIpfsService.providers.cloudflare}${file[0].hash}`]);
+        t.push([`\IPFS address: ${this.fileIpfsService.providers.ipfsOriginal}${file[0].hash}`]);
 
         t.attrRange({ row: [0, 1] }, {
             align: 'center',

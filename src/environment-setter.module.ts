@@ -296,7 +296,8 @@ import { unlinkSync } from 'fs';
         new Promise(resolve => {
           const database = new Datastore({
             filename: `${homeDir}/.rxdi/transactions`,
-            autoload: true
+            autoload: true,
+            timestampData: true
           });
           database.loadDatabase(e => {
             if (e) {
@@ -309,3 +310,12 @@ import { unlinkSync } from 'fs';
   ]
 })
 export class EnvironemntSetterModule {}
+
+// import { Commands } from 'commands';
+
+// process.argv.push(<Commands>'--webui');
+// process.argv.push(<Commands>'--verbose');
+// process.argv.push(<Commands>'--write-effects');
+// process.argv.push(<Commands>'--graphiql-playground');
+// process.argv.push(<Commands>'--server-push-interval');
+// process.argv.push(<Commands>'--graphiql');

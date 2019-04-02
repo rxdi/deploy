@@ -12,4 +12,8 @@ export class CompileService {
     buildFile(folder: string = './packages/', file: string = 'index.ts', message: string = 'bla bla', namespace: string = '@pesho', buildFolder) {
         return this.compilePlugin.completeBuildAndAddToIpfs(folder, file, message, namespace, 'reactive.json', buildFolder);
     }
+
+    pushTransaction(folder: string = './packages/', file: string = 'index.ts', message: string = 'bla bla', namespace: string = '@pesho', buildFolder) {
+        return this.compilePlugin.pushTransaction(folder, file, message, namespace, 'reactive.json', buildFolder);
+    }
 }

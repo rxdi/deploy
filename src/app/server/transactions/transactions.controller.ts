@@ -23,10 +23,13 @@ export class TransactionsController {
         },
         repoFolder: {
             type: new GraphQLNonNull(GraphQLString)
-        }
+        },
+        namespace: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
     })
     addTransaction(root, payload: ITransactionType) {
-        return this.transactionSevice.insert({...payload, status: 'UNKNOWN'});
+        return this.transactionSevice.add({...payload, status: 'UNKNOWN'});
     }
 
     @Mutation({
@@ -38,7 +41,28 @@ export class TransactionsController {
         },
     })
     checkoutTransaction(root, payload: ITransactionType) {
-        return this.transactionSevice.remove(payload);
+        return this.transactionSevice.checkout(payload);
+    }
+
+    @Mutation({
+        message: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        repoFolder: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+    })
+    commitTransaction(root, payload: ITransactionType) {
+        return this.transactionSevice.commit(payload);
+    }
+
+    @Mutation({
+        repoFolder: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+    })
+    pushTransactionMutation(root, payload: ITransactionType) {
+        return this.transactionSevice.push(payload);
     }
 
     @Type(new GraphQLList(TransactionType))
@@ -53,4 +77,11 @@ export class TransactionsController {
     listTransactions(root, {status, repoFolder}) {
         return this.transactionSevice.listTransactions(status, repoFolder);
     }
+
+
+
+
+
+
+    
 }
