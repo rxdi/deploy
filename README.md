@@ -185,7 +185,7 @@ rxdi-deploy P1010094.jpg --beat 30
 
 
 ```bash
-docker build -t rxdi/deployer .
+docker build -t rxdi/deploy .
 ```
 
 ```bash

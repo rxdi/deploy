@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+// process.argv.push('--webui');
 import { checkArguments } from './check-arguments';
 import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { CommandDescription } from './commands-description';

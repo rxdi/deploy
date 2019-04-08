@@ -5,10 +5,9 @@ import {
   Stats,
   readdir,
   rename,
-  createReadStream,
-  createWriteStream,
   unlink,
-  copyFile
+  copyFile,
+  exists
 } from "fs";
 import { includes } from "../../../services";
 import { resolve, normalize } from "path";
@@ -16,7 +15,6 @@ import { from } from "rxjs";
 import { promisify } from "util";
 import { __HOME_DIR } from "../../../../env.injection.tokens";
 import { mkdirp } from "@rxdi/core/dist/services/file/dist";
-
 
 const ncp = require("ncp").ncp;
 const rimraf = require("rimraf");
@@ -153,16 +151,15 @@ export class FileService {
 
   ensureDir(path: string) {
     return new Promise((resolve, reject) => {
-      mkdirp(path, (err) => {
+      mkdirp(path, err => {
         if (err) {
-            console.error(err);
-            reject(err);
-        }
-        else {
-           resolve();
+          console.error(err);
+          reject(err);
+        } else {
+          resolve();
         }
       });
-    })
+    });
   }
   private getFolderFromPath(path: string) {
     return path.substring(0, path.lastIndexOf("/"));
@@ -172,33 +169,54 @@ export class FileService {
     repoFolder: string,
     fileName: string
   ) {
-    const {saveFolder, originalFilePath, filePath } = this.prepareCopyData(transactionId, repoFolder, fileName);
+    const getJson = (path: string, type: "package.json" | "reactive.json") =>
+      `${path}/${type}`;
+    const { saveFolder, originalFilePath, filePath } = this.prepareCopyData(
+      transactionId,
+      repoFolder,
+      fileName
+    );
+    const packageJsonRepoPath = getJson(repoFolder, "package.json");
+    const reactiveJsonRepoPath = getJson(repoFolder, "reactive.json");
+    const packageJsonFilePath = getJson(filePath, "package.json");
+    const reactiveJsonFilePath = getJson(filePath, "reactive.json");
+    let hasConfiguration = false;
     await this.ensureDir(this.getFolderFromPath(saveFolder));
-    await this.copyFile(`${repoFolder}/package.json`, `${filePath}/package.json`);
+    if (this.isFileExist(packageJsonRepoPath)) {
+      await this.copyFile(packageJsonRepoPath, packageJsonFilePath);
+      hasConfiguration = true;
+    }
+
+    if (this.isFileExist(packageJsonRepoPath)) {
+      await this.copyFile(reactiveJsonRepoPath, reactiveJsonFilePath);
+      hasConfiguration = true;
+    }
+
+    if (!hasConfiguration) {
+      console.error(
+        "Missing package.json or reactive.json bundle will proceed but if you depend on some modules you cannot use them since they will not be installed"
+      );
+    }
     await this.copyFolderRecursive(
       this.getFolderFromPath(originalFilePath),
       this.getFolderFromPath(saveFolder)
     );
   }
 
-  prepareCopyData(
-    transactionId: string,
-    repoFolder: string,
-    fileName: string
-  ) {
+  prepareCopyData(transactionId: string, repoFolder: string, fileName: string) {
     const transactionFolder = `${this.homeDir}/.rxdi/builds/${transactionId}`;
     const originalFilePath = normalize(`${repoFolder}/${fileName}`);
     const saveFolder = normalize(`${transactionFolder}/${fileName}`);
-    const filename = originalFilePath.replace(/^.*[\\\/]/, '');
-    const filePath = saveFolder.replace(filename, '');
+    const filename = originalFilePath.replace(/^.*[\\\/]/, "");
+    const filePath = saveFolder.replace(filename, "");
 
     return {
-        saveFolder,
-        originalFilePath,
-        transactionFolder,
-        filename,
-        filePath
-    }
+      saveFolder,
+      originalFilePath,
+      transactionFolder,
+      filename,
+      filePath
+    };
   }
 
   removeTransaction(
@@ -206,7 +224,11 @@ export class FileService {
     repoFolder: string,
     fileName: string
   ) {
-    const {transactionFolder} = this.prepareCopyData(transactionId, repoFolder, fileName);
+    const { transactionFolder } = this.prepareCopyData(
+      transactionId,
+      repoFolder,
+      fileName
+    );
     return from(new Promise(r => rimraf(transactionFolder, r)));
   }
 
@@ -219,12 +241,16 @@ export class FileService {
     return promisify(copyFile)(path, newPath);
   }
 
+  isFileExist(path: string) {
+    return promisify(exists)(path);
+  }
+
   copyFolderRecursive(source: string, destination: string) {
     // ncp.limit = 16;
     return new Promise((resolve, reject) => {
-      console.log("WHY")
+      console.log("WHY");
       ncp(source, destination, function(err) {
-        console.log(err)
+        console.log(err);
         if (err) {
           return reject(err);
         }
