@@ -1,6 +1,6 @@
 {
   "name": "@rxdi/deploy",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Package prepared to deploy easy decentralized rxdi package ",
   "main": "index.js",
   "scripts": {
@@ -34,6 +34,7 @@
     "go-ipfs": "git+https://github.com/Stradivario/npm-go-ipfs.git",
     "graphql-request": "^1.8.2",
     "nedb": "^1.8.0",
+    "ncp": "2.0.0",
     "parcel-bundler": "1.12.3",
     "terminal-table": "0.0.12",
     "typescript": "3.4.1"
