@@ -1,0 +1,22 @@
+export declare const EffectTypes: {
+    findUser: "findUser";
+    subscribeToUserMessagesBasic: "subscribeToUserMessagesBasic";
+    listenForNewBuilds: "listenForNewBuilds";
+    getNamespace: "getNamespace";
+    insertNamespace: "insertNamespace";
+    listNamespaces: "listNamespaces";
+    triggerBuild: "triggerBuild";
+    getBuildHistory: "getBuildHistory";
+    buildStatus: "buildStatus";
+    processStdOut: "processStdOut";
+    listFiles: "listFiles";
+    readFile: "readFile";
+    saveFile: "saveFile";
+    addTransaction: "addTransaction";
+    checkoutTransaction: "checkoutTransaction";
+    commitTransaction: "commitTransaction";
+    pushTransactionMutation: "pushTransactionMutation";
+    listTransactions: "listTransactions";
+    status: "status";
+};
+export declare type EffectTypes = keyof typeof EffectTypes;

@@ -1,0 +1,1 @@
+{"version":3,"file":"user.type.js","sourceRoot":"","sources":["../../../../../src/app/server/user/types/user.type.ts"],"names":[],"mappings":";;AAAA,qCAA2D;AAE9C,QAAA,QAAQ,GAAG,IAAI,2BAAiB,CAAC;IAC1C,IAAI,EAAE,UAAU;IAChB,MAAM,EAAE;QACJ,OAAO,EAAE;YACL,IAAI,EAAE,uBAAa;SACtB;KACJ;CACJ,CAAC,CAAC"}
