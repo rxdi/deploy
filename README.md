@@ -192,7 +192,7 @@ docker build -t rxdi/deploy .
 docker-compose up -d
 ```
 
-Open browser to http://localhost:9300
+Open browser to http://localhost:9300/webui
 To change the port open `docker-compose.yml`
 
 ```yml
