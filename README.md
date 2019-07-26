@@ -183,6 +183,13 @@ rxdi-deploy P1010094.jpg --beat 30
 
 #### Docker
 
+Available on `docker hub` https://hub.docker.com/r/rxdi/deploy
+
+```bash
+docker pull rxdi/deploy
+```
+
+Manual build from source
 
 ```bash
 docker build -t rxdi/deploy .
