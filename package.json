@@ -1,6 +1,6 @@
 {
   "name": "@rxdi/deploy",
-  "version": "0.7.13",
+  "version": "0.7.14",
   "description": "Package prepared to deploy easy decentralized rxdi package ",
   "main": "index.js",
   "scripts": {
