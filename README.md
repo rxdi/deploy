@@ -185,6 +185,11 @@ rxdi-deploy P1010094.jpg --beat 30
 
 Available on `docker hub` https://hub.docker.com/r/rxdi/deploy
 
+Single command to run
+```bash
+docker run -p 8957:8957 -p 5001:5001 -p 8080:8080 -p 9300:9300 -v $(pwd)/packages:/usr/src/app/packages -v $(pwd)/.rxdi:/root/.rxdi -v $(pwd)/.jsipfs:/root/.jsipfs -i -t rxdi/deploy:latest --graphiql-playground --webui
+```
+
 ```bash
 docker pull rxdi/deploy
 ```
