@@ -10,7 +10,7 @@ import {
 } from '../../../env.injection.tokens';
 import { Inject, BootstrapLogger, PluginInterface, Plugin } from '@rxdi/core';
 import { tap, switchMapTo, take, map, switchMap } from 'rxjs/operators';
-import { interval, from, of, combineLatest } from 'rxjs';
+import { interval, from, of, combineLatest, Observable } from 'rxjs';
 import { FileUserService } from '../../services/file/file-user.service';
 import { IPFSFile } from '@gapi/ipfs';
 import { ParcelBundlerService } from '../../services/parcel-bundler/parcel-bundler.service';
@@ -167,7 +167,7 @@ Error loading file ${filePath}
     let ipfsModule: IPFSFile[];
     let ipfsTypings: IPFSFile[] = this.initIpfsModule;
     let ipfsMessage: IPFSFile[] = this.initIpfsModule;
-    let ipfsFileMetadata: IPFSFile[] = this.initIpfsModule;
+    const ipfsFileMetadata: IPFSFile[] = this.initIpfsModule;
     let currentModule: DagModel;
     let dag: DagModel;
     this.logger.log('Bundling Started!\n');
@@ -506,7 +506,7 @@ export class Pesho {
         console.log('THIS IS PESHO SERVICE');
     }
 }
-        
+
         `,
         fileName + '.ts',
         namespace
@@ -558,7 +558,7 @@ export class Pesho {
     let ipfsModule: IPFSFile[];
     let ipfsTypings: IPFSFile[] = this.initIpfsModule;
     let ipfsMessage: IPFSFile[] = this.initIpfsModule;
-    let ipfsFileMetadata: IPFSFile[] = this.initIpfsModule;
+    const ipfsFileMetadata: IPFSFile[] = this.initIpfsModule;
     let currentModule: DagModel;
     let dag: DagModel;
     this.logger.log('Bundling Started!\n');
@@ -608,7 +608,7 @@ export class Pesho {
         from(
           this.typingsGenerator.mergeTypings(
             namespace,
-            normalize(folder + filePathFromRepo.substring(0, filePathFromRepo.lastIndexOf("/")).replace('.', '')),
+            normalize(folder + filePathFromRepo.substring(0, filePathFromRepo.lastIndexOf('/')).replace('.', '')),
             normalize(`${folder}/${buildFolder}/index.d.ts`)
           )
         )

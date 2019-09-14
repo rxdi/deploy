@@ -16,6 +16,12 @@ COPY . .
 
 RUN npm run build
 
+RUN mkdir -p /usr/src/app/files
+
+WORKDIR /usr/src/app/files
+
 VOLUME [ "/packages" ]
 
-ENTRYPOINT ["node", "./dist/main.js", "--webui", "--verbose", "--ipfs-api-gateway", "8080",  "--ipfs-api-port", "5001"]
+VOLUME [ "/files" ]
+
+ENTRYPOINT ["node", "../dist/main.js", "--webui", "--verbose", "--ipfs-api-gateway", "8080",  "--ipfs-api-port", "5001"]

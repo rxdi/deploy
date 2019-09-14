@@ -1,14 +1,14 @@
-import { Type, Controller, Mutation, GraphQLString, GraphQLNonNull, Query, GraphQLInt, GraphQLInputObjectType, Subscribe, Subscription, PubSubService } from "@gapi/core";
+import { Type, Controller, Mutation, GraphQLString, GraphQLNonNull, Query, GraphQLInt, GraphQLInputObjectType, Subscribe, Subscription, PubSubService } from '@gapi/core';
 import { BuildType } from './types/build.type';
-import { CompileService } from "../services/compile.service";
-import { IHistoryListType } from "../../core/api-introspection";
-import { BuildHistoryService, FileService, TsConfigGenratorService, LoggerService } from "../../services";
+import { CompileService } from '../services/compile.service';
+import { IHistoryListType } from '../../core/api-introspection';
+import { BuildHistoryService, FileService, TsConfigGenratorService, LoggerService } from '../../services';
 import { HistoryListType } from '../history/types/history-list.type';
 import { BuildStatusType } from './types/built-status.type';
 import { ProcessStdOutType } from './types/process.type';
-import { createWriteStream } from "fs";
-import { format } from "util";
-import { Subscription as rxjsSubscription } from "rxjs";
+import { createWriteStream } from 'fs';
+import { format } from 'util';
+import { Subscription as rxjsSubscription } from 'rxjs';
 
 @Controller()
 export class BuildController {
@@ -42,32 +42,38 @@ export class BuildController {
     })
     async triggerBuild(root, { folder, file, message, namespace, buildFolder }) {
         return new Promise(async (resolve, reject) => {
-            await this.fileService.writeFile(folder + '/tsconfig.json', this.tsGenerator.getTsConfig(file.replace('.ts', '')));
-            const log_file = createWriteStream(`${folder}/${file}.log`, { flags: 'w' });
-            const subscription = this.loggerService.stdout.subscribe(log => {
-                log_file.write(format(log) + '\n');
-                this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: format(log) });
-            });
-            let sub: rxjsSubscription;
-            const cancelSubscription = () => {
-                subscription.unsubscribe();
-                log_file.close();
-                sub.unsubscribe();
-            };
-            sub = this.compileService.buildFile(
-                folder, file, message, namespace, buildFolder
-            ).subscribe(
-                () => {
-                    resolve({
-                        status: 'Finish'
-                    });
-                    cancelSubscription();
-                },
-                (e) => {
-                    cancelSubscription();
-                    reject(e || 'Build failed');
-                }
-            );
+            try {
+                await this.fileService.writeFile(folder + '/tsconfig.json', this.tsGenerator.getTsConfig(file.replace('.ts', '')));
+                const log_file = createWriteStream(`${folder}/${file}.log`, { flags: 'w' });
+                const subscription = this.loggerService.stdout.subscribe(log => {
+                    log_file.write(format(log) + '\n');
+                    this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: format(log) });
+                });
+                let sub: rxjsSubscription;
+                const cancelSubscription = () => {
+                    subscription.unsubscribe();
+                    log_file.close();
+                    sub.unsubscribe();
+                };
+                sub = this.compileService.buildFile(
+                    folder, file, message, namespace, buildFolder
+                ).subscribe(
+                    (data) => {
+                        resolve({
+                            status: 'Finish',
+                            ...data
+                        });
+                        cancelSubscription();
+                    },
+                    (e) => {
+                        cancelSubscription();
+                        reject(e || 'Build failed');
+                    }
+                );
+            } catch (e) {
+                reject(e || 'Build failed');
+            }
+
         });
 
     }
@@ -115,7 +121,7 @@ export class BuildController {
     @Subscribe((self: BuildController) => self.pubsub.asyncIterator('PROCESS_STDOUT'))
     @Subscription()
     processStdOut(payload) {
-        return { payload }
+        return { payload };
     }
 
 }
