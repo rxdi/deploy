@@ -9,7 +9,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "moduleResolution": "node",
-        "outDir": ".",
+        "outDir": "app",
         "lib": [
             "es2017",
             "es2016",
@@ -27,6 +27,6 @@
         "."
     ],
     "files": [
-        "gosho.ts"
+        "./src/main.ts"
     ]
 }

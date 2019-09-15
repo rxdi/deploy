@@ -2,9 +2,8 @@ import { Service } from '@rxdi/core';
 
 @Service()
 export class TsConfigGenratorService {
-
-    getTsConfig(filename: string) {
-        return `
+  getTsConfig(filename: string) {
+    return `
 {
     "compilerOptions": {
         "declaration": true,
@@ -36,6 +35,5 @@ export class TsConfigGenratorService {
         "${filename}.ts"
     ]
 }`;
-    }
-
+  }
 }

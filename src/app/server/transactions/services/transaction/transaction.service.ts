@@ -1,21 +1,21 @@
-import { Injectable, Inject } from "@rxdi/core";
+import { Injectable, Inject } from '@rxdi/core';
 import {
   __TRANSACTIONS_DATABASE,
   __HOME_DIR
-} from "../../../../../env.injection.tokens";
-import { ITransactionType } from "../../../../core/api-introspection/index";
-import { CompileService } from "../../../services/compile.service";
-import { PubSubService } from "@gapi/core";
+} from '../../../../../env.injection.tokens';
+import { ITransactionType } from '../../../../core/api-introspection/index';
+import { CompileService } from '../../../services/compile.service';
+import { PubSubService } from '@gapi/core';
 import {
   TsConfigGenratorService,
   LoggerService,
   FileService as AppFileService
-} from "../../../..//services";
-import { FileService } from "../../../file/services/file.service";
-import { format } from "util";
-import { createWriteStream } from "fs";
-import { Subscription } from "rxjs";
-import { IPFSFile } from "@gapi/ipfs";
+} from '../../../..//services';
+import { FileService } from '../../../file/services/file.service';
+import { format } from 'util';
+import { createWriteStream } from 'fs';
+import { Subscription } from 'rxjs';
+import { IPFSFile } from '@gapi/ipfs';
 
 @Injectable()
 export class TransactionService {
@@ -71,13 +71,11 @@ export class TransactionService {
 
   async add(doc: ITransactionType): Promise<ITransactionType> {
     const isExist = (await this.getTransactionByPath(doc.path, doc.repoFolder, {
-      status: "UNKNOWN"
+      status: 'UNKNOWN'
     } as any)) as ITransactionType;
     if (isExist) {
       throw new Error(
-        `File is already added to transaction ${isExist._id}: ${
-          isExist.path
-        } and not commited use (rxdi commit "my-message")`
+        `File is already added to transaction ${isExist._id}: ${isExist.path} and not commited use (rxdi commit "my-message")`
       );
     }
     return await new Promise((resolve, reject) => {
@@ -147,11 +145,11 @@ export class TransactionService {
       throw new Error(`Transaction doesn't exist ${repoFolder}`);
     }
     transaction.message = message;
-    transaction.status = "COMMITED";
+    transaction.status = 'COMMITED';
 
     const isUpdated = await this.update(repoFolder, transaction);
     if (!isUpdated) {
-      throw new Error("Transaction not commited");
+      throw new Error('Transaction not commited');
     }
     return transaction;
   }
@@ -171,16 +169,16 @@ export class TransactionService {
     } = this.fileService.prepareCopyData(transactionId, repoFolder, fileName);
     return new Promise(async (resolve, reject) => {
       await this.appFileService.writeFile(
-        filePath + "/tsconfig.json",
-        this.tsGenerator.getTsConfig(filename.replace(".ts", ""))
+        filePath + '/tsconfig.json',
+        this.tsGenerator.getTsConfig(filename.replace('.ts', ''))
       );
       const log_file = createWriteStream(
         `${transactionFolder}/${filename}.log`,
-        { flags: "w" }
+        { flags: 'w' }
       );
       const subscription = this.loggerService.stdout.subscribe(log => {
-        log_file.write(format(log) + "\n");
-        this.pubsub.publish("CREATE_SIGNAL_BASIC", { message: format(log) });
+        log_file.write(format(log) + '\n');
+        this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: format(log) });
       });
       let sub: Subscription;
       const cancelSubscription = () => {
@@ -194,7 +192,7 @@ export class TransactionService {
           fileName,
           message,
           namespace,
-          "build"
+          'build'
         )
         .subscribe(
           ({ module }: { module: IPFSFile }) => {
@@ -207,7 +205,7 @@ export class TransactionService {
           },
           e => {
             cancelSubscription();
-            reject(e || "Build failed");
+            reject(e || 'Build failed');
           }
         );
     });
@@ -215,7 +213,7 @@ export class TransactionService {
 
   async push({ repoFolder }: ITransactionType): Promise<ITransactionType> {
     const transaction = (await this.getTransactionByRepo(repoFolder, {
-      status: "COMMITED"
+      status: 'COMMITED'
     } as any)) as ITransactionType;
     if (!transaction) {
       throw new Error(
@@ -229,10 +227,10 @@ export class TransactionService {
       transaction.message,
       transaction.namespace
     );
-    transaction.status = "DEPLOYED";
+    transaction.status = 'DEPLOYED';
     const isUpdated = await this.update(repoFolder, transaction);
     if (!isUpdated) {
-      throw new Error("Transaction not commited");
+      throw new Error('Transaction not commited');
     }
     return transaction;
   }
@@ -245,7 +243,7 @@ export class TransactionService {
     sort = { createdAt: -1 }
   ): Promise<any[]> {
     const find = {} as any;
-    if (status !== "UNKNOWN") {
+    if (status !== 'UNKNOWN') {
       find.status = status;
     }
     find.repoFolder = repoFolder;

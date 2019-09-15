@@ -1,4 +1,3 @@
-
 import { Module } from '@rxdi/core';
 import { IpfsModule } from '@gapi/ipfs';
 import { IpfsDaemonModule } from '@gapi/ipfs-daemon';
@@ -14,44 +13,67 @@ import { BuildHistoryService } from './services/build-history/build-history.serv
 import { ErrorReasonService } from './services/error-reason/error-reason.service';
 import { CompilePlugin } from './plugins/compile/compile.plugin';
 import { TimeService } from './services/time/time.service';
-import { HtmlTemplateBuilder, PackageJsonService, nextOrDefault, includes, PreviousService, LoggerService } from './services';
+import {
+  HtmlTemplateBuilder,
+  PackageJsonService,
+  nextOrDefault,
+  includes,
+  PreviousService,
+  LoggerService
+} from './services';
 import { ServerModule } from './server/server.module';
 
 const _IMPORTS = [
-    IpfsDaemonModule.forRoot({
-        type: nextOrDefault('--default-ipfs-node', 'go'),
-        config: {
-            Addresses: {
-                API: process.env.IPFS_API_PORT ? process.env.IPFS_API_PORT : nextOrDefault('--ipfs-api-port', '/ip4/0.0.0.0/tcp/5002', (a) => `/ip4/0.0.0.0/tcp/${a}`),
-                Gateway: process.env.IPFS_API_GATEWAY ? process.env.IPFS_API_GATEWAY : nextOrDefault('--ipfs-api-gateway', '/ip4/0.0.0.0/tcp/8081', (a) => `/ip4/0.0.0.0/tcp/${a}`),
-                Swarm: nextOrDefault('--ipfs-swarms', [ '/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001' ], (a) => a.split(',')),
-            }
-        }
-    }),
-    IpfsModule.forRoot(),
-    StatusModule,
+  IpfsDaemonModule.forRoot({
+    type: nextOrDefault('--default-ipfs-node', 'go'),
+    config: {
+      Addresses: {
+        API: process.env.IPFS_API_PORT
+          ? process.env.IPFS_API_PORT
+          : nextOrDefault(
+              '--ipfs-api-port',
+              '/ip4/0.0.0.0/tcp/5002',
+              a => `/ip4/0.0.0.0/tcp/${a}`
+            ),
+        Gateway: process.env.IPFS_API_GATEWAY
+          ? process.env.IPFS_API_GATEWAY
+          : nextOrDefault(
+              '--ipfs-api-gateway',
+              '/ip4/0.0.0.0/tcp/8081',
+              a => `/ip4/0.0.0.0/tcp/${a}`
+            ),
+        Swarm: nextOrDefault(
+          '--ipfs-swarms',
+          ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001'],
+          a => a.split(',')
+        )
+      }
+    }
+  }),
+  IpfsModule.forRoot(),
+  StatusModule
 ];
 
 includes('--webui') ? _IMPORTS.push(ServerModule) : null;
 
 @Module({
-    imports: _IMPORTS,
-    services: [
-        FileIpfsService,
-        FileService,
-        ParcelBundlerService,
-        FileUserService,
-        TypescriptDefinitionGeneratorService,
-        TsConfigGenratorService,
-        TableService,
-        BuildHistoryService,
-        ErrorReasonService,
-        TimeService,
-        HtmlTemplateBuilder,
-        PackageJsonService,
-        PreviousService,
-        LoggerService
-    ],
-    plugins: [CompilePlugin]
+  imports: _IMPORTS,
+  services: [
+    FileIpfsService,
+    FileService,
+    ParcelBundlerService,
+    FileUserService,
+    TypescriptDefinitionGeneratorService,
+    TsConfigGenratorService,
+    TableService,
+    BuildHistoryService,
+    ErrorReasonService,
+    TimeService,
+    HtmlTemplateBuilder,
+    PackageJsonService,
+    PreviousService,
+    LoggerService
+  ],
+  plugins: [CompilePlugin]
 })
-export class AppModule { }
+export class AppModule {}

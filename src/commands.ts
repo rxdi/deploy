@@ -14,6 +14,7 @@ export const Commands = strEnum([
     '--namespace',
     '--beat',
     '--html',
+    '--html-message',
     '--webui',
     '--open-browser',
     '--node-only',
@@ -45,7 +46,8 @@ export const Commands = strEnum([
     '--ipfs-api-port',
     '--ipfs-swarms',
     '--graphql-server-only',
-    '--enable-full-folder-access'
+    '--enable-full-folder-access',
+    '--customComponent'
 ]);
 export type Commands = keyof typeof Commands;
 

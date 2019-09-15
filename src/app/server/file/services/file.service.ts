@@ -1,31 +1,23 @@
-import { Service, Inject } from "@rxdi/core";
-import { switchMap } from "rxjs/operators";
-import {
-  stat,
-  Stats,
-  readdir,
-  rename,
-  unlink,
-  copyFile,
-  exists
-} from "fs";
-import { includes } from "../../../services";
-import { resolve, normalize } from "path";
-import { from } from "rxjs";
-import { promisify } from "util";
-import { __HOME_DIR } from "../../../../env.injection.tokens";
-import { mkdirp } from "@rxdi/core/dist/services/file/dist";
+import { Service, Inject } from '@rxdi/core';
+import { switchMap } from 'rxjs/operators';
+import { stat, Stats, readdir, rename, unlink, copyFile, exists } from 'fs';
+import { includes } from '../../../services';
+import { resolve, normalize } from 'path';
+import { from } from 'rxjs';
+import { promisify } from 'util';
+import { __HOME_DIR } from '../../../../env.injection.tokens';
+import { mkdirp } from '@rxdi/core/dist/services/file/dist';
 
-const ncp = require("ncp").ncp;
-const rimraf = require("rimraf");
+const ncp = require('ncp').ncp;
+const rimraf = require('rimraf');
 
 @Service()
 export class FileService {
-  units = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   results: string[] = [];
   @Inject(__HOME_DIR) private homeDir: __HOME_DIR;
   constructor() {}
-  async wholeReadDirRecursive(path: string = ".") {
+  async wholeReadDirRecursive(path: string = '.') {
     const directory = await this.readDir(path);
     const pathinternal = path;
     const self = this;
@@ -34,7 +26,7 @@ export class FileService {
         const path = resolve(pathinternal, file);
         const stat = await this.statAsync(path);
         if (stat && stat.isDirectory()) {
-          if (!file.includes("node_modules")) {
+          if (!file.includes('node_modules')) {
             await self.wholeReadDirRecursive.bind(this)(path);
           } else {
             return null;
@@ -46,7 +38,7 @@ export class FileService {
     )).filter(a => !!a);
   }
 
-  async readCurrentDirFlat(path: string = ".") {
+  async readCurrentDirFlat(path: string = '.') {
     return (await this.readDir(path))
       .map(file => resolve(path, file))
       .filter(a => !!a);
@@ -85,7 +77,7 @@ export class FileService {
   }
 
   async map(res) {
-    let foldersCount = 100;
+    const foldersCount = 100;
     let counter = 0;
     return (await Promise.all(
       res.map(async r => {
@@ -100,7 +92,7 @@ export class FileService {
         const status: Stats = await this.statAsync(r);
         const pathMapping = v => r.replace(process.cwd(), v);
 
-        if (!status.isDirectory || (status && status["prototype"] === String)) {
+        if (!status.isDirectory || (status && status['prototype'] === String)) {
           return null;
         }
         if (status.isDirectory()) {
@@ -108,10 +100,10 @@ export class FileService {
         } else {
           mapping.file = true;
         }
-        mapping.name = r.split("/").pop();
-        mapping.path = pathMapping(".");
+        mapping.name = r.split('/').pop();
+        mapping.path = pathMapping('.');
 
-        if (includes("--enable-full-folder-access")) {
+        if (includes('--enable-full-folder-access')) {
           mapping.path = r;
         }
 
@@ -129,7 +121,7 @@ export class FileService {
     let l = 0,
       n = parseInt(x, 10) || 0;
     while (n >= 1024 && ++l) n = n / 1024;
-    return n.toFixed(n >= 10 || l < 1 ? 0 : 1) + " " + this.units[l];
+    return n.toFixed(n >= 10 || l < 1 ? 0 : 1) + ' ' + this.units[l];
   }
 
   async statAsync(path: string): Promise<any> {
@@ -162,24 +154,24 @@ export class FileService {
     });
   }
   private getFolderFromPath(path: string) {
-    return path.substring(0, path.lastIndexOf("/"));
+    return path.substring(0, path.lastIndexOf('/'));
   }
   async copyTransactionFiles(
     transactionId: string,
     repoFolder: string,
     fileName: string
   ) {
-    const getJson = (path: string, type: "package.json" | "reactive.json") =>
+    const getJson = (path: string, type: 'package.json' | 'reactive.json') =>
       `${path}/${type}`;
     const { saveFolder, originalFilePath, filePath } = this.prepareCopyData(
       transactionId,
       repoFolder,
       fileName
     );
-    const packageJsonRepoPath = getJson(repoFolder, "package.json");
-    const reactiveJsonRepoPath = getJson(repoFolder, "reactive.json");
-    const packageJsonFilePath = getJson(filePath, "package.json");
-    const reactiveJsonFilePath = getJson(filePath, "reactive.json");
+    const packageJsonRepoPath = getJson(repoFolder, 'package.json');
+    const reactiveJsonRepoPath = getJson(repoFolder, 'reactive.json');
+    const packageJsonFilePath = getJson(filePath, 'package.json');
+    const reactiveJsonFilePath = getJson(filePath, 'reactive.json');
     let hasConfiguration = false;
     await this.ensureDir(this.getFolderFromPath(saveFolder));
     if (this.isFileExist(packageJsonRepoPath)) {
@@ -194,7 +186,7 @@ export class FileService {
 
     if (!hasConfiguration) {
       console.error(
-        "Missing package.json or reactive.json bundle will proceed but if you depend on some modules you cannot use them since they will not be installed"
+        'Missing package.json or reactive.json bundle will proceed but if you depend on some modules you cannot use them since they will not be installed'
       );
     }
     await this.copyFolderRecursive(
@@ -207,8 +199,8 @@ export class FileService {
     const transactionFolder = `${this.homeDir}/.rxdi/builds/${transactionId}`;
     const originalFilePath = normalize(`${repoFolder}/${fileName}`);
     const saveFolder = normalize(`${transactionFolder}/${fileName}`);
-    const filename = originalFilePath.replace(/^.*[\\\/]/, "");
-    const filePath = saveFolder.replace(filename, "");
+    const filename = originalFilePath.replace(/^.*[\\\/]/, '');
+    const filePath = saveFolder.replace(filename, '');
 
     return {
       saveFolder,
@@ -248,7 +240,7 @@ export class FileService {
   copyFolderRecursive(source: string, destination: string) {
     // ncp.limit = 16;
     return new Promise((resolve, reject) => {
-      console.log("WHY");
+      console.log('WHY');
       ncp(source, destination, function(err) {
         console.log(err);
         if (err) {

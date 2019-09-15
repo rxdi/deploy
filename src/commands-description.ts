@@ -4,7 +4,8 @@ export const CommandDescription = {
     '--file': 'Pass file path after this argument',
     '--namespace': `How this module will be named ? Later when you install it you can use it as follow import { MyModule } from '@mynamespace'`,
     '--beat': `How many seconds the application should stay after deploy recomended 20 seconds so file will be distributed accross the network`,
-    '--html': 'Pass your html file this will override --message or 3-th argument message and you can put whole html',
+    '--html': 'Pass your html file this will override module and will injet your html before metadata',
+    '--html-message': 'Pass your html file this will override --message or 3-th argument message and you can put whole html',
     '--webui': `Will spawn web ui with many settings, history, last deployed module etc. can be passed with --open-browser argument`,
     '--open-browser': `Will open browser for web user interface`,
     '--graphiql-playground': `Development purposes open graphiql-playground dev tools`,
@@ -35,5 +36,6 @@ export const CommandDescription = {
     '--collect-packages': 'Collect dependencies from package.json and transfer it to reactive.json',
     '--help': `This help suite :)`,
     '--server-push-interval': 'Interval for server push service this is how fast the data will update by default is 7 seconds',
-    '--enable-full-folder-access': 'Will give you reading and writing the whole file system so you can scan and build every folder and file (development only)'
+    '--enable-full-folder-access': 'Will give you reading and writing the whole file system so you can scan and build every folder and file (development only)',
+    '--customComponent': 'Default ipfs module view component link',
 };
