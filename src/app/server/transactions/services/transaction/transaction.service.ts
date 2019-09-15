@@ -12,10 +12,11 @@ import {
   FileService as AppFileService
 } from '../../../..//services';
 import { FileService } from '../../../file/services/file.service';
-import { format } from 'util';
-import { createWriteStream } from 'fs';
+import { format, promisify } from 'util';
+import { createWriteStream, exists, readFile, writeFile } from 'fs';
 import { Subscription } from 'rxjs';
 import { IPFSFile } from '@gapi/ipfs';
+import { join } from 'path';
 
 @Injectable()
 export class TransactionService {
@@ -172,6 +173,25 @@ export class TransactionService {
         filePath + '/tsconfig.json',
         this.tsGenerator.getTsConfig(filename.replace('.ts', ''))
       );
+      let packageJson: any = {browserslist: []};
+      if (await promisify(exists)(join(filePath, 'package.json'))) {
+        packageJson = JSON.parse(await promisify(readFile)(join(filePath, 'package.json'), {encoding: 'utf-8'}));
+        if (packageJson.browserslist && packageJson.browserslist.length) {
+          const isExistsLatestChrome = packageJson.browserslist.find((item: string) => item.includes('last 1 chrome versions'));
+          if (!isExistsLatestChrome) {
+            packageJson.browserslist.push('last 1 chrome versions');
+          }
+        } else {
+          packageJson.browserslist.push('last 1 chrome versions');
+        }
+        await promisify(writeFile)(join(filePath, 'package.json'), JSON.stringify(packageJson));
+      } else {
+        await this.appFileService.writeFile(
+          filePath + '/package.json',
+          this.tsGenerator.getPackageJson()
+        );
+      }
+
       const log_file = createWriteStream(
         `${transactionFolder}/${filename}.log`,
         { flags: 'w' }

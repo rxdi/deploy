@@ -2,7 +2,7 @@ import { Service, Inject } from '@rxdi/core';
 import { switchMap } from 'rxjs/operators';
 import { stat, Stats, readdir, rename, unlink, copyFile, exists } from 'fs';
 import { includes } from '../../../services';
-import { resolve, normalize } from 'path';
+import { resolve, normalize, join } from 'path';
 import { from } from 'rxjs';
 import { promisify } from 'util';
 import { __HOME_DIR } from '../../../../env.injection.tokens';
@@ -161,25 +161,26 @@ export class FileService {
     repoFolder: string,
     fileName: string
   ) {
-    const getJson = (path: string, type: 'package.json' | 'reactive.json') =>
+    const getJson = (path: string, type: 'package.json' | 'reactive.json' | string) =>
       `${path}/${type}`;
     const { saveFolder, originalFilePath, filePath } = this.prepareCopyData(
       transactionId,
       repoFolder,
       fileName
     );
-    const packageJsonRepoPath = getJson(repoFolder, 'package.json');
+    await this.copyFolderRecursive(
+      this.getFolderFromPath(originalFilePath),
+      this.getFolderFromPath(saveFolder)
+    );
     const reactiveJsonRepoPath = getJson(repoFolder, 'reactive.json');
-    const packageJsonFilePath = getJson(filePath, 'package.json');
     const reactiveJsonFilePath = getJson(filePath, 'reactive.json');
+    const mainFile = normalize(getJson(repoFolder, fileName));
     let hasConfiguration = false;
     await this.ensureDir(this.getFolderFromPath(saveFolder));
-    if (this.isFileExist(packageJsonRepoPath)) {
-      await this.copyFile(packageJsonRepoPath, packageJsonFilePath);
-      hasConfiguration = true;
+    if (await this.isFileExist(mainFile)) {
+      await this.copyFile(mainFile, saveFolder);
     }
-
-    if (this.isFileExist(packageJsonRepoPath)) {
+    if (await this.isFileExist(reactiveJsonRepoPath)) {
       await this.copyFile(reactiveJsonRepoPath, reactiveJsonFilePath);
       hasConfiguration = true;
     }
@@ -189,10 +190,7 @@ export class FileService {
         'Missing package.json or reactive.json bundle will proceed but if you depend on some modules you cannot use them since they will not be installed'
       );
     }
-    await this.copyFolderRecursive(
-      this.getFolderFromPath(originalFilePath),
-      this.getFolderFromPath(saveFolder)
-    );
+
   }
 
   prepareCopyData(transactionId: string, repoFolder: string, fileName: string) {

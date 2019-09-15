@@ -36,4 +36,14 @@ export class TsConfigGenratorService {
     ]
 }`;
   }
+
+  getPackageJson() {
+    return `
+{
+  "browserslist": [
+      "last 1 chrome versions"
+  ]
+}
+`;
+  }
 }

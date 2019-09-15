@@ -32,6 +32,9 @@ export class TableService {
   }
 
   createTable(file: IPFSFile[], typings: IPFSFile[], m: IPFSFile[]) {
+    if (m.length < 1) {
+      m.push(m[0]);
+    }
     const provider = this.fileIpfsService.providers.ipfsOriginal;
     const FileStatus = this.$deploymentStatus.getValue().file;
     const TypingsStatus = this.$deploymentStatus.getValue().typings;

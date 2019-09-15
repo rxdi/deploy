@@ -26,4 +26,4 @@ VOLUME [ "/packages" ]
 
 VOLUME [ "/files" ]
 
-ENTRYPOINT ["node", "../dist/main.js", "--webui", "--verbose", "--ipfs-api-gateway", "8080",  "--ipfs-api-port", "5001", '--browser']
+ENTRYPOINT ["node", "../dist/main.js", "--webui", "--verbose", "--browser", "--ipfs-api-gateway", "8080",  "--ipfs-api-port", "5001"]

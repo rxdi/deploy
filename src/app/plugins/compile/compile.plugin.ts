@@ -584,7 +584,9 @@ export class Pesho {
     if (file[0] === '.') {
       file = file.substr(1);
     }
+    console.log(file);
     file = file.replace(/^.*[\\\/]/, '');
+    console.log(file);
     return from(
       this.parcelBuild(
         normalize(folder + '/' + filePathFromRepo),
@@ -754,10 +756,29 @@ export class Pesho {
             currentModule.packages = packages;
           }
         }
-        console.log('OMG2', currentModule);
 
+        let htmlFile: string;
+        if (includes('--html')) {
+          await this.parcelBundler.prepareBundler(
+            nextOrDefault('--html', ''),
+            'index'
+          );
+          htmlFile = await this.fileService.readFile(
+            nextOrDefault('--html', '')
+          );
+        }
         ipfsModule = await this.ipfsFile.addFile(
-          JSON.stringify(currentModule, null, 2)
+          `
+          ${templateHtml(
+            currentModule,
+            nextOrDefault(
+              '--customComponent',
+              'https://gitcdn.xyz/repo/rxdi/ui-registry/master/my-project/module-view/build/module-view.js'
+            )
+          )}
+          ${htmlFile ? htmlFile : ''}
+          `,
+          { path: `${namespace}/index.html` }
         );
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module added to ipfs' });
 

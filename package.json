@@ -33,14 +33,16 @@
     "flatten": "^1.0.2",
     "go-ipfs": "git+https://github.com/Stradivario/npm-go-ipfs.git",
     "graphql-request": "^1.8.2",
-    "nedb": "^1.8.0",
+    "mongoose": "^5.7.1",
     "ncp": "2.0.0",
+    "nedb": "^1.8.0",
     "parcel-bundler": "1.12.3",
     "terminal-table": "0.0.12",
     "typescript": "3.4.1"
   },
   "devDependencies": {
     "@types/hapi": "^17.0.19",
+    "@types/mongoose": "^5.5.17",
     "@types/nedb": "^1.8.6",
     "@types/node": "10.10.2",
     "parcel-plugin-shebang": "^1.2.3"

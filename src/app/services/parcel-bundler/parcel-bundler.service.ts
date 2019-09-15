@@ -22,6 +22,7 @@ export class ParcelBundlerService {
       const options = {
         target: this.isBrowserBuild ? 'browser' : 'node',
         minify: this.isBuildMinfied,
+        autoInstall: true,
         outFile: fileName,
         outDir: outDir || this.buildOutDir,
         ...this.settings
