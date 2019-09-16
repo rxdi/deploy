@@ -3,7 +3,7 @@
 import { checkArguments } from './check-arguments';
 import { Container, ConfigService, BootstrapFramework } from '@rxdi/core';
 import { CommandDescription } from './commands-description';
-import { includes } from './app/services/helpers/helpers';
+import { includes, nextOrDefault } from './app/services/helpers/helpers';
 import { LoggerService } from './app/services/logger/logger.service';
 const Table = require('terminal-table');
 const originalLog = console.log;
@@ -42,6 +42,9 @@ checkArguments();
 import { EnvironemntSetterModule } from './environment-setter.module';
 import { AppModule } from './app/app.module';
 import { GapiFrameworkImports } from './gapi-framework-imports';
+import { TranspileTypescript } from './app/core/helpers/transpile-typescript';
+import { join } from 'path';
+import { getFirstItem } from './app/core/helpers/get-first-item';
 
 Container.get(ConfigService).setConfig({
   ...(process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')
@@ -68,18 +71,25 @@ const _FRAMEWORK_IMPORTS = [
   GapiFrameworkImports.forRoot(includes('--webui') || includes('--graphql-server-only')),
 ];
 
-BootstrapFramework(AppModule, _FRAMEWORK_IMPORTS).subscribe(
-  () => {
-    console.log('Started! Use --open-browser argument! Enjoy! :)');
-  },
-  error => {
-    throw new Error(error);
+async function Main() {
+  if (includes('--import')) {
+    const interceptorPath: string = nextOrDefault('--import', './import.ts');
+    try {
+      await TranspileTypescript([interceptorPath.replace('.', '')], 'import');
+      const modulePath = join(process.cwd(), 'import', interceptorPath.replace('ts', 'js'));
+      _FRAMEWORK_IMPORTS.push(getFirstItem(require(modulePath)));
+    } catch (e) {
+      console.log(e);
+    }
   }
-);
+  BootstrapFramework(AppModule, _FRAMEWORK_IMPORTS).subscribe(
+    () => {
+      console.log('Started! Use --open-browser argument! Enjoy! :)');
+    },
+    error => {
+      throw new Error(error);
+    }
+  );
+}
 
-export * from './app/index';
-export * from './gapi-framework-imports';
-export * from './env.injection.tokens';
-export * from './commands';
-export * from './check-arguments';
-export * from './commands-description';
+Main();

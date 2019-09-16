@@ -47,4 +47,5 @@ export const CommandDescription = {
     'Will give you reading and writing the whole file system so you can scan and build every folder and file (development only)',
   '--customComponent': 'Default ipfs module view component link',
   '--interceptor': 'Pass Javascript or Typescript file to customize your Request/Response logic and Authorization',
+  '--import': 'Pass @rxdi module like a regular Import object',
 };
