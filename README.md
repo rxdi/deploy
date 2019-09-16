@@ -243,6 +243,12 @@ as long as `interceptor.ts` present inside `/usr/src/app/files` it will be loade
 
 Working with this approach you need to set `--interceptor ./interceptor.ts` argument
 
+To be sure that packages will be installed inside container you can pass following option:
+
+```bash
+--globals 'firebase-admin, @rxdi/firestore, express, @angular/cli'
+```
+
 ```typescript
 import { Request } from 'hapi';
 import { errorUnauthorized, GenericGapiResolversType } from '@gapi/core';

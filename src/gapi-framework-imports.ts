@@ -39,7 +39,7 @@ export class GapiFrameworkImports {
             openBrowser: includes('--open-browser-graphiql'),
             watcherPort: nextOrDefault('--open-browser-graphiql', 8967),
             writeEffects: includes('--write-effects'),
-            graphiql: includes('--graphiql'),
+            // graphiql: includes('--graphiql'),
             graphiQlPlayground: includes('--graphiql-playground'),
             graphiQlPath: nextOrDefault('--graphiql-endpoint', '/graphiql'),
             graphiqlOptions: {

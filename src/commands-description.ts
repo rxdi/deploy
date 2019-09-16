@@ -48,4 +48,5 @@ export const CommandDescription = {
   '--customComponent': 'Default ipfs module view component link',
   '--interceptor': 'Pass Javascript or Typescript file to customize your Request/Response logic and Authorization',
   '--import': 'Pass @rxdi module like a regular Import object',
+  '--globals': 'Install npm packages inside container separated by comma `@rxdi/core, @rxdi/hapi`, etc.',
 };

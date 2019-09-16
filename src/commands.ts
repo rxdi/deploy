@@ -49,7 +49,8 @@ export const Commands = strEnum([
   '--enable-full-folder-access',
   '--customComponent',
   '--interceptor',
-  '--import'
+  '--import',
+  '--globals'
 ]);
 export type Commands = keyof typeof Commands;
 

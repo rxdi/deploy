@@ -45,6 +45,7 @@ import { GapiFrameworkImports } from './gapi-framework-imports';
 import { TranspileTypescript } from './app/core/helpers/transpile-typescript';
 import { join } from 'path';
 import { getFirstItem } from './app/core/helpers/get-first-item';
+import { NpmInstall } from './app/core/helpers/npm-install';
 
 Container.get(ConfigService).setConfig({
   ...(process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')
@@ -72,6 +73,14 @@ const _FRAMEWORK_IMPORTS = [
 ];
 
 async function Main() {
+  if (includes('--globals')) {
+    const argument = nextOrDefault('--globals', '');
+    const globals = ((argument as string) || '').split(',');
+    if (!globals.length) {
+      globals.push(argument);
+    }
+    await NpmInstall(globals);
+  }
   if (includes('--import')) {
     const interceptorPath: string = nextOrDefault('--import', './import.ts');
     try {
