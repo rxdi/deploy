@@ -48,6 +48,7 @@ export const Commands = strEnum([
   '--graphql-server-only',
   '--enable-full-folder-access',
   '--customComponent',
+  '--interceptor'
 ]);
 export type Commands = keyof typeof Commands;
 

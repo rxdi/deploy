@@ -232,3 +232,70 @@ services:
       - ./.rxdi:/root/.rxdi
       - ./.jsipfs:/root/.jsipfs
 ```
+
+
+
+#### Modify Authentication logic
+
+Add inside the working directory file with name `interceptor.ts` and add following content;
+if using `docker` place `interceptor.ts` inside `my-project` or mount it at with custom folder `-v $(pwd)/files:/usr/src/app/files`
+as long as `interceptor.ts` present inside `/usr/src/app/files` it will be loaded.
+
+Working with this approach you need to set `--interceptor ./interceptor.ts` argument
+
+```typescript
+import { Request } from 'hapi';
+import { errorUnauthorized, GenericGapiResolversType } from '@gapi/core';
+
+interface Context {
+  user: { type: string };
+}
+
+interface Resolver extends GenericGapiResolversType {
+  scope?: string[];
+  public?: boolean;
+}
+
+function canAccess(resolverScope: string[], context: Context) {
+  return context && context.user && resolverScope.filter(scope => scope === context.user.type).length
+    ? true
+    : errorUnauthorized();
+}
+function AuthenticationHooks(resolver: Resolver, context: Context) {
+  canAccess(resolver.scope, context);
+}
+function ResolverHooks(resolver: Resolver, root, args, context: Context, info) {
+  if (resolver && !resolver.public) {
+    AuthenticationHooks(resolver, context);
+  }
+}
+
+
+export async function OnRequestHook(request: Request) {
+  return { user: { type: 'ADMIN' } };
+}
+
+export async function ResolverHook(resolver: Resolver, root, args, context: Context, info) {
+    return ResolverHooks(resolver, root, args, context, info);
+}
+
+
+```
+
+Important part is that we export 2 methods `OnRequestHook` and `ResolverHook`
+These are named for convenience the script internally will take UP to 2 methods
+
+1. Request handler function - will populate `context` variable for resolver
+2. Resolver hook function - on every request apply some authentication logic
+3. By default every resolver scope is predefined with `ADMIN` to change it set Environment variable `APP_DEFAULT_SCOPE`
+
+```typescript
+export async function MyMethodWhichWillPopulateContext(request: Request) {
+  return { user: { type: 'ADMIN' } };
+}
+
+export async function MyMethodThatWillBeRunnedOnEveryRequest(resolver: Resolver, root, args, context: Context, info) {
+    console.log(context);
+    return ResolverHooks(resolver, root, args, context, info);
+}
+```

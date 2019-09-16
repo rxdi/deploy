@@ -1,10 +1,11 @@
 import { Controller } from '@rxdi/core';
-import { Query, Type, GraphQLString, GraphQLNonNull } from '@gapi/core';
+import { Query, Type  } from '@gapi/core';
 import { FileType } from './types/file.type';
 import { FileService as InternalFileService } from './services/file.service';
 import { FileService } from '../../services/file/file.service';
 import { FileRawType } from './types/file-raw.type';
 import { includes } from '../../services';
+import { GraphQLString, GraphQLNonNull } from 'graphql';
 
 @Controller()
 export class FileController {
@@ -35,7 +36,7 @@ export class FileController {
       type: new GraphQLNonNull(GraphQLString),
     },
   })
-  async readFile(root, { folder }: { folder: string }) {
+  async readFile(root, { folder }: { folder: string }, context) {
     let filePath;
     if (includes('--enable-full-folder-access')) {
       filePath = folder;

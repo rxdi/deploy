@@ -1,5 +1,8 @@
 import { InjectionToken } from '@rxdi/core';
 import * as Datastore from 'nedb';
+import GraphQLServerOptions from 'apollo-server-core/dist/graphqlOptions';
+import { Request } from 'hapi';
+import { Resolver } from './app/server/context';
 
 export type __DEPLOYER_ARGUMENTS = string[];
 export type __PARCEL_BROWSER_BUILD = boolean;
@@ -56,6 +59,8 @@ export const __NAMESPACE_DB = new InjectionToken<boolean>('rxdi-deployer-namespa
 export const __HOME_DIR = new InjectionToken<boolean>('rxdi-deployer-home-directory');
 export const __COMMIT_MESSAGE = new InjectionToken<boolean>('rxdi-deployer-commit-message');
 export const __CREATE_HTML_PAGE = new InjectionToken<boolean>('rxdi-deployer-commit-message');
+export type RequestHandler = InterceptorType;
+export const RequestHandler = new InjectionToken<InterceptorType>('rxdi-deployer-request-handler-external');
 
 export interface __PARCEL_SETTINGS {
   watch?: boolean;
@@ -94,3 +99,10 @@ export class PreviousModel {
   name: string;
   hash: string;
 }
+
+export interface InterceptorType {
+  handler: (request: Request) => Promise<GraphQLServerOptions>;
+  resolverHook: (resolver: Resolver, root, args, context, info) => void;
+}
+
+

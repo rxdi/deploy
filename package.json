@@ -7,7 +7,7 @@
     "postpublish": "git push -f ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git && git push --tags && git push ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git --tags",
     "start": "gapi start --local --parcel",
     "build:docker": "docker build -t rxdi/deploy .",
-    "prettier":"prettier --write 'src/**/*.ts'",
+    "prettier": "prettier --write 'src/**/*.ts'",
     "start:docker": "docker-compose up -d",
     "build": "gapi build",
     "deploy": "docker run -v /proba/:/usr/src/app/proba --name rxdi-deployer rxdi/deploy ./proba/index.ts || true && npm run stop",
@@ -42,6 +42,7 @@
     "typescript": "3.4.1"
   },
   "devDependencies": {
+    "@types/graphql": "^14.5.0",
     "@types/hapi": "^17.0.19",
     "@types/mongoose": "^5.5.17",
     "@types/nedb": "^1.8.6",

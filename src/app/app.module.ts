@@ -22,6 +22,11 @@ import {
   LoggerService,
 } from './services';
 import { ServerModule } from './server/server.module';
+import { TranspileTypescript } from './core/helpers/transpile-typescript';
+import { join } from 'path';
+import { getFirstItem } from './core/helpers/get-first-item';
+import { RequestHandler } from '../env.injection.tokens';
+import { getSecondItem } from './core/helpers/get-second-item';
 
 const _IMPORTS = [
   IpfsDaemonModule.forRoot({
@@ -63,5 +68,25 @@ includes('--webui') ? _IMPORTS.push(ServerModule) : null;
     LoggerService,
   ],
   plugins: [CompilePlugin],
+  providers: [
+    {
+      provide: RequestHandler,
+      lazy: true,
+      useFactory: async () => {
+        const interceptorPath: string = nextOrDefault('--interceptor', null);
+        if (interceptorPath) {
+          await TranspileTypescript([interceptorPath.replace('.', '')], 'interceptor');
+          const modulePath = join(process.cwd(), 'interceptor', interceptorPath.replace('ts', 'js'));
+          return {
+            handler: getFirstItem(require(modulePath)),
+            resolverHook: getSecondItem(require(modulePath)),
+          };
+        }
+        return {
+          handler: null,
+        };
+      },
+    },
+  ],
 })
 export class AppModule {}
