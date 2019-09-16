@@ -13,9 +13,7 @@ export class FILE_DEPLOYMENT_STATUS_INTERFACE {
   typings?: BuildStatus = new BuildStatus();
   module?: BuildStatus = new BuildStatus();
 }
-export type FILE_DEPLOYMENT_STATUS = BehaviorSubject<
-  FILE_DEPLOYMENT_STATUS_INTERFACE
->;
+export type FILE_DEPLOYMENT_STATUS = BehaviorSubject<FILE_DEPLOYMENT_STATUS_INTERFACE>;
 
 export const START = new InjectionToken('compilation-started');
 export const FILE_DEPLOYMENT_STATUS = new InjectionToken('files-deploy-ment');

@@ -1,11 +1,4 @@
-import {
-  Query,
-  Controller,
-  Type,
-  GraphQLString,
-  GraphQLInt,
-  Mutation,
-} from '@gapi/core';
+import { Query, Controller, Type, GraphQLString, GraphQLInt, Mutation } from '@gapi/core';
 import { NamespaceType } from './types/namespace.type';
 import { NamespaceService } from './services/namespace.service';
 import { NamespaceListType } from './types/namespace-list.type';

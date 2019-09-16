@@ -30,13 +30,6 @@ export class CompileService {
     namespace: string = '@pesho',
     buildFolder
   ) {
-    return this.compilePlugin.pushTransaction(
-      folder,
-      file,
-      message,
-      namespace,
-      'reactive.json',
-      buildFolder
-    );
+    return this.compilePlugin.pushTransaction(folder, file, message, namespace, 'reactive.json', buildFolder);
   }
 }

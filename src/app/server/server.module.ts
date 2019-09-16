@@ -10,13 +10,7 @@ import { FileModule } from './file/file.module';
 import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
-  imports: [
-    HistoryModule,
-    NamespaceModule,
-    BuildModule,
-    FileModule,
-    TransactionsModule,
-  ],
+  imports: [HistoryModule, NamespaceModule, BuildModule, FileModule, TransactionsModule],
   services: [WebUiService, ServerPushService, CompileService],
   controllers: [UserQueriesController],
 })

@@ -30,23 +30,11 @@ const _IMPORTS = [
       Addresses: {
         API: process.env.IPFS_API_PORT
           ? process.env.IPFS_API_PORT
-          : nextOrDefault(
-              '--ipfs-api-port',
-              '/ip4/0.0.0.0/tcp/5002',
-              a => `/ip4/0.0.0.0/tcp/${a}`
-            ),
+          : nextOrDefault('--ipfs-api-port', '/ip4/0.0.0.0/tcp/5002', a => `/ip4/0.0.0.0/tcp/${a}`),
         Gateway: process.env.IPFS_API_GATEWAY
           ? process.env.IPFS_API_GATEWAY
-          : nextOrDefault(
-              '--ipfs-api-gateway',
-              '/ip4/0.0.0.0/tcp/8081',
-              a => `/ip4/0.0.0.0/tcp/${a}`
-            ),
-        Swarm: nextOrDefault(
-          '--ipfs-swarms',
-          ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001'],
-          a => a.split(',')
-        ),
+          : nextOrDefault('--ipfs-api-gateway', '/ip4/0.0.0.0/tcp/8081', a => `/ip4/0.0.0.0/tcp/${a}`),
+        Swarm: nextOrDefault('--ipfs-swarms', ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001'], a => a.split(',')),
       },
     },
   }),

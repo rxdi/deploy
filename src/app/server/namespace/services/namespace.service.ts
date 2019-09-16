@@ -51,11 +51,7 @@ export class NamespaceService {
     });
   }
 
-  listNamespaces(
-    skip: number = 0,
-    limit: number = 100,
-    sort = { createdAt: -1 }
-  ): Promise<INamespacetype[]> {
+  listNamespaces(skip: number = 0, limit: number = 100, sort = { createdAt: -1 }): Promise<INamespacetype[]> {
     return new Promise((resolve, reject) => {
       this.namespace
         .find({})

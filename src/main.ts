@@ -24,9 +24,7 @@ if (includes('--help')) {
   });
   t.push(['Command', 'Description']);
   t.push([`\Available arguments are:`]);
-  Object.keys(CommandDescription).forEach(c =>
-    t.push([c, CommandDescription[c]])
-  );
+  Object.keys(CommandDescription).forEach(c => t.push([c, CommandDescription[c]]));
   t.attrRange(
     { row: [0, 1] },
     {
@@ -46,8 +44,7 @@ import { AppModule } from './app/app.module';
 import { GapiFrameworkImports } from './gapi-framework-imports';
 
 Container.get(ConfigService).setConfig({
-  ...(process.argv.toString().includes('-v') ||
-  process.argv.toString().includes('--verbose')
+  ...(process.argv.toString().includes('-v') || process.argv.toString().includes('--verbose')
     ? {
         logger: {
           logging: true,
@@ -68,9 +65,7 @@ Container.get(ConfigService).setConfig({
 
 const _FRAMEWORK_IMPORTS = [
   EnvironemntSetterModule,
-  GapiFrameworkImports.forRoot(
-    includes('--webui') || includes('--graphql-server-only')
-  ),
+  GapiFrameworkImports.forRoot(includes('--webui') || includes('--graphql-server-only')),
 ];
 
 BootstrapFramework(AppModule, _FRAMEWORK_IMPORTS).subscribe(

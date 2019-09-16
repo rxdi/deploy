@@ -132,11 +132,7 @@ export interface IFileRawType {
   file?: string | null;
 }
 
-export type ITransactionsTypeEnumEnum =
-  | 'DEPLOYED'
-  | 'COMMITED'
-  | 'UNKNOWN'
-  | 'BUILD';
+export type ITransactionsTypeEnumEnum = 'DEPLOYED' | 'COMMITED' | 'UNKNOWN' | 'BUILD';
 
 export interface ITransactionType {
   __typename?: 'TransactionType';

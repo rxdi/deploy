@@ -14,12 +14,7 @@ import {
 import { BuildType } from './types/build.type';
 import { CompileService } from '../services/compile.service';
 import { IHistoryListType } from '../../core/api-introspection';
-import {
-  BuildHistoryService,
-  FileService,
-  TsConfigGenratorService,
-  LoggerService,
-} from '../../services';
+import { BuildHistoryService, FileService, TsConfigGenratorService, LoggerService } from '../../services';
 import { HistoryListType } from '../history/types/history-list.type';
 import { BuildStatusType } from './types/built-status.type';
 import { ProcessStdOutType } from './types/process.type';
@@ -76,21 +71,19 @@ export class BuildController {
           log_file.close();
           sub.unsubscribe();
         };
-        sub = this.compileService
-          .buildFile(folder, file, message, namespace, buildFolder)
-          .subscribe(
-            data => {
-              resolve({
-                status: 'Finish',
-                ...data,
-              });
-              cancelSubscription();
-            },
-            e => {
-              cancelSubscription();
-              reject(e || 'Build failed');
-            }
-          );
+        sub = this.compileService.buildFile(folder, file, message, namespace, buildFolder).subscribe(
+          data => {
+            resolve({
+              status: 'Finish',
+              ...data,
+            });
+            cancelSubscription();
+          },
+          e => {
+            cancelSubscription();
+            reject(e || 'Build failed');
+          }
+        );
       } catch (e) {
         reject(e || 'Build failed');
       }
@@ -119,16 +112,8 @@ export class BuildController {
       }),
     },
   })
-  async getBuildHistory(
-    root,
-    { skip, limit, where }
-  ): Promise<IHistoryListType> {
-    const items = await this.buildHistoryService.findAll(
-      skip,
-      limit,
-      null,
-      where
-    );
+  async getBuildHistory(root, { skip, limit, where }): Promise<IHistoryListType> {
+    const items = await this.buildHistoryService.findAll(skip, limit, null, where);
     return {
       count: items.length,
       rows: items,
@@ -136,18 +121,14 @@ export class BuildController {
   }
 
   @Type(BuildStatusType)
-  @Subscribe((self: BuildController) =>
-    self.pubsub.asyncIterator('LISTEN_FOR_BUILDS')
-  )
+  @Subscribe((self: BuildController) => self.pubsub.asyncIterator('LISTEN_FOR_BUILDS'))
   @Subscription()
   buildStatus(payload) {
     return { payload };
   }
 
   @Type(ProcessStdOutType)
-  @Subscribe((self: BuildController) =>
-    self.pubsub.asyncIterator('PROCESS_STDOUT')
-  )
+  @Subscribe((self: BuildController) => self.pubsub.asyncIterator('PROCESS_STDOUT'))
   @Subscription()
   processStdOut(payload) {
     return { payload };

@@ -172,13 +172,7 @@ Error loading file ${filePath}
     let currentModule: DagModel;
     let dag: DagModel;
     this.logger.log('Bundling Started!\n');
-    return from(
-      this.parcelBuild(
-        normalize(folder + '/' + file),
-        buildFolder,
-        `${file.split('.')[0]}.js`
-      )
-    ).pipe(
+    return from(this.parcelBuild(normalize(folder + '/' + file), buildFolder, `${file.split('.')[0]}.js`)).pipe(
       tap(() => {
         this.logger.log('Bundling finished!\n');
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundling finished' });
@@ -190,44 +184,22 @@ Error loading file ${filePath}
         this.logger.log(`Commit message added...\n`);
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Commit message added' });
       }),
-      switchMap(() =>
-        this.fileService.readFile(`${buildFolder}/${file.split('.')[0]}.js`)
-      ),
+      switchMap(() => this.fileService.readFile(`${buildFolder}/${file.split('.')[0]}.js`)),
       tap(() => {
-        this.logger.log(
-          `Reading bundle ${buildFolder}/${file.split('.')[0]}.js finished!\n`
-        );
+        this.logger.log(`Reading bundle ${buildFolder}/${file.split('.')[0]}.js finished!\n`);
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Reading bundle finished' });
       }),
       switchMap((res: string) => this.ipfsFile.addFile(res)),
       tap(res => {
         ipfsFile = res;
-        this.logger.log(
-          `Bundle added to ipfs ${buildFolder}/${file.split('.')[0]}.js\n`
-        );
+        this.logger.log(`Bundle added to ipfs ${buildFolder}/${file.split('.')[0]}.js\n`);
         this.logger.log(`Typescript definitions merge started!\n`);
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Typescript definitions merge starte' });
       }),
-      switchMap(() =>
-        from(
-          this.typingsGenerator.mergeTypings(
-            namespace,
-            folder,
-            `${buildFolder}/index.d.ts`
-          )
-        )
-      ),
-      tap(() =>
-        this.logger.log(
-          `Typescript definitions merge finished! Reading file...\n`
-        )
-      ),
+      switchMap(() => from(this.typingsGenerator.mergeTypings(namespace, folder, `${buildFolder}/index.d.ts`))),
+      tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)),
       switchMap(() => this.fileService.readFile(`${buildFolder}/index.d.ts`)),
-      tap(() =>
-        this.logger.log(
-          `Typescript definitions read finished! Adding to IPFS...\n`
-        )
-      ),
+      tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
       switchMap((res: string) => {
         if (!!res) {
           return this.ipfsFile.addFile(res);
@@ -235,8 +207,7 @@ Error loading file ${filePath}
           this.statusService.setBuildStatus({
             typings: {
               status: 'WARNING',
-              message:
-                'Missing typescript definition.Typings will not be uploaded!',
+              message: 'Missing typescript definition.Typings will not be uploaded!',
             },
           });
           return Promise.resolve(this.initIpfsModule);
@@ -245,23 +216,15 @@ Error loading file ${filePath}
       tap(res => {
         ipfsTypings = res;
         if (ipfsTypings[0].hash) {
-          this.logger.log(
-            `Typescript definitions added to IPFS! Adding module configuration...\n`
-          );
+          this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`);
         }
       }),
-      switchMap(() =>
-        this.fileService.readFilePromisifyFallback(
-          `${folder}/${outputConfigName}`
-        )
-      ),
+      switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${outputConfigName}`)),
       switchMap(async (d: string) => {
         try {
           dag = JSON.parse(d);
         } catch (e) {
-          throw new Error(
-            `Cannot parse ${outputConfigName} from root directory!`
-          );
+          throw new Error(`Cannot parse ${outputConfigName} from root directory!`);
         }
         currentModule = {
           name: namespace,
@@ -287,56 +250,35 @@ Error loading file ${filePath}
           dependencies?: string[];
           ipfs?: { provider: string; dependencies: string[] }[];
         } = { ipfs: [] };
-        if (
-          await this.internalFileService.statAsync(
-            `${folder}/${outputConfigName}`
-          )
-        ) {
-          this.logger.log(
-            `Reactive file present ${outputConfigName} package dependencies will be taken from it`
-          );
+        if (await this.internalFileService.statAsync(`${folder}/${outputConfigName}`)) {
+          this.logger.log(`Reactive file present ${outputConfigName} package dependencies will be taken from it`);
           try {
-            f = JSON.parse(
-              await this.fileService.readFile(`${folder}/${outputConfigName}`)
-            );
+            f = JSON.parse(await this.fileService.readFile(`${folder}/${outputConfigName}`));
           } catch (e) {
-            throw new Error(
-              `Cannot parce reactive file at ${folder}/${outputConfigName}`
-            );
+            throw new Error(`Cannot parce reactive file at ${folder}/${outputConfigName}`);
           }
           if (f.dependencies) {
             currentModule.dependencies = f.dependencies;
           }
           const dependencies: string[] = [];
           if (f.ipfs && f.ipfs.length) {
-            f.ipfs.forEach(p =>
-              p.dependencies.forEach(d => dependencies.push(d))
-            );
+            f.ipfs.forEach(p => p.dependencies.forEach(d => dependencies.push(d)));
             if (dependencies.length) {
               currentModule.dependencies = dependencies;
             }
           }
         }
-        this.logger.log(
-          `Current module before deploy ${JSON.stringify(currentModule)}`
-        );
+        this.logger.log(`Current module before deploy ${JSON.stringify(currentModule)}`);
         if (includes('--collect-packages')) {
-          const packages = await this.packageJsonService.prepareDependencies(
-            `${folder}/package.json`
-          );
+          const packages = await this.packageJsonService.prepareDependencies(`${folder}/package.json`);
           if (packages.length) {
             currentModule.packages = packages;
           }
         }
         let htmlFile: string;
         if (includes('--html')) {
-          await this.parcelBundler.prepareBundler(
-            nextOrDefault('--html', ''),
-            'index'
-          );
-          htmlFile = await this.fileService.readFile(
-            nextOrDefault('--html', '')
-          );
+          await this.parcelBundler.prepareBundler(nextOrDefault('--html', ''), 'index');
+          htmlFile = await this.fileService.readFile(nextOrDefault('--html', ''));
         }
         ipfsModule = await this.ipfsFile.addFile(
           `
@@ -357,17 +299,11 @@ Error loading file ${filePath}
         if (currentModule.previous.length >= 20) {
           currentModule.previous.shift();
         }
-        currentModule.previous = [
-          ...currentModule.previous,
-          ipfsModule[1].hash,
-        ];
+        currentModule.previous = [...currentModule.previous, ipfsModule[1].hash];
         if (f.ipfs) {
           currentModule.ipfs = f.ipfs;
         }
-        await this.fileUserService.writeDag(
-          `${folder}/${outputConfigName}`,
-          JSON.stringify(currentModule, null, 2)
-        );
+        await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
         // this.integrityCheck(dag, ipfsFile, ipfsTypings);
         return ipfsModule;
@@ -416,22 +352,13 @@ Error loading file ${filePath}
         if (!ipfsModule) {
           this.fileNotAddedToIpfs(ipfsModule);
         }
-        console.log(
-          '' + this.tableService.previewsVersions(currentModule.previous)
-        );
-        console.log(
-          '' + this.tableService.previewsNext(currentModule.previous)
-        );
-        console.log(
-          '' + this.tableService.endInstallCommand(ipfsModule[1].hash)
-        );
-        console.log(
-          '' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule)
-        );
+        console.log('' + this.tableService.previewsVersions(currentModule.previous));
+        console.log('' + this.tableService.previewsNext(currentModule.previous));
+        console.log('' + this.tableService.endInstallCommand(ipfsModule[1].hash));
+        console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundle finished' });
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: `Ipfs file can be found at ${ipfsModule[1].hash}` });
-        const returnItemByIndex = (i: number) =>
-          currentModule.previous[currentModule.previous.length - i];
+        const returnItemByIndex = (i: number) => currentModule.previous[currentModule.previous.length - i];
         await this.showError(returnItemByIndex(2), returnItemByIndex(1));
       })
     );
@@ -439,14 +366,11 @@ Error loading file ${filePath}
 
   fileNotAddedToIpfs(file: IPFSFile[]) {
     console.log(`File not added to ipfs for ${JSON.stringify(file)}`);
-    console.log(
-      `More info can be found executing command: rxdi-deploy --find ${file[0].hash}`
-    );
+    console.log(`More info can be found executing command: rxdi-deploy --find ${file[0].hash}`);
   }
 
   integrityCheck(dag: DagModel, file: IPFSFile[], typings: IPFSFile[]) {
-    const genericIntegrityError =
-      'Integrity is same like in the previews version!';
+    const genericIntegrityError = 'Integrity is same like in the previews version!';
     console.log(dag.module, file[0].hash);
     if (dag.module === file[0].hash) {
       this.logger.log(`
@@ -506,9 +430,7 @@ Error loading file ${filePath}
   }
   logSuccess(res) {
     // this.logger.log(`Success deploying module! Package added to IPFS: ${JSON.stringify(res, null, 4)}`);
-    console.log(
-      `Deploy finish ipfs node will shutdown in: ${this.resolutionTime} seconds`
-    );
+    console.log(`Deploy finish ipfs node will shutdown in: ${this.resolutionTime} seconds`);
   }
 
   completeBuildAndAddToIpfs2(namespace: string = '@gapi/core') {
@@ -532,32 +454,14 @@ export class Pesho {
       )
     ).pipe(
       switchMap(() =>
-        from(
-          this.fileUserService.writeFile(
-            this.tsConfigGenerator.getTsConfig(fileName),
-            'tsconfig.json',
-            namespace
-          )
-        )
+        from(this.fileUserService.writeFile(this.tsConfigGenerator.getTsConfig(fileName), 'tsconfig.json', namespace))
       ),
-      switchMap(() =>
-        from(
-          this.parcelBundler.prepareBundler(
-            `./build/${namespace}/${fileName}.ts`
-          )
-        )
-      ),
+      switchMap(() => from(this.parcelBundler.prepareBundler(`./build/${namespace}/${fileName}.ts`))),
       switchMap(() => this.fileService.readFile(`./build/${fileName}.js`)),
       switchMap((res: string) => this.ipfsFile.addFile(res)),
       tap(res => (ipfsFile = res)),
       switchMap(() =>
-        from(
-          this.typingsGenerator.mergeTypings(
-            namespace,
-            `./build/${namespace}`,
-            './build/index.d.ts'
-          )
-        )
+        from(this.typingsGenerator.mergeTypings(namespace, `./build/${namespace}`, './build/index.d.ts'))
       ),
       switchMap(() => of(ipfsFile))
     );
@@ -605,27 +509,15 @@ export class Pesho {
         this.logger.log(`Commit message added...\n`);
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Commit message added' });
       }),
-      switchMap(() =>
-        this.fileService.readFile(
-          `${folder}/${buildFolder}/${file.split('.')[0]}.js`
-        )
-      ),
+      switchMap(() => this.fileService.readFile(`${folder}/${buildFolder}/${file.split('.')[0]}.js`)),
       tap(() => {
-        this.logger.log(
-          `Reading bundle ${folder}/${buildFolder}/${
-            file.split('.')[0]
-          }.js finished!\n`
-        );
+        this.logger.log(`Reading bundle ${folder}/${buildFolder}/${file.split('.')[0]}.js finished!\n`);
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Reading bundle finished' });
       }),
       switchMap((res: string) => this.ipfsFile.addFile(res)),
       tap(res => {
         ipfsFile = res;
-        this.logger.log(
-          `Bundle added to ipfs ${folder}/${buildFolder}/${
-            file.split('.')[0]
-          }.js\n`
-        );
+        this.logger.log(`Bundle added to ipfs ${folder}/${buildFolder}/${file.split('.')[0]}.js\n`);
         this.logger.log(`Typescript definitions merge started!\n`);
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Typescript definitions merge starte' });
       }),
@@ -633,29 +525,14 @@ export class Pesho {
         from(
           this.typingsGenerator.mergeTypings(
             namespace,
-            normalize(
-              folder +
-                filePathFromRepo
-                  .substring(0, filePathFromRepo.lastIndexOf('/'))
-                  .replace('.', '')
-            ),
+            normalize(folder + filePathFromRepo.substring(0, filePathFromRepo.lastIndexOf('/')).replace('.', '')),
             normalize(`${folder}/${buildFolder}/index.d.ts`)
           )
         )
       ),
-      tap(() =>
-        this.logger.log(
-          `Typescript definitions merge finished! Reading file...\n`
-        )
-      ),
-      switchMap(() =>
-        this.fileService.readFile(`${folder}/${buildFolder}/index.d.ts`)
-      ),
-      tap(() =>
-        this.logger.log(
-          `Typescript definitions read finished! Adding to IPFS...\n`
-        )
-      ),
+      tap(() => this.logger.log(`Typescript definitions merge finished! Reading file...\n`)),
+      switchMap(() => this.fileService.readFile(`${folder}/${buildFolder}/index.d.ts`)),
+      tap(() => this.logger.log(`Typescript definitions read finished! Adding to IPFS...\n`)),
       switchMap((res: string) => {
         if (!!res) {
           return this.ipfsFile.addFile(res);
@@ -663,8 +540,7 @@ export class Pesho {
           this.statusService.setBuildStatus({
             typings: {
               status: 'WARNING',
-              message:
-                'Missing typescript definition.Typings will not be uploaded!',
+              message: 'Missing typescript definition.Typings will not be uploaded!',
             },
           });
           return Promise.resolve(this.initIpfsModule);
@@ -673,23 +549,15 @@ export class Pesho {
       tap(res => {
         ipfsTypings = res;
         if (ipfsTypings[0].hash) {
-          this.logger.log(
-            `Typescript definitions added to IPFS! Adding module configuration...\n`
-          );
+          this.logger.log(`Typescript definitions added to IPFS! Adding module configuration...\n`);
         }
       }),
-      switchMap(() =>
-        this.fileService.readFilePromisifyFallback(
-          `${folder}/${outputConfigName}`
-        )
-      ),
+      switchMap(() => this.fileService.readFilePromisifyFallback(`${folder}/${outputConfigName}`)),
       switchMap(async (d: string) => {
         try {
           dag = JSON.parse(d);
         } catch (e) {
-          throw new Error(
-            `Cannot parse ${outputConfigName} from root directory!`
-          );
+          throw new Error(`Cannot parse ${outputConfigName} from root directory!`);
         }
         currentModule = {
           name: namespace,
@@ -715,43 +583,27 @@ export class Pesho {
           dependencies?: string[];
           ipfs?: { provider: string; dependencies: string[] }[];
         } = { ipfs: [] };
-        if (
-          await this.internalFileService.statAsync(
-            `${folder}/${outputConfigName}`
-          )
-        ) {
-          this.logger.log(
-            `Reactive file present ${outputConfigName} package dependencies will be taken from it`
-          );
+        if (await this.internalFileService.statAsync(`${folder}/${outputConfigName}`)) {
+          this.logger.log(`Reactive file present ${outputConfigName} package dependencies will be taken from it`);
           try {
-            f = JSON.parse(
-              await this.fileService.readFile(`${folder}/${outputConfigName}`)
-            );
+            f = JSON.parse(await this.fileService.readFile(`${folder}/${outputConfigName}`));
           } catch (e) {
-            throw new Error(
-              `Cannot parce reactive file at ${folder}/${outputConfigName}`
-            );
+            throw new Error(`Cannot parce reactive file at ${folder}/${outputConfigName}`);
           }
           if (f.dependencies) {
             currentModule.dependencies = f.dependencies;
           }
           const dependencies: string[] = [];
           if (f.ipfs && f.ipfs.length) {
-            f.ipfs.forEach(p =>
-              p.dependencies.forEach(d => dependencies.push(d))
-            );
+            f.ipfs.forEach(p => p.dependencies.forEach(d => dependencies.push(d)));
             if (dependencies.length) {
               currentModule.dependencies = dependencies;
             }
           }
         }
-        this.logger.log(
-          `Current module before deploy ${JSON.stringify(currentModule)}`
-        );
+        this.logger.log(`Current module before deploy ${JSON.stringify(currentModule)}`);
         if (includes('--collect-packages')) {
-          const packages = await this.packageJsonService.prepareDependencies(
-            `${folder}/package.json`
-          );
+          const packages = await this.packageJsonService.prepareDependencies(`${folder}/package.json`);
           if (packages.length) {
             currentModule.packages = packages;
           }
@@ -759,13 +611,8 @@ export class Pesho {
 
         let htmlFile: string;
         if (includes('--html')) {
-          await this.parcelBundler.prepareBundler(
-            nextOrDefault('--html', ''),
-            'index'
-          );
-          htmlFile = await this.fileService.readFile(
-            nextOrDefault('--html', '')
-          );
+          await this.parcelBundler.prepareBundler(nextOrDefault('--html', ''), 'index');
+          htmlFile = await this.fileService.readFile(nextOrDefault('--html', ''));
         }
         ipfsModule = await this.ipfsFile.addFile(
           `
@@ -785,17 +632,11 @@ export class Pesho {
         if (currentModule.previous.length >= 20) {
           currentModule.previous.shift();
         }
-        currentModule.previous = [
-          ...currentModule.previous,
-          ipfsModule[0].hash,
-        ];
+        currentModule.previous = [...currentModule.previous, ipfsModule[0].hash];
         if (f.ipfs) {
           currentModule.ipfs = f.ipfs;
         }
-        await this.fileUserService.writeDag(
-          `${folder}/${outputConfigName}`,
-          JSON.stringify(currentModule, null, 2)
-        );
+        await this.fileUserService.writeDag(`${folder}/${outputConfigName}`, JSON.stringify(currentModule, null, 2));
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Dag written' });
         // this.integrityCheck(dag, ipfsFile, ipfsTypings);
         return ipfsModule;
@@ -844,22 +685,13 @@ export class Pesho {
         if (!ipfsModule) {
           this.fileNotAddedToIpfs(ipfsModule);
         }
-        console.log(
-          '' + this.tableService.previewsVersions(currentModule.previous)
-        );
-        console.log(
-          '' + this.tableService.previewsNext(currentModule.previous)
-        );
-        console.log(
-          '' + this.tableService.endInstallCommand(ipfsModule[0].hash)
-        );
-        console.log(
-          '' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule)
-        );
+        console.log('' + this.tableService.previewsVersions(currentModule.previous));
+        console.log('' + this.tableService.previewsNext(currentModule.previous));
+        console.log('' + this.tableService.endInstallCommand(ipfsModule[0].hash));
+        console.log('' + this.tableService.createTable(ipfsFile, ipfsTypings, ipfsModule));
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Bundle finished' });
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: `Ipfs file can be found at ${ipfsModule[0].hash}` });
-        const returnItemByIndex = (i: number) =>
-          currentModule.previous[currentModule.previous.length - i];
+        const returnItemByIndex = (i: number) => currentModule.previous[currentModule.previous.length - i];
         await this.showError(returnItemByIndex(2), returnItemByIndex(1));
       })
     );

@@ -1,16 +1,9 @@
 import { Injectable, Inject } from '@rxdi/core';
-import {
-  __TRANSACTIONS_DATABASE,
-  __HOME_DIR,
-} from '../../../../../env.injection.tokens';
+import { __TRANSACTIONS_DATABASE, __HOME_DIR } from '../../../../../env.injection.tokens';
 import { ITransactionType } from '../../../../core/api-introspection/index';
 import { CompileService } from '../../../services/compile.service';
 import { PubSubService } from '@gapi/core';
-import {
-  TsConfigGenratorService,
-  LoggerService,
-  FileService as AppFileService,
-} from '../../../..//services';
+import { TsConfigGenratorService, LoggerService, FileService as AppFileService } from '../../../..//services';
 import { FileService } from '../../../file/services/file.service';
 import { format, promisify } from 'util';
 import { createWriteStream, exists, readFile, writeFile } from 'fs';
@@ -41,11 +34,7 @@ export class TransactionService {
     });
   }
 
-  getTransactionByPath(
-    path: string,
-    repoFolder: string,
-    payload?: ITransactionType
-  ) {
+  getTransactionByPath(path: string, repoFolder: string, payload?: ITransactionType) {
     return new Promise((resolve, reject) => {
       this.transaction.findOne({ path, repoFolder }, (e, d) => {
         if (e) {
@@ -56,10 +45,7 @@ export class TransactionService {
     });
   }
 
-  getTransactionByRepo(
-    repoFolder: string,
-    payload: ITransactionType = {} as any
-  ) {
+  getTransactionByRepo(repoFolder: string, payload: ITransactionType = {} as any) {
     return new Promise((resolve, reject) => {
       this.transaction.findOne({ repoFolder, ...payload }, (e, d) => {
         if (e) {
@@ -85,11 +71,7 @@ export class TransactionService {
           reject(e);
         }
         try {
-          await this.fileService.copyTransactionFiles(
-            d._id,
-            d.repoFolder,
-            d.path
-          );
+          await this.fileService.copyTransactionFiles(d._id, d.repoFolder, d.path);
         } catch (e) {
           return reject(e);
         }
@@ -99,20 +81,11 @@ export class TransactionService {
   }
 
   async checkout(doc: ITransactionType): Promise<number> {
-    const transaction = (await this.getTransactionByPath(
-      doc.path,
-      doc.repoFolder
-    )) as ITransactionType;
+    const transaction = (await this.getTransactionByPath(doc.path, doc.repoFolder)) as ITransactionType;
     if (!transaction) {
       throw new Error(`Transaction doesn't exist ${doc.path}`);
     }
-    await this.fileService
-      .removeTransaction(
-        transaction._id,
-        transaction.repoFolder,
-        transaction.path
-      )
-      .toPromise();
+    await this.fileService.removeTransaction(transaction._id, transaction.repoFolder, transaction.path).toPromise();
     return await new Promise((resolve, reject) => {
       this.transaction.remove(transaction, (e, d) => {
         if (e) {
@@ -134,14 +107,9 @@ export class TransactionService {
     });
   }
 
-  async commit({
-    repoFolder,
-    message,
-  }: ITransactionType): Promise<ITransactionType> {
+  async commit({ repoFolder, message }: ITransactionType): Promise<ITransactionType> {
     console.log(repoFolder, message);
-    const transaction = (await this.getTransactionByRepo(
-      repoFolder
-    )) as ITransactionType;
+    const transaction = (await this.getTransactionByRepo(repoFolder)) as ITransactionType;
     if (!transaction) {
       throw new Error(`Transaction doesn't exist ${repoFolder}`);
     }
@@ -155,19 +123,13 @@ export class TransactionService {
     return transaction;
   }
 
-  private deploy(
-    transactionId: string,
-    repoFolder: string,
-    fileName: string,
-    message: string,
-    namespace: string
-  ) {
+  private deploy(transactionId: string, repoFolder: string, fileName: string, message: string, namespace: string) {
     // const { folder, file, message, namespace, buildFolder } = {} as any;
-    const {
-      filename,
-      transactionFolder,
-      filePath,
-    } = this.fileService.prepareCopyData(transactionId, repoFolder, fileName);
+    const { filename, transactionFolder, filePath } = this.fileService.prepareCopyData(
+      transactionId,
+      repoFolder,
+      fileName
+    );
     return new Promise(async (resolve, reject) => {
       await this.appFileService.writeFile(
         filePath + '/tsconfig.json',
@@ -181,8 +143,8 @@ export class TransactionService {
           })
         );
         if (packageJson.browserslist && packageJson.browserslist.length) {
-          const isExistsLatestChrome = packageJson.browserslist.find(
-            (item: string) => item.includes('last 1 chrome versions')
+          const isExistsLatestChrome = packageJson.browserslist.find((item: string) =>
+            item.includes('last 1 chrome versions')
           );
           if (!isExistsLatestChrome) {
             packageJson.browserslist.push('last 1 chrome versions');
@@ -190,21 +152,12 @@ export class TransactionService {
         } else {
           packageJson.browserslist.push('last 1 chrome versions');
         }
-        await promisify(writeFile)(
-          join(filePath, 'package.json'),
-          JSON.stringify(packageJson)
-        );
+        await promisify(writeFile)(join(filePath, 'package.json'), JSON.stringify(packageJson));
       } else {
-        await this.appFileService.writeFile(
-          filePath + '/package.json',
-          this.tsGenerator.getPackageJson()
-        );
+        await this.appFileService.writeFile(filePath + '/package.json', this.tsGenerator.getPackageJson());
       }
 
-      const log_file = createWriteStream(
-        `${transactionFolder}/${filename}.log`,
-        { flags: 'w' }
-      );
+      const log_file = createWriteStream(`${transactionFolder}/${filename}.log`, { flags: 'w' });
       const subscription = this.loggerService.stdout.subscribe(log => {
         log_file.write(format(log) + '\n');
         this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: format(log) });
@@ -215,28 +168,20 @@ export class TransactionService {
         log_file.close();
         sub.unsubscribe();
       };
-      sub = this.compileService
-        .pushTransaction(
-          transactionFolder,
-          fileName,
-          message,
-          namespace,
-          'build'
-        )
-        .subscribe(
-          ({ module }: { module: IPFSFile }) => {
-            resolve({
-              message,
-              _id: transactionId,
-              hash: module.hash,
-            });
-            cancelSubscription();
-          },
-          e => {
-            cancelSubscription();
-            reject(e || 'Build failed');
-          }
-        );
+      sub = this.compileService.pushTransaction(transactionFolder, fileName, message, namespace, 'build').subscribe(
+        ({ module }: { module: IPFSFile }) => {
+          resolve({
+            message,
+            _id: transactionId,
+            hash: module.hash,
+          });
+          cancelSubscription();
+        },
+        e => {
+          cancelSubscription();
+          reject(e || 'Build failed');
+        }
+      );
     });
   }
 

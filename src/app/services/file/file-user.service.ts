@@ -11,18 +11,13 @@ export class FileUserService {
 
   async writeFile(file: string, fileName: string, namespace: string) {
     return await new Promise(async (resolve, reject) => {
-      this.fileService
-        .ensureDir(`${this.parcelBuildDir}/${namespace}`)
-        .subscribe(
-          async () => {
-            await this.fileService.writeFile(
-              `${this.parcelBuildDir}/${namespace}/${fileName}`,
-              file
-            );
-            resolve(true);
-          },
-          e => reject(e)
-        );
+      this.fileService.ensureDir(`${this.parcelBuildDir}/${namespace}`).subscribe(
+        async () => {
+          await this.fileService.writeFile(`${this.parcelBuildDir}/${namespace}/${fileName}`, file);
+          resolve(true);
+        },
+        e => reject(e)
+      );
     });
   }
 

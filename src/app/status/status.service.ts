@@ -1,8 +1,5 @@
 import { Service, Inject } from '@rxdi/core';
-import {
-  FILE_DEPLOYMENT_STATUS,
-  FILE_DEPLOYMENT_STATUS_INTERFACE,
-} from './status-injection.tokens';
+import { FILE_DEPLOYMENT_STATUS, FILE_DEPLOYMENT_STATUS_INTERFACE } from './status-injection.tokens';
 
 @Service()
 export class StatusService {

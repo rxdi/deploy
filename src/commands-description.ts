@@ -4,8 +4,7 @@ export const CommandDescription = {
   '--file': 'Pass file path after this argument',
   '--namespace': `How this module will be named ? Later when you install it you can use it as follow import { MyModule } from '@mynamespace'`,
   '--beat': `How many seconds the application should stay after deploy recomended 20 seconds so file will be distributed accross the network`,
-  '--html':
-    'Pass your html file this will override module and will injet your html before metadata',
+  '--html': 'Pass your html file this will override module and will injet your html before metadata',
   '--html-message':
     'Pass your html file this will override --message or 3-th argument message and you can put whole html',
   '--webui': `Will spawn web ui with many settings, history, last deployed module etc. can be passed with --open-browser argument`,
@@ -23,8 +22,7 @@ export const CommandDescription = {
   '--ipfs-swarms': `These are the swarms for the Ipfs daemon passing them with comma separated example: --ipfs-swarms /ip4/0.0.0.0/tcp/4001,/ip6/::/tcp/4001, etc...`,
   '--deployer-config-name': `This is default reactive.json filename you can change with other but in this moment is not tested very well`,
   '--graphiql': `Open GraphiQL dev screen`,
-  '--open-browser-graphiql':
-    'Open browser for development purposes with Graphiql Dev tools',
+  '--open-browser-graphiql': 'Open browser for development purposes with Graphiql Dev tools',
   '--webui-server-watcher':
     'If this argument passed we can spawn our server watcher so we can manage syncronization with UI and passing data from the rxdi-deploy server',
   '--webui-server-watcher-port':
@@ -37,13 +35,11 @@ export const CommandDescription = {
   '--graphql-server-only':
     'This argument will start also graphql web server so you can start making queries and interact with deployer only via API',
   '--graphiql-endpoint': `Endpoint for Graphiql development tools`,
-  '--graphql-api-port':
-    'Development server api port is random, if not set --random-port will default to: 9300',
+  '--graphql-api-port': 'Development server api port is random, if not set --random-port will default to: 9300',
   '--random-port':
     'This parameter will set random port to Graphql Server if for example you dont have the port avalable',
   '--disable-package-collection': `Disable collecting dependencies from package.json`,
-  '--collect-packages':
-    'Collect dependencies from package.json and transfer it to reactive.json',
+  '--collect-packages': 'Collect dependencies from package.json and transfer it to reactive.json',
   '--help': `This help suite :)`,
   '--server-push-interval':
     'Interval for server push service this is how fast the data will update by default is 7 seconds',

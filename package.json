@@ -45,7 +45,8 @@
     "@types/mongoose": "^5.5.17",
     "@types/nedb": "^1.8.6",
     "@types/node": "10.10.2",
-    "parcel-plugin-shebang": "^1.2.3"
+    "parcel-plugin-shebang": "^1.2.3",
+    "prettier": "1.18.2"
   },
   "types": "./dist/main.d.ts",
   "module": "./dist/main.js",

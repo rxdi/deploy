@@ -39,11 +39,7 @@ export class PackageJsonService {
   }
 
   async read(path?: string) {
-    return JSON.parse(
-      await this.fileService.readFile(
-        path || `${process.cwd()}/${this.defaultOutputConfig}`
-      )
-    );
+    return JSON.parse(await this.fileService.readFile(path || `${process.cwd()}/${this.defaultOutputConfig}`));
   }
 
   async write(data, path?: string) {

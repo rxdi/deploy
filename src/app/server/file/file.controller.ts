@@ -8,10 +8,7 @@ import { includes } from '../../services';
 
 @Controller()
 export class FileController {
-  constructor(
-    private fileServiceInternal: InternalFileService,
-    private fileService: FileService
-  ) {}
+  constructor(private fileServiceInternal: InternalFileService, private fileService: FileService) {}
 
   @Type(FileType)
   @Query({
@@ -47,8 +44,7 @@ export class FileController {
       filePath = process.cwd() + folder;
     }
     const extension = filePath.split('.').pop();
-    const isImage =
-      extension === 'jpg' || extension === 'jpeg' || extension === 'png';
+    const isImage = extension === 'jpg' || extension === 'jpeg' || extension === 'png';
     let file = await this.fileService.readFile(filePath);
     if (isImage) {
       file = (await this.fileService.readFileRaw(filePath)).toString('base64');

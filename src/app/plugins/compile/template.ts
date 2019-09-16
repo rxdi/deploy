@@ -1,10 +1,6 @@
 import { DagModel } from '../../../env.injection.tokens';
 
-export const templateHtml = (
-  currentModule: DagModel,
-  link: string,
-  containerName: string = 'container'
-) => `
+export const templateHtml = (currentModule: DagModel, link: string, containerName: string = 'container') => `
 <!DOCTYPE html>
 <div id="meta-rxdi-ipfs-module" style="visibility:hidden;z-index:-10000;position:absolute;">
 <!--meta-rxdi-ipfs-module-->

@@ -10,13 +10,9 @@ export class GapiFrameworkImports {
       imports = [
         CoreModule.forRoot({
           server: {
-            randomPort: !process.env.RANDOM_PORT
-              ? nextOrDefault('--random-port', false, Boolean)
-              : false,
+            randomPort: !process.env.RANDOM_PORT ? nextOrDefault('--random-port', false, Boolean) : false,
             hapi: {
-              port: process.env.API_PORT
-                ? process.env.API_PORT
-                : nextOrDefault('--graphql-api-port', 9300, Number),
+              port: process.env.API_PORT ? process.env.API_PORT : nextOrDefault('--graphql-api-port', 9300, Number),
               routes: {
                 cors: {
                   origin: ['*'],
@@ -48,10 +44,7 @@ export class GapiFrameworkImports {
             graphiQlPath: nextOrDefault('--graphiql-endpoint', '/graphiql'),
             graphiqlOptions: {
               endpointURL: nextOrDefault('--graphql-endpoint', '/graphql'),
-              passHeader: `'Authorization':'${nextOrDefault(
-                '--graphiql-auth-token',
-                ''
-              )}'`,
+              passHeader: `'Authorization':'${nextOrDefault('--graphiql-auth-token', '')}'`,
               subscriptionsEndpoint: nextOrDefault(
                 '--graphiql-subscription-endpoint',
                 'ws://localhost:9300/subscriptions'

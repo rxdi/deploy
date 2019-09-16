@@ -1,9 +1,6 @@
 import { Service, Inject } from '@rxdi/core';
 import { Observable } from 'rxjs';
-import {
-  __PREVIWS_DATABASE,
-  PreviousModel,
-} from '../../../env.injection.tokens';
+import { __PREVIWS_DATABASE, PreviousModel } from '../../../env.injection.tokens';
 
 @Service()
 export class PreviousService {

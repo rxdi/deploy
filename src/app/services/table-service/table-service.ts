@@ -66,11 +66,7 @@ export class TableService {
       `${provider}${m[1].hash}`,
     ];
 
-    if (
-      FileStatus.status !== 'SUCCESS' ||
-      TypingsStatus.status !== 'SUCCESS' ||
-      ModuleStatus.status !== 'SUCCESS'
-    ) {
+    if (FileStatus.status !== 'SUCCESS' || TypingsStatus.status !== 'SUCCESS' || ModuleStatus.status !== 'SUCCESS') {
       columns.push('Errors');
       width = [4, '6%', '6%', '8%', '40%', '38%'];
     }
@@ -159,11 +155,7 @@ export class TableService {
       }
     );
 
-    if (
-      FileStatus.status !== 'SUCCESS' ||
-      TypingsStatus.status !== 'SUCCESS' ||
-      ModuleStatus.status !== 'SUCCESS'
-    ) {
+    if (FileStatus.status !== 'SUCCESS' || TypingsStatus.status !== 'SUCCESS' || ModuleStatus.status !== 'SUCCESS') {
       t.attrRange(
         { column: [5, 6] },
         {
@@ -346,9 +338,7 @@ export class TableService {
 
     t.push(['File upload status']);
     t.push([`\File size: ${file[0].size} bytes`]);
-    t.push([
-      `\IPFS address: ${this.fileIpfsService.providers.ipfsOriginal}${file[0].hash}`,
-    ]);
+    t.push([`\IPFS address: ${this.fileIpfsService.providers.ipfsOriginal}${file[0].hash}`]);
 
     t.attrRange(
       { row: [0, 1] },

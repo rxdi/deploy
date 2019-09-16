@@ -1,9 +1,6 @@
 import { Service, Inject } from '@rxdi/core';
 import { Observable } from 'rxjs';
-import {
-  __BUILD_HISTORY_DATABASE,
-  DagModel,
-} from '../../../env.injection.tokens';
+import { __BUILD_HISTORY_DATABASE, DagModel } from '../../../env.injection.tokens';
 import { IHistoryType } from '../../core/api-introspection';
 
 @Service()
@@ -32,12 +29,7 @@ export class BuildHistoryService {
     });
   }
 
-  findAll(
-    skip: number = 0,
-    limit: number = 100,
-    sort = { createdAt: -1 },
-    where = {}
-  ): Promise<IHistoryType[]> {
+  findAll(skip: number = 0, limit: number = 100, sort = { createdAt: -1 }, where = {}): Promise<IHistoryType[]> {
     return new Promise((resolve, reject) => {
       this.buildHistoryDatabase
         .find(where)

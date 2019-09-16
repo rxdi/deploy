@@ -40,9 +40,7 @@ export class FileIpfsService {
 
     // this.logger.log(`\nLocal: http://${this.nodeInfo.gatewayHost}:${this.nodeInfo.gatewayPort}/ipfs/${ipfsFile[0].hash}`);
     // this.logger.log(`\nInfura: ${providers.infura}${ipfsFile[0].hash}`);
-    this.logger.log(
-      `\Cloudflare: ${this.providers.cloudflare}${ipfsFile[0].hash}`
-    );
+    this.logger.log(`\Cloudflare: ${this.providers.cloudflare}${ipfsFile[0].hash}`);
     // this.logger.log(`\nIpfs: ${providers.ipfsOriginal}${ipfsFile[0].hash}`);
 
     return ipfsFile;
@@ -81,10 +79,7 @@ export class FileIpfsService {
   }
   async wait(ipfsFile: IPFSFile[]) {
     return await new Promise((resolve, reject) =>
-      this.ping(ipfsFile[0].hash).subscribe(
-        stream => resolve(stream),
-        e => reject(e)
-      )
+      this.ping(ipfsFile[0].hash).subscribe(stream => resolve(stream), e => reject(e))
     );
   }
 

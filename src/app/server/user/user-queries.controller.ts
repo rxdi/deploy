@@ -1,11 +1,5 @@
 import { Controller } from '@rxdi/core';
-import {
-  Type,
-  Query,
-  Subscription,
-  Subscribe,
-  PubSubService,
-} from '@gapi/core';
+import { Type, Query, Subscription, Subscribe, PubSubService } from '@gapi/core';
 import { GraphQLString } from 'graphql';
 import { UserType } from './types/user.type';
 
@@ -26,9 +20,7 @@ export class UserQueriesController {
   }
 
   @Type(UserType)
-  @Subscribe((self: UserQueriesController) =>
-    self.pubsub.asyncIterator('CREATE_SIGNAL_BASIC')
-  )
+  @Subscribe((self: UserQueriesController) => self.pubsub.asyncIterator('CREATE_SIGNAL_BASIC'))
   @Subscription()
   subscribeToUserMessagesBasic({ message }: { message: string }) {
     return { message };

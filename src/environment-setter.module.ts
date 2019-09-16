@@ -116,12 +116,7 @@ import { unlinkSync } from 'fs';
         if (includes('--file')) {
           return nextOrDefault('--file', '');
         }
-        if (
-          args[0] &&
-          args[0].includes('--') &&
-          args[0] &&
-          !args[0].match(/[^\\]*\.(\w+)$/)
-        ) {
+        if (args[0] && args[0].includes('--') && args[0] && !args[0].match(/[^\\]*\.(\w+)$/)) {
           return './index.ts';
         }
         return args[0] || './index.ts';
@@ -148,16 +143,13 @@ import { unlinkSync } from 'fs';
     {
       provide: __FOLDER,
       deps: [__FILE_PATH],
-      useFactory: (filePath: __FILE_PATH) =>
-        filePath.substring(0, filePath.lastIndexOf('/')),
+      useFactory: (filePath: __FILE_PATH) => filePath.substring(0, filePath.lastIndexOf('/')),
     },
     {
       provide: __FILE_EXTENSION,
       deps: [__FILE_PATH],
       useFactory: (filePath: __FILE_PATH) => {
-        return filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)
-          ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0]
-          : 'ts';
+        return filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i) ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0] : 'ts';
       },
     },
     {
@@ -174,30 +166,21 @@ import { unlinkSync } from 'fs';
     },
     {
       provide: __PROCESSING_TIME_FINISH,
-      useFactory: () =>
-        nextOrDefault('--deployer-config-name', 'reactive.json'),
+      useFactory: () => nextOrDefault('--deployer-config-name', 'reactive.json'),
     },
     {
       provide: __PROCESSING_TIME_END,
       deps: [ArgumentsService],
-      useFactory: () =>
-        nextOrDefault('--deployer-config-name', 'reactive.json'),
+      useFactory: () => nextOrDefault('--deployer-config-name', 'reactive.json'),
     },
     {
       provide: __CREATE_HTML_PAGE,
       deps: [ArgumentsService],
-      useFactory: () =>
-        nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>'),
+      useFactory: () => nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>'),
     },
     {
       provide: 'init-ts-config-file',
-      deps: [
-        __GENERATE_TS_CONFIG,
-        __FILE_NAME,
-        __FOLDER,
-        TsConfigGenratorService,
-        FileService,
-      ],
+      deps: [__GENERATE_TS_CONFIG, __FILE_NAME, __FOLDER, TsConfigGenratorService, FileService],
       lazy: true,
       useFactory: async (
         tsConfig: __GENERATE_TS_CONFIG,
@@ -207,10 +190,7 @@ import { unlinkSync } from 'fs';
         fileService: FileService
       ) => {
         if (tsConfig) {
-          await fileService.writeFile(
-            folder + '/tsconfig.json',
-            generator.getTsConfig(fileName.replace('.ts', ''))
-          );
+          await fileService.writeFile(folder + '/tsconfig.json', generator.getTsConfig(fileName.replace('.ts', '')));
         }
         return tsConfig;
       },

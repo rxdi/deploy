@@ -39,9 +39,7 @@ export class FileService {
   }
 
   async readCurrentDirFlat(path: string = '.') {
-    return (await this.readDir(path))
-      .map(file => resolve(path, file))
-      .filter(a => !!a);
+    return (await this.readDir(path)).map(file => resolve(path, file)).filter(a => !!a);
   }
 
   async listFolder(folder: string) {
@@ -136,9 +134,7 @@ export class FileService {
   }
 
   moveFile(filePath: string, newPath?: string) {
-    return from(
-      promisify(rename)(filePath, newPath || `${this.homeDir}/.rxdi/builds`)
-    );
+    return from(promisify(rename)(filePath, newPath || `${this.homeDir}/.rxdi/builds`));
   }
 
   ensureDir(path: string) {
@@ -156,24 +152,10 @@ export class FileService {
   private getFolderFromPath(path: string) {
     return path.substring(0, path.lastIndexOf('/'));
   }
-  async copyTransactionFiles(
-    transactionId: string,
-    repoFolder: string,
-    fileName: string
-  ) {
-    const getJson = (
-      path: string,
-      type: 'package.json' | 'reactive.json' | string
-    ) => `${path}/${type}`;
-    const { saveFolder, originalFilePath, filePath } = this.prepareCopyData(
-      transactionId,
-      repoFolder,
-      fileName
-    );
-    await this.copyFolderRecursive(
-      this.getFolderFromPath(originalFilePath),
-      this.getFolderFromPath(saveFolder)
-    );
+  async copyTransactionFiles(transactionId: string, repoFolder: string, fileName: string) {
+    const getJson = (path: string, type: 'package.json' | 'reactive.json' | string) => `${path}/${type}`;
+    const { saveFolder, originalFilePath, filePath } = this.prepareCopyData(transactionId, repoFolder, fileName);
+    await this.copyFolderRecursive(this.getFolderFromPath(originalFilePath), this.getFolderFromPath(saveFolder));
     const reactiveJsonRepoPath = getJson(repoFolder, 'reactive.json');
     const reactiveJsonFilePath = getJson(filePath, 'reactive.json');
     const mainFile = normalize(getJson(repoFolder, fileName));
@@ -210,16 +192,8 @@ export class FileService {
     };
   }
 
-  removeTransaction(
-    transactionId: string,
-    repoFolder: string,
-    fileName: string
-  ) {
-    const { transactionFolder } = this.prepareCopyData(
-      transactionId,
-      repoFolder,
-      fileName
-    );
+  removeTransaction(transactionId: string, repoFolder: string, fileName: string) {
+    const { transactionFolder } = this.prepareCopyData(transactionId, repoFolder, fileName);
     return from(new Promise(r => rimraf(transactionFolder, r)));
   }
 

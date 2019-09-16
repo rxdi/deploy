@@ -6,16 +6,9 @@ import { __NODE_MODULES } from '../../../env.injection.tokens';
 export class TypescriptDefinitionGeneratorService {
   child: childProcess.ChildProcess;
 
-  constructor(
-    private logger: BootstrapLogger,
-    @Inject(__NODE_MODULES) private node_modules: string
-  ) {}
+  constructor(private logger: BootstrapLogger, @Inject(__NODE_MODULES) private node_modules: string) {}
 
-  private validateEntries(
-    namespace: string,
-    projectPath: string,
-    outPath: string
-  ) {
+  private validateEntries(namespace: string, projectPath: string, outPath: string) {
     if (!projectPath) {
       throw new Error('Missing project path');
     }
@@ -38,9 +31,7 @@ export class TypescriptDefinitionGeneratorService {
         this.child.kill();
       }
       process.env = Object.assign(process.env, {});
-      this.logger.log(
-        'Typescript merging definitions started in child process...\n'
-      );
+      this.logger.log('Typescript merging definitions started in child process...\n');
       this.child = childProcess.spawn(`${this.node_modules}/.bin/rxdi-merge`, [
         '--name',
         namespace,
@@ -50,15 +41,11 @@ export class TypescriptDefinitionGeneratorService {
         outPath,
       ]);
       this.child.stdout.on('data', data => {
-        process.argv.toString().includes('--silent')
-          ? (console.log = () => null)
-          : process.stdout.write(data);
+        process.argv.toString().includes('--silent') ? (console.log = () => null) : process.stdout.write(data);
       });
       this.child.stderr.on('data', data => {
         if (data.toString().includes('Unable to resolve configuration')) {
-          this.logger.log(
-            'If you want rxdi-deploy to create tsconfig.json for you pass parameter --tsconfig'
-          );
+          this.logger.log('If you want rxdi-deploy to create tsconfig.json for you pass parameter --tsconfig');
         }
         reject(process.stdout.write(data));
       });
