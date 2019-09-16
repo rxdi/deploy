@@ -26,7 +26,7 @@ import {
   __CREATE_HTML_PAGE,
   __ROOT_FOLDER,
   __NAMESPACE_DB,
-  __TRANSACTIONS_DATABASE
+  __TRANSACTIONS_DATABASE,
 } from './env.injection.tokens';
 import { TsConfigGenratorService } from './app/services/tsconfig-generator/tsconfig-generator.service';
 import { FileService } from './app/services/file/file.service';
@@ -53,23 +53,23 @@ import { unlinkSync } from 'fs';
           unlinkSync(lockPath);
         } catch (e) {}
         return true;
-      }
+      },
     },
     {
       provide: __DEPLOYER_ARGUMENTS,
-      useFactory: () => process.argv.slice(2)
+      useFactory: () => process.argv.slice(2),
     },
     {
       provide: __NODE_MODULES,
-      useValue: __dirname.replace('dist', '') + '/node_modules'
+      useValue: __dirname.replace('dist', '') + '/node_modules',
     },
     {
       provide: __ROOT_FOLDER,
-      useValue: __dirname.replace('dist', '')
+      useValue: __dirname.replace('dist', ''),
     },
     {
       provide: __HOME_DIR,
-      useValue: homedir()
+      useValue: homedir(),
     },
     {
       provide: __COMMIT_MESSAGE,
@@ -83,31 +83,31 @@ import { unlinkSync } from 'fs';
           return '';
         }
         return args[2] || '';
-      }
+      },
     },
     {
       provide: __PARCEL_BROWSER_BUILD,
-      useFactory: () => includes('--browser')
+      useFactory: () => includes('--browser'),
     },
     {
       provide: __PARCEL_MINIFY,
-      useFactory: () => !includes('--unminify')
+      useFactory: () => !includes('--unminify'),
     },
     {
       provide: __PARCEL_BUILD_OUT_DIR,
-      useFactory: () => nextOrDefault('--out-dir', 'build')
+      useFactory: () => nextOrDefault('--out-dir', 'build'),
     },
     {
       provide: __PARCEL_SETTINGS,
       useFactory: () => ({
         watch: false,
         logLevel: 3,
-        detailedReport: true
-      })
+        detailedReport: true,
+      }),
     },
     {
       provide: __GENERATE_TS_CONFIG,
-      useFactory: (): __GENERATE_TS_CONFIG => includes('--tsconfig')
+      useFactory: (): __GENERATE_TS_CONFIG => includes('--tsconfig'),
     },
     {
       provide: __FILE_PATH,
@@ -125,12 +125,12 @@ import { unlinkSync } from 'fs';
           return './index.ts';
         }
         return args[0] || './index.ts';
-      }
+      },
     },
     {
       provide: __FILE_NAME,
       deps: [__FILE_PATH],
-      useFactory: (filePath: __FILE_PATH) => filePath.split('/').pop()
+      useFactory: (filePath: __FILE_PATH) => filePath.split('/').pop(),
     },
     {
       provide: __NAMESPACE,
@@ -143,13 +143,13 @@ import { unlinkSync } from 'fs';
           return '@rxdi';
         }
         return args[1] || '@rxdi';
-      }
+      },
     },
     {
       provide: __FOLDER,
       deps: [__FILE_PATH],
       useFactory: (filePath: __FILE_PATH) =>
-        filePath.substring(0, filePath.lastIndexOf('/'))
+        filePath.substring(0, filePath.lastIndexOf('/')),
     },
     {
       provide: __FILE_EXTENSION,
@@ -158,34 +158,36 @@ import { unlinkSync } from 'fs';
         return filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)
           ? filePath.match(/\.([0-9a-z]+)(?:[\?#]|$)/i)[0]
           : 'ts';
-      }
+      },
     },
     {
       provide: __IPFS_NODE_RESOLUTION_TIME,
-      useFactory: () => nextOrDefault('--beat', 20, Number)
+      useFactory: () => nextOrDefault('--beat', 20, Number),
     },
     {
       provide: __DEPLOYER_OUTPUT_CONFIG_NAME,
-      useValue: nextOrDefault('--deployer-config-name', 'reactive.json')
+      useValue: nextOrDefault('--deployer-config-name', 'reactive.json'),
     },
     {
       provide: __PROCESSING_TIME_INIT,
-      useFactory: () => Date.now()
+      useFactory: () => Date.now(),
     },
     {
       provide: __PROCESSING_TIME_FINISH,
-      useFactory: () => nextOrDefault('--deployer-config-name', 'reactive.json')
+      useFactory: () =>
+        nextOrDefault('--deployer-config-name', 'reactive.json'),
     },
     {
       provide: __PROCESSING_TIME_END,
       deps: [ArgumentsService],
-      useFactory: () => nextOrDefault('--deployer-config-name', 'reactive.json')
+      useFactory: () =>
+        nextOrDefault('--deployer-config-name', 'reactive.json'),
     },
     {
       provide: __CREATE_HTML_PAGE,
       deps: [ArgumentsService],
       useFactory: () =>
-        nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>')
+        nextOrDefault('--html', '<h1>@rxdi decentralized module</h1>'),
     },
     {
       provide: 'init-ts-config-file',
@@ -194,7 +196,7 @@ import { unlinkSync } from 'fs';
         __FILE_NAME,
         __FOLDER,
         TsConfigGenratorService,
-        FileService
+        FileService,
       ],
       lazy: true,
       useFactory: async (
@@ -211,7 +213,7 @@ import { unlinkSync } from 'fs';
           );
         }
         return tsConfig;
-      }
+      },
     },
     {
       provide: __SETTINGS_DATABASE,
@@ -222,7 +224,7 @@ import { unlinkSync } from 'fs';
           const database = new Datastore({
             filename: `${homeDir}/.rxdi/settings`,
             autoload: true,
-            timestampData: true
+            timestampData: true,
           });
           database.loadDatabase(e => {
             if (e) {
@@ -230,7 +232,7 @@ import { unlinkSync } from 'fs';
             }
             resolve(database);
           });
-        })
+        }),
     },
     {
       provide: __NAMESPACE_DB,
@@ -241,7 +243,7 @@ import { unlinkSync } from 'fs';
           const database = new Datastore({
             filename: `${homeDir}/.rxdi/namespace`,
             autoload: true,
-            timestampData: true
+            timestampData: true,
           });
           database.loadDatabase(e => {
             if (e) {
@@ -249,7 +251,7 @@ import { unlinkSync } from 'fs';
             }
             resolve(database);
           });
-        })
+        }),
     },
     {
       provide: __BUILD_HISTORY_DATABASE,
@@ -260,7 +262,7 @@ import { unlinkSync } from 'fs';
           const database = new Datastore({
             filename: `${homeDir}/.rxdi/history`,
             autoload: true,
-            timestampData: true
+            timestampData: true,
           });
           database.loadDatabase(e => {
             if (e) {
@@ -268,7 +270,7 @@ import { unlinkSync } from 'fs';
             }
             resolve(database);
           });
-        })
+        }),
     },
     {
       provide: __PREVIWS_DATABASE,
@@ -278,7 +280,7 @@ import { unlinkSync } from 'fs';
         new Promise(resolve => {
           const database = new Datastore({
             filename: `${homeDir}/.rxdi/previews`,
-            autoload: true
+            autoload: true,
           });
           database.loadDatabase(e => {
             if (e) {
@@ -286,7 +288,7 @@ import { unlinkSync } from 'fs';
             }
             resolve(database);
           });
-        })
+        }),
     },
     {
       provide: __TRANSACTIONS_DATABASE,
@@ -297,7 +299,7 @@ import { unlinkSync } from 'fs';
           const database = new Datastore({
             filename: `${homeDir}/.rxdi/transactions`,
             autoload: true,
-            timestampData: true
+            timestampData: true,
           });
           database.loadDatabase(e => {
             if (e) {
@@ -305,9 +307,9 @@ import { unlinkSync } from 'fs';
             }
             resolve(database);
           });
-        })
-    }
-  ]
+        }),
+    },
+  ],
 })
 export class EnvironemntSetterModule {}
 

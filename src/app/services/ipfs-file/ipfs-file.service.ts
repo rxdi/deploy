@@ -15,7 +15,7 @@ export class FileIpfsService {
     infura: 'https://ipfs.infura.io/ipfs/',
     cloudflare: 'https://cloudflare-ipfs.com/ipfs/',
     ipfsOriginal: 'https://ipfs.io/ipfs/',
-    thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`
+    thisNode: `http://${this.ipfsDaemonNodeInfo.info.gatewayHost}:${this.ipfsDaemonNodeInfo.info.gatewayPort}/ipfs/`,
   };
   constructor(
     @Inject(IPFS_DAEMON) private ipfsDaemon: { api: FilesAPI },
@@ -23,7 +23,7 @@ export class FileIpfsService {
     private logger: BootstrapLogger
   ) {}
 
-  async addFile(file: string, options?: {path: string; }) {
+  async addFile(file: string, options?: { path: string }) {
     const content = new Readable();
 
     content.push(file);

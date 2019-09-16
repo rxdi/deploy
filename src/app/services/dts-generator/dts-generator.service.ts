@@ -47,7 +47,7 @@ export class TypescriptDefinitionGeneratorService {
         '--project',
         projectPath,
         '--out',
-        outPath
+        outPath,
       ]);
       this.child.stdout.on('data', data => {
         process.argv.toString().includes('--silent')

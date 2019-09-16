@@ -20,7 +20,7 @@ if (includes('--help')) {
     borderStyle: 2,
     horizontalLine: true,
     width: ['20%', '80%'],
-    leftPadding: 1
+    leftPadding: 1,
   });
   t.push(['Command', 'Description']);
   t.push([`\Available arguments are:`]);
@@ -32,7 +32,7 @@ if (includes('--help')) {
     {
       align: 'center',
       color: 'green',
-      bg: 'black'
+      bg: 'black',
     }
   );
   console.log('' + t);
@@ -54,23 +54,23 @@ Container.get(ConfigService).setConfig({
           hashes: false,
           date: true,
           exitHandler: true,
-          fileService: true
-        }
+          fileService: true,
+        },
       }
     : {}),
   init: false,
   initOptions: {
     services: true,
     plugins: true,
-    controllers: true
-  }
+    controllers: true,
+  },
 });
 
 const _FRAMEWORK_IMPORTS = [
   EnvironemntSetterModule,
   GapiFrameworkImports.forRoot(
     includes('--webui') || includes('--graphql-server-only')
-  )
+  ),
 ];
 
 BootstrapFramework(AppModule, _FRAMEWORK_IMPORTS).subscribe(

@@ -9,7 +9,7 @@ import {
   GraphQLInputObjectType,
   Subscribe,
   Subscription,
-  PubSubService
+  PubSubService,
 } from '@gapi/core';
 import { BuildType } from './types/build.type';
 import { CompileService } from '../services/compile.service';
@@ -18,7 +18,7 @@ import {
   BuildHistoryService,
   FileService,
   TsConfigGenratorService,
-  LoggerService
+  LoggerService,
 } from '../../services';
 import { HistoryListType } from '../history/types/history-list.type';
 import { BuildStatusType } from './types/built-status.type';
@@ -41,20 +41,20 @@ export class BuildController {
   @Type(BuildType)
   @Mutation({
     folder: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     file: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     message: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     namespace: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     buildFolder: {
-      type: GraphQLString
-    }
+      type: GraphQLString,
+    },
   })
   async triggerBuild(root, { folder, file, message, namespace, buildFolder }) {
     return new Promise(async (resolve, reject) => {
@@ -64,7 +64,7 @@ export class BuildController {
           this.tsGenerator.getTsConfig(file.replace('.ts', ''))
         );
         const log_file = createWriteStream(`${folder}/${file}.log`, {
-          flags: 'w'
+          flags: 'w',
         });
         const subscription = this.loggerService.stdout.subscribe(log => {
           log_file.write(format(log) + '\n');
@@ -82,7 +82,7 @@ export class BuildController {
             data => {
               resolve({
                 status: 'Finish',
-                ...data
+                ...data,
               });
               cancelSubscription();
             },
@@ -100,24 +100,24 @@ export class BuildController {
   @Type(HistoryListType)
   @Query({
     skip: {
-      type: GraphQLInt
+      type: GraphQLInt,
     },
     limit: {
-      type: GraphQLInt
+      type: GraphQLInt,
     },
     where: {
       type: new GraphQLInputObjectType({
         name: 'BuildWhereType',
         fields: {
           namespaceId: {
-            type: GraphQLString
+            type: GraphQLString,
           },
           name: {
-            type: GraphQLString
-          }
-        }
-      })
-    }
+            type: GraphQLString,
+          },
+        },
+      }),
+    },
   })
   async getBuildHistory(
     root,
@@ -131,7 +131,7 @@ export class BuildController {
     );
     return {
       count: items.length,
-      rows: items
+      rows: items,
     };
   }
 

@@ -32,11 +32,11 @@ export class GapiFrameworkImports {
                     'Origin',
                     'Connection',
                     'Pragma',
-                    'Cache-Control'
-                  ]
-                }
-              }
-            }
+                    'Cache-Control',
+                  ],
+                },
+              },
+            },
           },
           graphql: {
             path: nextOrDefault('--graphql-endpoint', '/graphql'),
@@ -57,19 +57,19 @@ export class GapiFrameworkImports {
                 'ws://localhost:9300/subscriptions'
               ),
               websocketConnectionParams: {
-                token: nextOrDefault('--graphiql-auth-token', '')
-              }
+                token: nextOrDefault('--graphiql-auth-token', ''),
+              },
             },
             graphqlOptions: {
-              schema: null
-            }
-          }
-        })
+              schema: null,
+            },
+          },
+        }),
       ];
     }
     return {
       module: GapiFrameworkImports,
-      frameworkImports: imports
+      frameworkImports: imports,
     };
   }
 }

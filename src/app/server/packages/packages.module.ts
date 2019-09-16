@@ -2,6 +2,6 @@ import { Module } from '@rxdi/core';
 
 @Module({
   controllers: [],
-  providers: []
+  providers: [],
 })
 export class PackagesModule {}

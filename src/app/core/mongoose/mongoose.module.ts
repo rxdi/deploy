@@ -20,7 +20,7 @@ export class MongooseModule {
                 {
                   useNewUrlParser: true,
                   pass: process.env.MONGO_PASSWORD || '',
-                  user: process.env.MONGO_USERNAME || ''
+                  user: process.env.MONGO_USERNAME || '',
                 }
               );
               connection.on('error', e => reject(e));
@@ -28,9 +28,9 @@ export class MongooseModule {
                 resolve();
               });
             });
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
   }
 }

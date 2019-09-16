@@ -6,7 +6,7 @@ import {
   Type,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLString
+  GraphQLString,
 } from '@gapi/core';
 import { TransactionType } from './types/transaction.type';
 import { TransactionService } from './services/transaction/transaction.service';
@@ -15,24 +15,24 @@ import { ITransactionType } from '../../core/api-introspection';
 
 @Controller<GraphQLControllerOptions>({
   guards: [],
-  type: TransactionType
+  type: TransactionType,
 })
 export class TransactionsController {
   constructor(private transactionSevice: TransactionService) {}
 
   @Mutation({
     path: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     birthtime: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     repoFolder: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     namespace: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   })
   addTransaction(root, payload: ITransactionType) {
     return this.transactionSevice.add({ ...payload, status: 'UNKNOWN' });
@@ -40,11 +40,11 @@ export class TransactionsController {
 
   @Mutation({
     path: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     repoFolder: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   })
   checkoutTransaction(root, payload: ITransactionType) {
     return this.transactionSevice.checkout(payload);
@@ -52,11 +52,11 @@ export class TransactionsController {
 
   @Mutation({
     message: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     repoFolder: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   })
   commitTransaction(root, payload: ITransactionType) {
     return this.transactionSevice.commit(payload);
@@ -64,8 +64,8 @@ export class TransactionsController {
 
   @Mutation({
     repoFolder: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   })
   pushTransactionMutation(root, payload: ITransactionType) {
     return this.transactionSevice.push(payload);
@@ -74,11 +74,11 @@ export class TransactionsController {
   @Type(new GraphQLList(TransactionType))
   @Query({
     status: {
-      type: TransactionTypeEnum
+      type: TransactionTypeEnum,
     },
     repoFolder: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   })
   listTransactions(root, { status, repoFolder }) {
     return this.transactionSevice.listTransactions(status, repoFolder);

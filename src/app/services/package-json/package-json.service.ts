@@ -26,7 +26,7 @@ export class PackageJsonService {
     if (file.dependencies) {
       return Object.keys(file.dependencies).map(name => ({
         name,
-        version: file.dependencies[name]
+        version: file.dependencies[name],
       }));
     }
     return [];

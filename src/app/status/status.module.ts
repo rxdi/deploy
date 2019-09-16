@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import {
   START,
   FILE_DEPLOYMENT_STATUS,
-  FILE_DEPLOYMENT_STATUS_INTERFACE
+  FILE_DEPLOYMENT_STATUS_INTERFACE,
 } from './status-injection.tokens';
 import { StatusService } from './status.service';
 
@@ -12,25 +12,25 @@ import { StatusService } from './status.service';
     StatusService,
     {
       provide: START,
-      useValue: new BehaviorSubject(true)
+      useValue: new BehaviorSubject(true),
     },
     {
       provide: FILE_DEPLOYMENT_STATUS,
       useValue: new BehaviorSubject(<FILE_DEPLOYMENT_STATUS_INTERFACE>{
         file: {
           status: 'SUCCESS',
-          message: 'success'
+          message: 'success',
         },
         typings: {
           status: 'SUCCESS',
-          message: 'success'
+          message: 'success',
         },
         module: {
           status: 'SUCCESS',
-          message: 'success'
-        }
-      })
-    }
-  ]
+          message: 'success',
+        },
+      }),
+    },
+  ],
 })
 export class StatusModule {}

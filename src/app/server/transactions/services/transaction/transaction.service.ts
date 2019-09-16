@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@rxdi/core';
 import {
   __TRANSACTIONS_DATABASE,
-  __HOME_DIR
+  __HOME_DIR,
 } from '../../../../../env.injection.tokens';
 import { ITransactionType } from '../../../../core/api-introspection/index';
 import { CompileService } from '../../../services/compile.service';
@@ -9,7 +9,7 @@ import { PubSubService } from '@gapi/core';
 import {
   TsConfigGenratorService,
   LoggerService,
-  FileService as AppFileService
+  FileService as AppFileService,
 } from '../../../..//services';
 import { FileService } from '../../../file/services/file.service';
 import { format, promisify } from 'util';
@@ -72,7 +72,7 @@ export class TransactionService {
 
   async add(doc: ITransactionType): Promise<ITransactionType> {
     const isExist = (await this.getTransactionByPath(doc.path, doc.repoFolder, {
-      status: 'UNKNOWN'
+      status: 'UNKNOWN',
     } as any)) as ITransactionType;
     if (isExist) {
       throw new Error(
@@ -136,7 +136,7 @@ export class TransactionService {
 
   async commit({
     repoFolder,
-    message
+    message,
   }: ITransactionType): Promise<ITransactionType> {
     console.log(repoFolder, message);
     const transaction = (await this.getTransactionByRepo(
@@ -166,25 +166,34 @@ export class TransactionService {
     const {
       filename,
       transactionFolder,
-      filePath
+      filePath,
     } = this.fileService.prepareCopyData(transactionId, repoFolder, fileName);
     return new Promise(async (resolve, reject) => {
       await this.appFileService.writeFile(
         filePath + '/tsconfig.json',
         this.tsGenerator.getTsConfig(filename.replace('.ts', ''))
       );
-      let packageJson: any = {browserslist: []};
+      let packageJson: any = { browserslist: [] };
       if (await promisify(exists)(join(filePath, 'package.json'))) {
-        packageJson = JSON.parse(await promisify(readFile)(join(filePath, 'package.json'), {encoding: 'utf-8'}));
+        packageJson = JSON.parse(
+          await promisify(readFile)(join(filePath, 'package.json'), {
+            encoding: 'utf-8',
+          })
+        );
         if (packageJson.browserslist && packageJson.browserslist.length) {
-          const isExistsLatestChrome = packageJson.browserslist.find((item: string) => item.includes('last 1 chrome versions'));
+          const isExistsLatestChrome = packageJson.browserslist.find(
+            (item: string) => item.includes('last 1 chrome versions')
+          );
           if (!isExistsLatestChrome) {
             packageJson.browserslist.push('last 1 chrome versions');
           }
         } else {
           packageJson.browserslist.push('last 1 chrome versions');
         }
-        await promisify(writeFile)(join(filePath, 'package.json'), JSON.stringify(packageJson));
+        await promisify(writeFile)(
+          join(filePath, 'package.json'),
+          JSON.stringify(packageJson)
+        );
       } else {
         await this.appFileService.writeFile(
           filePath + '/package.json',
@@ -219,7 +228,7 @@ export class TransactionService {
             resolve({
               message,
               _id: transactionId,
-              hash: module.hash
+              hash: module.hash,
             });
             cancelSubscription();
           },
@@ -233,7 +242,7 @@ export class TransactionService {
 
   async push({ repoFolder }: ITransactionType): Promise<ITransactionType> {
     const transaction = (await this.getTransactionByRepo(repoFolder, {
-      status: 'COMMITED'
+      status: 'COMMITED',
     } as any)) as ITransactionType;
     if (!transaction) {
       throw new Error(

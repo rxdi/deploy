@@ -2,8 +2,6 @@ import { Module } from '@rxdi/core';
 import { HistorySubscriptionController } from './history-subscription.controller';
 
 @Module({
-    controllers: [
-        HistorySubscriptionController
-    ]
+  controllers: [HistorySubscriptionController],
 })
 export class HistoryModule {}

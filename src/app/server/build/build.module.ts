@@ -2,6 +2,6 @@ import { Module } from '@rxdi/core';
 import { BuildController } from './build.controller';
 
 @Module({
-  controllers: [BuildController]
+  controllers: [BuildController],
 })
 export class BuildModule {}

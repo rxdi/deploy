@@ -2,7 +2,7 @@ import { Service, Inject } from '@rxdi/core';
 import { Observable } from 'rxjs';
 import {
   __BUILD_HISTORY_DATABASE,
-  DagModel
+  DagModel,
 } from '../../../env.injection.tokens';
 import { IHistoryType } from '../../core/api-introspection';
 

@@ -87,7 +87,7 @@ export class FileService {
           directory: null,
           file: null,
           name: null,
-          status: null
+          status: null,
         };
         const status: Stats = await this.statAsync(r);
         const pathMapping = v => r.replace(process.cwd(), v);
@@ -161,8 +161,10 @@ export class FileService {
     repoFolder: string,
     fileName: string
   ) {
-    const getJson = (path: string, type: 'package.json' | 'reactive.json' | string) =>
-      `${path}/${type}`;
+    const getJson = (
+      path: string,
+      type: 'package.json' | 'reactive.json' | string
+    ) => `${path}/${type}`;
     const { saveFolder, originalFilePath, filePath } = this.prepareCopyData(
       transactionId,
       repoFolder,
@@ -190,7 +192,6 @@ export class FileService {
         'Missing package.json or reactive.json bundle will proceed but if you depend on some modules you cannot use them since they will not be installed'
       );
     }
-
   }
 
   prepareCopyData(transactionId: string, repoFolder: string, fileName: string) {
@@ -205,7 +206,7 @@ export class FileService {
       originalFilePath,
       transactionFolder,
       filename,
-      filePath
+      filePath,
     };
   }
 

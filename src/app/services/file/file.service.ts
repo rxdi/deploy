@@ -1,7 +1,7 @@
 import {
   Service,
   FileService as RxdiFileService,
-  BootstrapLogger
+  BootstrapLogger,
 } from '@rxdi/core';
 import { readFile, writeFile } from 'fs';
 
@@ -57,7 +57,7 @@ export class FileService {
               typings: '',
               module: '',
               message: '',
-              previews: []
+              previews: [],
             })
           )
             .then(async () => resolve(await this.readFilePromisify(file)))

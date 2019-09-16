@@ -19,7 +19,7 @@ import {
   nextOrDefault,
   includes,
   PreviousService,
-  LoggerService
+  LoggerService,
 } from './services';
 import { ServerModule } from './server/server.module';
 
@@ -46,12 +46,12 @@ const _IMPORTS = [
           '--ipfs-swarms',
           ['/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001'],
           a => a.split(',')
-        )
-      }
-    }
+        ),
+      },
+    },
   }),
   IpfsModule.forRoot(),
-  StatusModule
+  StatusModule,
 ];
 
 includes('--webui') ? _IMPORTS.push(ServerModule) : null;
@@ -72,8 +72,8 @@ includes('--webui') ? _IMPORTS.push(ServerModule) : null;
     HtmlTemplateBuilder,
     PackageJsonService,
     PreviousService,
-    LoggerService
+    LoggerService,
   ],
-  plugins: [CompilePlugin]
+  plugins: [CompilePlugin],
 })
 export class AppModule {}

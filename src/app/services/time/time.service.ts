@@ -7,7 +7,7 @@ export class TimeService {
     return {
       day: this.getDay(date),
       month: this.getDay(date),
-      year: this.getDay(date)
+      year: this.getDay(date),
     };
   }
 

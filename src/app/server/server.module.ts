@@ -15,9 +15,9 @@ import { TransactionsModule } from './transactions/transactions.module';
     NamespaceModule,
     BuildModule,
     FileModule,
-    TransactionsModule
+    TransactionsModule,
   ],
   services: [WebUiService, ServerPushService, CompileService],
-  controllers: [UserQueriesController]
+  controllers: [UserQueriesController],
 })
 export class ServerModule {}

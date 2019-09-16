@@ -49,21 +49,21 @@ export class TableService {
       FileStatus.status,
       'Bundle',
       `${file[0].size} bytes`,
-      `${provider}${file[0].hash}`
+      `${provider}${file[0].hash}`,
     ];
     const typingsRow = [
       statusTypings.Icon,
       TypingsStatus.status,
       'Typings',
       `${typings[0].size} bytes`,
-      `${provider}${typings[0].hash}`
+      `${provider}${typings[0].hash}`,
     ];
     const moduleRow = [
       statusModule.Icon,
       ModuleStatus.status,
       'Module',
       `${m[1].size} bytes`,
-      `${provider}${m[1].hash}`
+      `${provider}${m[1].hash}`,
     ];
 
     if (
@@ -92,7 +92,7 @@ export class TableService {
       horizontalLine: true,
       width,
       rightPadding: 0,
-      leftPadding: 1
+      leftPadding: 1,
     });
 
     t.push(columns);
@@ -104,7 +104,7 @@ export class TableService {
       { row: [0, 1] },
       {
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
@@ -112,7 +112,7 @@ export class TableService {
       { column: [0, 1] },
       {
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
@@ -120,39 +120,39 @@ export class TableService {
       { column: [0, 2], row: [0, 4] },
       {
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
     t.attrRange(
       { column: [0, 1], row: [0, 2] },
       {
-        color: 'green'
+        color: 'green',
       }
     );
 
     t.attrRange(
       { column: [0, 2], row: [0, 2] },
       {
-        color: statusFile.Color
+        color: statusFile.Color,
       }
     );
     t.attrRange(
       { column: [0, 2], row: [2, 3] },
       {
-        color: statusTypings.Color
+        color: statusTypings.Color,
       }
     );
     t.attrRange(
       { column: [0, 2], row: [3, 4] },
       {
-        color: statusModule.Color
+        color: statusModule.Color,
       }
     );
     t.attrRange(
       {
         row: [1],
-        column: [1]
+        column: [1],
       },
       {
         // leftPadding: 5
@@ -167,13 +167,13 @@ export class TableService {
       t.attrRange(
         { column: [5, 6] },
         {
-          color: 'red'
+          color: 'red',
         }
       );
       t.attrRange(
         { column: [5, 6], row: [5, 6] },
         {
-          color: 'red'
+          color: 'red',
         }
       );
     }
@@ -186,7 +186,7 @@ export class TableService {
       horizontalLine: true,
       width: ['50%', '50%'],
       rightPadding: 0,
-      leftPadding: 1
+      leftPadding: 1,
     });
 
     t.push(['Previews versions', 'Gateway']);
@@ -199,17 +199,17 @@ export class TableService {
       {
         align: 'center',
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
     t.attrRange(
       {
         row: [1],
-        column: [1]
+        column: [1],
       },
       {
-        leftPadding: 5
+        leftPadding: 5,
       }
     );
 
@@ -222,7 +222,7 @@ export class TableService {
       horizontalLine: true,
       width: ['50%'],
       rightPadding: 0,
-      leftPadding: 1
+      leftPadding: 1,
     });
 
     t.push(['Install command']);
@@ -233,17 +233,17 @@ export class TableService {
       {
         align: 'center',
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
     t.attrRange(
       {
         row: [1],
-        column: [1]
+        column: [1],
       },
       {
-        leftPadding: 5
+        leftPadding: 5,
       }
     );
 
@@ -256,7 +256,7 @@ export class TableService {
       horizontalLine: true,
       width: ['50%', '50%'],
       rightPadding: 0,
-      leftPadding: 1
+      leftPadding: 1,
     });
 
     t.push(['Previews version', 'Next version']);
@@ -281,17 +281,17 @@ export class TableService {
       {
         align: 'center',
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
     t.attrRange(
       {
         row: [1],
-        column: [1]
+        column: [1],
       },
       {
-        leftPadding: 5
+        leftPadding: 5,
       }
     );
 
@@ -304,7 +304,7 @@ export class TableService {
       horizontalLine: true,
       width: [3, '50%', '50%'],
       rightPadding: 0,
-      leftPadding: 1
+      leftPadding: 1,
     });
 
     t.push(['', 'Date', 'Hash']);
@@ -318,17 +318,17 @@ export class TableService {
       {
         align: 'center',
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
     t.attrRange(
       {
         row: [1],
-        column: [1]
+        column: [1],
       },
       {
-        leftPadding: 5
+        leftPadding: 5,
       }
     );
 
@@ -341,13 +341,13 @@ export class TableService {
       horizontalLine: true,
       width: ['100%'],
       rightPadding: 0,
-      leftPadding: 1
+      leftPadding: 1,
     });
 
     t.push(['File upload status']);
     t.push([`\File size: ${file[0].size} bytes`]);
     t.push([
-      `\IPFS address: ${this.fileIpfsService.providers.ipfsOriginal}${file[0].hash}`
+      `\IPFS address: ${this.fileIpfsService.providers.ipfsOriginal}${file[0].hash}`,
     ]);
 
     t.attrRange(
@@ -355,17 +355,17 @@ export class TableService {
       {
         align: 'center',
         color: 'green',
-        bg: 'black'
+        bg: 'black',
       }
     );
 
     t.attrRange(
       {
         row: [1],
-        column: [1]
+        column: [1],
       },
       {
-        leftPadding: 5
+        leftPadding: 5,
       }
     );
 

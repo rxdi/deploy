@@ -6,28 +6,26 @@ import { includes } from '../../services';
 
 @Service()
 export class WebUiService implements OnInit {
+  constructor(
+    @Inject(HAPI_SERVER) private server: Server,
+    @Inject(__ROOT_FOLDER) private root_folder: __ROOT_FOLDER
+  ) {}
 
-    constructor(
-        @Inject(HAPI_SERVER) private server: Server,
-        @Inject(__ROOT_FOLDER) private root_folder: __ROOT_FOLDER
-    ) { }
+  OnInit() {
+    includes('--webui') ? this.register() : null;
+  }
 
-    OnInit() {
-        includes('--webui') ? this.register() : null;
-    }
-
-    async register() {
-        this.server.route({
-            method: 'GET',
-            path: '/webui/{param*}',
-            handler: {
-                directory: {
-                    path: `${this.root_folder}/webui`,
-                    listing: true,
-                    index: ['index.html']
-                }
-            }
-        });
-    }
-
+  async register() {
+    this.server.route({
+      method: 'GET',
+      path: '/webui/{param*}',
+      handler: {
+        directory: {
+          path: `${this.root_folder}/webui`,
+          listing: true,
+          index: ['index.html'],
+        },
+      },
+    });
+  }
 }

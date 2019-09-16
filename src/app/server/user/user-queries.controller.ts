@@ -4,7 +4,7 @@ import {
   Query,
   Subscription,
   Subscribe,
-  PubSubService
+  PubSubService,
 } from '@gapi/core';
 import { GraphQLString } from 'graphql';
 import { UserType } from './types/user.type';
@@ -16,12 +16,12 @@ export class UserQueriesController {
   @Type(UserType)
   @Query({
     message: {
-      type: GraphQLString
-    }
+      type: GraphQLString,
+    },
   })
   async findUser(root, { message }) {
     return {
-      message
+      message,
     };
   }
 

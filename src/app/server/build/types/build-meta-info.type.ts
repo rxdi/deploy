@@ -4,10 +4,10 @@ export const BuildMetaInfo = new GraphQLObjectType({
   name: 'BuildMetaInfo',
   fields: () => ({
     path: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     hash: {
-      type: GraphQLString
-    }
-  })
+      type: GraphQLString,
+    },
+  }),
 });

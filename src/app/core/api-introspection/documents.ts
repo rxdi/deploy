@@ -1,2 +1,3 @@
-/* tslint:disable */ 
- export const DOCUMENTS = {};
+/* tslint:disable */
+
+export const DOCUMENTS = {};

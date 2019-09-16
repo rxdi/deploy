@@ -4,7 +4,7 @@ import {
   __PARCEL_BROWSER_BUILD,
   __PARCEL_MINIFY,
   __PARCEL_BUILD_OUT_DIR,
-  __PARCEL_SETTINGS
+  __PARCEL_SETTINGS,
 } from '../../../env.injection.tokens';
 
 @Service()
@@ -25,7 +25,7 @@ export class ParcelBundlerService {
         autoInstall: true,
         outFile: fileName,
         outDir: outDir || this.buildOutDir,
-        ...this.settings
+        ...this.settings,
       };
       const bundler = new Bundler(file, options);
       let bundle = null;

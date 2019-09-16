@@ -1,7 +1,7 @@
 import { Service, Inject } from '@rxdi/core';
 import {
   FILE_DEPLOYMENT_STATUS,
-  FILE_DEPLOYMENT_STATUS_INTERFACE
+  FILE_DEPLOYMENT_STATUS_INTERFACE,
 } from './status-injection.tokens';
 
 @Service()
@@ -16,7 +16,7 @@ export class StatusService {
   setBuildStatus(status: FILE_DEPLOYMENT_STATUS_INTERFACE) {
     this.$deploymentStatus.next({
       ...this.$deploymentStatus.getValue(),
-      ...status
+      ...status,
     });
   }
 }

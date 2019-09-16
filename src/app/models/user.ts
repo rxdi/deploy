@@ -13,7 +13,7 @@ export const UserSchema: Schema = new Schema(
     lastName: String,
     displayName: String,
     type: String,
-    password: String
+    password: String,
   },
   { collection: 'user' }
 );

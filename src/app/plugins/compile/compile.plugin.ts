@@ -6,7 +6,7 @@ import {
   __NAMESPACE,
   DagModel,
   __COMMIT_MESSAGE,
-  __FILE_EXTENSION
+  __FILE_EXTENSION,
 } from '../../../env.injection.tokens';
 import { Inject, BootstrapLogger, PluginInterface, Plugin } from '@rxdi/core';
 import { tap, switchMapTo, take, map, switchMap } from 'rxjs/operators';
@@ -47,8 +47,8 @@ export class CompilePlugin implements PluginInterface {
       size: 0,
       hash: this.fileNotDeployed,
       path: this.fileNotDeployed,
-      content: this.fileNotDeployed
-    }
+      content: this.fileNotDeployed,
+    },
   ];
   constructor(
     private parcelBundler: ParcelBundlerService,
@@ -236,8 +236,8 @@ Error loading file ${filePath}
             typings: {
               status: 'WARNING',
               message:
-                'Missing typescript definition.Typings will not be uploaded!'
-            }
+                'Missing typescript definition.Typings will not be uploaded!',
+            },
           });
           return Promise.resolve(this.initIpfsModule);
         }
@@ -266,7 +266,7 @@ Error loading file ${filePath}
         currentModule = {
           name: namespace,
           module: ipfsFile[0].hash,
-          createdAt: new Date()
+          createdAt: new Date(),
         };
 
         if (ipfsTypings[0].hash) {
@@ -359,7 +359,7 @@ Error loading file ${filePath}
         }
         currentModule.previous = [
           ...currentModule.previous,
-          ipfsModule[1].hash
+          ipfsModule[1].hash,
         ];
         if (f.ipfs) {
           currentModule.ipfs = f.ipfs;
@@ -377,7 +377,7 @@ Error loading file ${filePath}
         let nmspc = await this.namespaceService.searchForDuplicates(namespace);
         if (!nmspc) {
           nmspc = await this.namespaceService.insert({
-            name: namespace
+            name: namespace,
           });
         }
         return nmspc;
@@ -388,7 +388,7 @@ Error loading file ${filePath}
             status: {
               file: this.statusService.getBuildStatus().file,
               typings: this.statusService.getBuildStatus().typings,
-              module: this.statusService.getBuildStatus().module
+              module: this.statusService.getBuildStatus().module,
             },
             hash: ipfsModule[1].hash,
             name: namespace,
@@ -396,18 +396,18 @@ Error loading file ${filePath}
             module: ipfsFile[0].hash,
             metadata: ipfsFileMetadata[0].hash,
             message: ipfsMessage[0].hash,
-            namespaceId: nmspc['_id']
+            namespaceId: nmspc['_id'],
           }),
           this.previousService.insert({
             name: namespace,
-            hash: ipfsModule[1].hash
-          })
+            hash: ipfsModule[1].hash,
+          }),
         ])
       ),
       map(() => ({
         file: ipfsFile,
         typings: ipfsTypings,
-        module: ipfsModule
+        module: ipfsModule,
       })),
       tap(async () => {
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module saved to persisten history!' });
@@ -457,12 +457,12 @@ Error loading file ${filePath}
       this.statusService.setBuildStatus({
         file: {
           status: 'WARNING',
-          message: genericIntegrityError
+          message: genericIntegrityError,
         },
         module: {
           status: 'WARNING',
-          message: genericIntegrityError
-        }
+          message: genericIntegrityError,
+        },
       });
     }
 
@@ -475,8 +475,8 @@ Error loading file ${filePath}
       this.statusService.setBuildStatus({
         typings: {
           status: 'WARNING',
-          message: genericIntegrityError
-        }
+          message: genericIntegrityError,
+        },
       });
     }
   }
@@ -664,8 +664,8 @@ export class Pesho {
             typings: {
               status: 'WARNING',
               message:
-                'Missing typescript definition.Typings will not be uploaded!'
-            }
+                'Missing typescript definition.Typings will not be uploaded!',
+            },
           });
           return Promise.resolve(this.initIpfsModule);
         }
@@ -694,7 +694,7 @@ export class Pesho {
         currentModule = {
           name: namespace,
           module: ipfsFile[0].hash,
-          createdAt: new Date()
+          createdAt: new Date(),
         };
 
         if (ipfsTypings[0].hash) {
@@ -787,7 +787,7 @@ export class Pesho {
         }
         currentModule.previous = [
           ...currentModule.previous,
-          ipfsModule[0].hash
+          ipfsModule[0].hash,
         ];
         if (f.ipfs) {
           currentModule.ipfs = f.ipfs;
@@ -805,7 +805,7 @@ export class Pesho {
         let nmspc = await this.namespaceService.searchForDuplicates(namespace);
         if (!nmspc) {
           nmspc = await this.namespaceService.insert({
-            name: namespace
+            name: namespace,
           });
         }
         return nmspc;
@@ -816,7 +816,7 @@ export class Pesho {
             status: {
               file: this.statusService.getBuildStatus().file,
               typings: this.statusService.getBuildStatus().typings,
-              module: this.statusService.getBuildStatus().module
+              module: this.statusService.getBuildStatus().module,
             },
             hash: ipfsModule[0].hash,
             name: namespace,
@@ -824,18 +824,18 @@ export class Pesho {
             module: ipfsFile[0].hash,
             metadata: ipfsFileMetadata[0].hash,
             message: ipfsMessage[0].hash,
-            namespaceId: nmspc['_id']
+            namespaceId: nmspc['_id'],
           }),
           this.previousService.insert({
             name: namespace,
-            hash: ipfsModule[0].hash
-          })
+            hash: ipfsModule[0].hash,
+          }),
         ])
       ),
       map(() => ({
         file: ipfsFile,
         typings: ipfsTypings,
-        module: ipfsModule
+        module: ipfsModule,
       })),
       tap(async () => {
         // this.pubsub.publish('CREATE_SIGNAL_BASIC', { message: 'Module saved to persisten history!' });
