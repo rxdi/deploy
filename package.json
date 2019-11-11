@@ -1,6 +1,6 @@
 {
   "name": "@rxdi/deploy",
-  "version": "0.7.38",
+  "version": "0.7.39",
   "description": "Package prepared to deploy easy decentralized rxdi package ",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "deploy": "docker run -v /proba/:/usr/src/app/proba --name rxdi-deployer rxdi/deploy ./proba/index.ts || true && npm run stop",
     "stop": "docker rm -f rxdi-deploy",
     "tsc": "./node_modules/.bin/tsc",
-    "test":"echo Test Deploy",
+    "test": "echo Test Deploy",
     "lint": "echo lint",
     "pretest": "npm run lint"
   },
