@@ -1,10 +1,9 @@
 {
   "name": "@rxdi/deploy",
-  "version": "0.7.45",
+  "version": "0.7.46",
   "description": "Package prepared to deploy easy decentralized rxdi package ",
   "main": "index.js",
   "scripts": {
-    "postpublish": "git push -f ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git && git push --tags && git push ssh://git@gitlab.youvolio.com:522/rxdi/deploy.git --tags",
     "start": "gapi start --local --parcel",
     "build:docker": "docker build -t rxdi/deploy .",
     "prettier": "prettier --write 'src/**/*.ts'",
